@@ -3,6 +3,7 @@
 rule token = parse
 	[' ' '\t' '\r' '\n'] { token lexbuf }
 | "/*"		{ comment lexbuf }
+| "//"    { singleComment lexbuf }
 | '('		{ LPAREN }	| '='		{ ASSIGN }	| "if"		{ IF }
 | ')'		{ RPAREN }	| "=="		{ EQ }		| "else"	{ ELSE }
 | '{'		{ LBRACE }	| "!="		{ NEQ }		| "elseif"	{ ELSEIF }
@@ -24,3 +25,7 @@ rule token = parse
 and comment = parse
 	"*/" { token lexbuf }
 | _		{ comment lexbuf }
+
+and singleComment = parse
+  '\n' { token lexbuf }
+| _    { singleComment lexbuf }
