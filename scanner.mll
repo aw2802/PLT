@@ -8,10 +8,8 @@ let int = digit+
 let float = (digit+) '.' (digit+)
 (* @TODO: if all we have are numbers (floats) what to do with ints? *)
 
-let id = alpha (alpha | digit | '_')*
-let char = ''' ( ascii) '''
-let string = '"' ( (ascii)* as s) '"'
-
+let id = (alpha | '_') (alpha | digit | '_')*
+let char = ''' (ascii) '''
 
 rule token = parse 
 	whitespace { token lexbuf }
@@ -25,7 +23,7 @@ rule token = parse
   | '}'      { RBRACE }
   | '['      { LBRACKET }
   | ']'      { RBRACKET }	
-  | '.'			 { DOT 			}
+  | '.'	     { DOT }
   | ';'      { SEMI }
   | ','      { COMMA }
   | '+'      { PLUS }
@@ -44,16 +42,16 @@ rule token = parse
   | "!"      { NOT }
 
 	(* Branching Control *)
-  | "if"     		{ IF }
-  | "else"   		{ ELSE }
-  | "elseif"		{ ELSEIF }
-  | "for"    		{ FOR }
-  | "while"  		{ WHILE }
-  | "return" 	 	{ RETURN }
-  | "break"  	 	{ BREAK }
+  | "if"     	{ IF }
+  | "else"   	{ ELSE }
+  | "elseif"	{ ELSEIF }
+  | "for"    	{ FOR }
+  | "while"  	{ WHILE }
+  | "return" 	{ RETURN }
+  | "break"  	{ BREAK }
   | "continue" 	{ CONTINUE }
 
-  (* Data and Return Types *)
+  (* Primitive Data Types and Return Types *)
   | "number"    { FLOAT }
   | "char"      { CHAR }
   | "void"      { VOID }
@@ -62,24 +60,41 @@ rule token = parse
   | "false"     { FALSE }
 
   (* Classes *)
-  | "class"     { CLASS 	}
-  | "new" 	   	{ NEW 		}
-  | "public"		{ PUBLIC 	}
-  | "private"		{ PRIVATE }
+  | "class"     { CLASS }
+  | "new" 	{ NEW 	}
+  | "public"	{ PUBLIC }
+  | "private"	{ PRIVATE }
   
-  | int as lxm          { INT_LITERAL(int_of_string lxm) }
-  | float as lxm        { FLOAT_LITERAL(float_of_string lxm) }
-  | char as lxm         { CHAR_LITERAL(String.get lxm 1) }
-  | string       				{ STRING_LITERAL(unescape s) }
-  | id as lxm           { ID(lxm) }
-  | eof                 { EOF }
-  
+  | int as lxm    { INT_LITERAL(int_of_string lxm) }
+  | float as lxm  { FLOAT_LITERAL(float_of_string lxm) }
+  | char as lxm   { CHAR_LITERAL(String.get lxm 1) }
+  |'"'            { read_string (Buffer.create 17) lexbuf }  
+  | id as lxm     { ID(lxm) }
+  | eof           { EOF }
   | _ as illegal  { raise (Failure("illegal character " ^ Char.escaped illegal )) }
 
 and comment = parse
-	"*/" { token lexbuf }
+	"*/" 	{ token lexbuf }
 | _		{ comment lexbuf }
 
 and singleComment = parse
   '\n' { token lexbuf }
 | _    { singleComment lexbuf }
+
+(* from https://realworldocaml.org/v1/en/html/parsing-with-ocamllex-and-menhir.html, to be modified *)
+and read_string buf =
+  parse
+  | '"'       { STRING (Buffer.contents buf) }
+  | '\\' '/'  { Buffer.add_char buf '/'; read_string buf lexbuf }
+  | '\\' '\\' { Buffer.add_char buf '\\'; read_string buf lexbuf }
+  | '\\' 'b'  { Buffer.add_char buf '\b'; read_string buf lexbuf }
+  | '\\' 'f'  { Buffer.add_char buf '\012'; read_string buf lexbuf }
+  | '\\' 'n'  { Buffer.add_char buf '\n'; read_string buf lexbuf }
+  | '\\' 'r'  { Buffer.add_char buf '\r'; read_string buf lexbuf }
+  | '\\' 't'  { Buffer.add_char buf '\t'; read_string buf lexbuf }
+  | [^ '"' '\\']+
+    { Buffer.add_string buf (Lexing.lexeme lexbuf);
+      read_string buf lexbuf
+    }
+  | _ { raise (SyntaxError ("Illegal string character: " ^ Lexing.lexeme lexbuf)) }
+  | eof { raise (SyntaxError ("String is not terminated")) }
