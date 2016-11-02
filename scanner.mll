@@ -53,7 +53,7 @@ rule token = parse
 
   (* Primitive Data Types and Return Types *)
   | "char"      { CHAR }
-  | "number"    { FLOAT }
+  (**| "number"    { FLOAT }**)
   | "void"      { VOID }
   | "boolean"   { BOOLEAN }
   | "true"      { TRUE }
@@ -68,7 +68,7 @@ rule token = parse
   | inty as lxm    { INT_LITERAL(int_of_string lxm) }
   | floaty as lxm  { FLOAT_LITERAL(float_of_string lxm) }
   | chary as lxm   { CHAR_LITERAL(String.get lxm 1) }
-  | '"'            { read_string (Buffer.create 17) lexbuf }  
+  (**| '"'            { read_string (Buffer.create 17) lexbuf }  *)
   | id as lxm     { ID(lxm) }
   | eof           { EOF }
   | _ as illegal  { raise (Failure("illegal character " ^ Char.escaped illegal )) }
@@ -82,7 +82,7 @@ and singleComment = parse
 | _    { singleComment lexbuf }
 
 (* from https://realworldocaml.org/v1/en/html/parsing-with-ocamllex-and-menhir.html, to be modified *)
-and read_string buf =
+(**and read_string buf =
   parse
   | '"'       { STRING (Buffer.contents buf) }
   | '\\' '/'  { Buffer.add_char buf '/'; read_string buf lexbuf }
@@ -97,4 +97,4 @@ and read_string buf =
       read_string buf lexbuf
     }
   | _ { raise (SyntaxError ("Illegal string character: " ^ Lexing.lexeme lexbuf)) }
-  | eof { raise (SyntaxError ("String is not terminated")) }
+  | eof { raise (SyntaxError ("String is not terminated")) }**)
