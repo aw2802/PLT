@@ -2,11 +2,11 @@ OBJS = ast.cmo parser.cmo scanner.cmo javamp.cmo
 
 YACC = ocamlyacc
 
-stitch: $(OBJS)
+javamp: $(OBJS)
 	ocamlc -o javamp $(OBJS)
 
 scanner.ml: scanner.mll
-	ocamllex stch_scanner.mll
+	ocamllex scanner.mll
 
 parser.ml parser.mli: parser.mly
 	$(YACC) -v parser.mly
