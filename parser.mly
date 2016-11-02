@@ -33,3 +33,9 @@
 %type <Ast.program> program
 
 %%
+
+program:
+  decls EOF { $1 }
+  
+decls:
+   /* nothing */ { [], [] }

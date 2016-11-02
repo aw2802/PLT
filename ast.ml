@@ -1,1 +1,2 @@
-type program = bind list * func_decl list
+type dummy = AND
+type program = dummy

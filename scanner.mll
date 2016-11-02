@@ -4,12 +4,12 @@ let whitespace = [' ' '\t' '\r' '\n']
 let ascii = ([' '-'!' '#'-'[' ']'-'~'])
 let alpha = ['a'-'z' 'A'-'Z']
 let digit = ['0'-'9']
-let int = digit+ 
-let float = (digit+) '.' (digit+)
+let inty = digit+ 
+let floaty = (digit+) '.' (digit+)
 (* @TODO: if all we have are numbers (floats) what to do with ints? *)
 
 let id = (alpha | '_') (alpha | digit | '_')*
-let char = ''' (ascii) '''
+let chary = ''' (ascii) '''
 
 rule token = parse 
 	whitespace { token lexbuf }
@@ -52,8 +52,8 @@ rule token = parse
   | "continue" 	{ CONTINUE }
 
   (* Primitive Data Types and Return Types *)
-  | "number"    { FLOAT }
   | "char"      { CHAR }
+  | "number"    { FLOAT }
   | "void"      { VOID }
   | "boolean"   { BOOLEAN }
   | "true"      { TRUE }
@@ -65,10 +65,10 @@ rule token = parse
   | "public"	{ PUBLIC }
   | "private"	{ PRIVATE }
   
-  | int as lxm    { INT_LITERAL(int_of_string lxm) }
-  | float as lxm  { FLOAT_LITERAL(float_of_string lxm) }
-  | char as lxm   { CHAR_LITERAL(String.get lxm 1) }
-  |'"'            { read_string (Buffer.create 17) lexbuf }  
+  | inty as lxm    { INT_LITERAL(int_of_string lxm) }
+  | floaty as lxm  { FLOAT_LITERAL(float_of_string lxm) }
+  | chary as lxm   { CHAR_LITERAL(String.get lxm 1) }
+  | '"'            { read_string (Buffer.create 17) lexbuf }  
   | id as lxm     { ID(lxm) }
   | eof           { EOF }
   | _ as illegal  { raise (Failure("illegal character " ^ Char.escaped illegal )) }
