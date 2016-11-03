@@ -1,18 +1,18 @@
 
 (* Possible data types *)
 type data_type =
-  | Jchar 
-  | Jvoid
-  | Jboolean
+  | JChar 
+  | JVoid
+  | JBoolean
   
 (* Operators *)
 type op = Plus | Minus | Divide | Times | Assign | Eq | Neq | Lt | Leq | Gt | Geq |
 OR | AND | NOT
 
 (* Variable Declarations *)
-type var_decl = {
+type vdecl = {
   vtype: data_type;
-  vname : string;
+  vname: string;
 }
 
 (* Expressions *)
@@ -25,7 +25,7 @@ type expr =
 type stmt =
   Block of stmt list
 | Expr of expr
-| VarDecl of var_decl
+| VarDecl of vdecl
 | Return of expr
 | If of expr * stmt * stmt
 | For of stmt * expr * expr * stmt
@@ -34,7 +34,7 @@ type stmt =
 (* Functions *)
 type func_decl = {
   fname : string; (* name of the function *)
-  fformals : var_decl list; (* formal params *)
+  fformals : vdecl list; (* formal params *)
   freturn : data_type; (* return type *)
   fbody : stmt list; (* statements, including local variable declarations *)
 }

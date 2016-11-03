@@ -52,10 +52,10 @@ rule token = parse
   | "continue" 	{ CONTINUE }
 
   (* Primitive Data Types and Return Types *)
-  | "char"      { CHAR }
+  | "char"      { JCHAR }
   (**| "number"    { FLOAT }**)
-  | "void"      { VOID }
-  | "boolean"   { BOOLEAN }
+  | "void"      { JVOID }
+  | "boolean"   { JBOOLEAN }
   | "true"      { TRUE }
   | "false"     { FALSE }
 
@@ -68,7 +68,6 @@ rule token = parse
   | inty as lxm    { INT_LITERAL(int_of_string lxm) }
   | floaty as lxm  { FLOAT_LITERAL(float_of_string lxm) }
   | chary as lxm   { CHAR_LITERAL(String.get lxm 1) }
-  (**| '"'            { read_string (Buffer.create 17) lexbuf }  *)
   | id as lxm     { ID(lxm) }
   | eof           { EOF }
   | _ as illegal  { raise (Failure("illegal character " ^ Char.escaped illegal )) }
