@@ -35,11 +35,60 @@
 %%
 
 program:
-  decls EOF { $1 }
+	cdecls EOF { $1 } 
 
-decls: /* nothing */ { [], [] }
-	| decls vdecl { ($2 :: fst $1), snd $1 }
-	| decls fdecl { fst $1, ($2 :: snd $1) }
+cdecls: cdecl_list { List.rev $1 } /* REVERSE ???! */
+
+cdecl_list: 
+	  cdecl 	{ [$1] } /* BRACES WTF  */
+	| cdecl_list cdecl { $2::$1 } /* WE DON'T GET LISTS */
+
+cdecl:
+		PUBLIC CLASS ID LBRACE cbody RBRACE { {
+			cname = $3;
+			cbody = $5
+		} }
+	| 	PRIVATE CLASS ID LBRACE cbody RBRACE { {
+			cname = $3;
+			cbody = $5
+		} }
+
+cbody: /* make sure defined in ast, rename to variables */
+	/* nothing */ { { 
+		variables = [];
+		constructors = [];
+		methods = [];
+	} }
+	| 	cbody variable { { 
+			variables = $2 :: $1.variables;
+			constructors = $1.constructors;
+			methods = $1.methods;
+		} }
+ 	| 	cbody constructor { { 
+			variables = $1.variables;
+			constructors = $2 :: $1.constructors;
+			methods = $1.methods;
+		} }
+ 	| 	cbody fdecl { { 
+			variables = $1.variables;
+			constructors = $1.constructors;
+			methods = $2 :: $1.methods;
+		} }
+
+/* variables */
+variable:
+	typ ID { { 
+		vtype = $1;
+		vname = $2;
+	} }
+
+/* constructors */
+
+/* methods */
+
+
+
+
 
 fdecl:
 	typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
@@ -69,10 +118,6 @@ typ:  JCHAR { JChar }
 vdecl_list: /* nothing */ { [] }
 	| vdecl_list vdecl { $2 :: $1 }
 
-/*vdecl: typ ID SEMI { { 	
-		vtype = $1;
-		vname = $2; } }*/
-
 vdecl: typ ID SEMI { VarDecl({ 	
 		vtype = $1;
 		vname = $2; }) }
@@ -84,14 +129,13 @@ stmt_list:
 
 stmt:
 	  expr SEMI { Expr $1 }
-	| vdecl { VarDecl($1) }
+	/*| vdecl { VarDecl($1) } */
 	| RETURN SEMI { Return Noexpr }
 	| RETURN expr SEMI { Return $2 }
 	| LBRACE stmt_list RBRACE { Block(List.rev $2) }
 	| IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
 	| IF LPAREN expr RPAREN stmt ELSE stmt { If($3, $5, $7) }
-	| FOR LPAREN expr_opt SEMI expr SEMI expr_opt RPAREN stmt
-	{ For($3, $5, $7, $9) }
+	| FOR LPAREN expr_opt SEMI expr SEMI expr_opt RPAREN stmt { For($3, $5, $7, $9) }
 	| WHILE LPAREN expr RPAREN stmt { While($3, $5) }
 
 expr:

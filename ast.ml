@@ -6,8 +6,9 @@ type data_type =
   | JBoolean
   
 (* Operators *)
-type op = Plus | Minus | Divide | Times | Assign | Eq | Neq | Lt | Leq | Gt | Geq |
-OR | AND | NOT
+type op = Plus | Minus | Divide | Times | Eq | Neq | Lt | Leq | Gt | Geq |
+OR | AND | NOT 
+(* removed assign from op list, may need to add back *)
 
 (* Variable Declarations *)
 type vdecl = {
@@ -17,9 +18,13 @@ type vdecl = {
 
 (* Expressions *)
 type expr =
-	Int_Lit of int
+	  Int_Lit of int
 	| Float_Lit of float
 	| Char_Lit of string
+	| Noexpr
+	| Binop of expr * op * expr 
+	| Assign of string * expr
+	| Null 
 
 (* Statements *)
 type stmt =

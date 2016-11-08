@@ -68,7 +68,8 @@ rule token = parse
   | inty as lxm    { INT_LITERAL(int_of_string lxm) }
   | floaty as lxm  { FLOAT_LITERAL(float_of_string lxm) }
   | chary as lxm   { CHAR_LITERAL(String.get lxm 1) }
-  | id as lxm     { ID(lxm) }
+  | '"'( ('\\'('/'|'\\'| 'b' | 'f' | 'n' | 'r' | 't'))|([^'"']) )*'"' as lxm { STRING_LITERAL(lxm) }
+  | id as lxm      { ID(lxm) }
   | eof           { EOF }
   | _ as illegal  { raise (Failure("illegal character " ^ Char.escaped illegal )) }
 
