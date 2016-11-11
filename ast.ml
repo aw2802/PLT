@@ -43,7 +43,7 @@ type stmt =
 | VarDecl of vdecl 
 | Return of expr
 | If of expr * stmt * stmt
-| For of stmt * expr * expr * stmt
+| For of expr * expr * expr * stmt
 | While of expr * stmt
 
 (* Functions *)
