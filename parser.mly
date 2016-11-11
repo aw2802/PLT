@@ -120,11 +120,11 @@ primitive:  JCHAR 		{ JChar }
 		  | JVOID 		{ JVoid }
 
 name:
-	CLASS ID { Object ($2) }
+	CLASS ID { $2 }
 
 type_tag:
 	  primitive { $1 }
-	| name	  { $1 }
+	| name	  { Object($1) }
 
 datatype:
 	type_tag   { Data_type($1) }
