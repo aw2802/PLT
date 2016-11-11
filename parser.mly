@@ -129,15 +129,20 @@ type_tag:
 datatype:
 	type_tag   { $1 }
 
+formal:
+	datatype ID
+	 {{
+		vtype = $1;
+	  	vname = $2; 
+	  	}}
 
 formals_opt: /* nothing */ { [] }
 	| formal_list { List.rev $1 }
 
 formal_list: 
-	  datatype ID { 
-	  	[ { 
-	  		vtype = $1;
-	  		vname = $2; } ] }
+	  formal { 
+	  	[ { $1
+} ] }
 	| formal_list COMMA datatype ID 
 		{ { 
 			vtype = $3;
@@ -145,9 +150,6 @@ formal_list:
 			} 
 			:: $1 
 		}
-
-formal:
-	datatype ID { Formal($1, $2) }
 
 actuals_opt:
 		/* nothing */ { [] }
