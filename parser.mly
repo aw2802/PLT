@@ -1,7 +1,7 @@
 %{ open Ast %}
 
 %token CLASS PUBLIC PRIVATE
-%token NUMBER JBOOLEAN JCHAR JINT JFLOAT JVOID TRUE FALSE
+%token NUMBER JBOOLEAN JCHAR JINT JFLOAT JVOID TRUE FALSE NULL
 %token SEMI LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET COMMA DOT
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT AND OR 
 %token EQ NEQ LT LEQ GT GEQ 
@@ -110,7 +110,8 @@ fdecl:
 
 /* datatypes + formal & actual params */
 primitive:  JCHAR 		{ JChar }
-		  /*| JFLOAT { JFloat } */
+		  | JINT		{ JInt }
+		  | JFLOAT 		{ JFloat } 
 		  | JBOOLEAN 	{ JBoolean }
 		  | JVOID 		{ JVoid }
 
@@ -167,12 +168,7 @@ stmt:
 /* expressions */
 
 expr:
-	  INT_LITERAL { Int_Lit($1) }
-	| FLOAT_LITERAL { Float_Lit($1)}
-	| CHAR_LITERAL { Char_Lit($1)}
-	| TRUE { Bool_Lit(true) }
-	| FALSE { Bool_Lit(false) }
-	| ID { Id($1) }
+	  literals	{ $1 }
 	| expr PLUS expr { Binop($1, Add, $3) }
 	| expr MINUS expr { Binop($1, Sub, $3) }
 	| expr TIMES expr { Binop($1, Mult, $3) }
@@ -190,8 +186,16 @@ expr:
 	| LPAREN expr RPAREN { $2 }
 	| ID LPAREN actuals_opt RPAREN { FuncCall($1, $3) }	
 
-
 expr_opt:
 	/* nothing */ { Noexpr }
 	| expr { $1 }
 
+literals:
+	  INT_LITERAL      		{ Int_Lit($1) }
+	| FLOAT_LITERAL    		{ Float_Lit($1) }
+	| TRUE			   		{ Bool_Lit(true) }
+	| FALSE			   		{ Bool_Lit(false) }
+	| STRING_LITERAL   		{ String_Lit($1) }  
+	| CHAR_LITERAL			{ Char_Lit($1) }
+	| ID 			   		{ Id($1) }	
+	| NULL				    { Null }

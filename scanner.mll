@@ -58,6 +58,7 @@ rule token = parse
   | "boolean"   { JBOOLEAN }
   | "true"      { TRUE }
   | "false"     { FALSE }
+  | "null"      { NULL }
 
   (* Classes *)
   | "class"   { CLASS }

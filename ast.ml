@@ -4,6 +4,8 @@ type data_type =
   | JChar 
   | JVoid
   | JBoolean
+  | JFloat
+  | JInt
   | Object of string 
 
   
@@ -33,6 +35,7 @@ type expr =
 	| Float_Lit of float
 	| Char_Lit of char
   | Bool_Lit of bool
+  | String_Lit of string
 	| Noexpr
 	| Binop of expr * op * expr 
   | Unop of op * expr
