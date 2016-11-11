@@ -28,9 +28,11 @@ type formal = {
 
 (* Expressions *)
 type expr =
-	  Int_Lit of int
+    Id of string
+	| Int_Lit of int
 	| Float_Lit of float
-	| Char_Lit of string
+	| Char_Lit of char
+  | Bool_Lit of bool
 	| Noexpr
 	| Binop of expr * op * expr 
 	| Assign of string * expr

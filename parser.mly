@@ -172,9 +172,11 @@ stmt:
 /* expressions */
 
 expr:
-	  INT_LITERAL { Literal($1) }
-	| TRUE { BoolLit(true) }
-	| FALSE { BoolLit(false) }
+	  INT_LITERAL { Int_Lit($1) }
+	| FLOAT_LITERAL { Float_Lit($1)}
+	| CHAR_LITERAL { Char_Lit($1)}
+	| TRUE { Bool_Lit(true) }
+	| FALSE { Bool_Lit(false) }
 	| ID { Id($1) }
 	| expr PLUS expr { Binop($1, Add, $3) }
 	| expr MINUS expr { Binop($1, Sub, $3) }
