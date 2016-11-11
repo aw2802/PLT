@@ -83,11 +83,11 @@ scope:
 	| PUBLIC  { Public }
 
 vdecl:
-	scope datatype ID { VarDecl({ 
+	scope datatype ID {{ 
 		vscope = $1;
 		vtype = $2;
 		vname = $3;
-	}) }
+	}}
 
 
 /* constructors */
