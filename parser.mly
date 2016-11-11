@@ -43,17 +43,17 @@ cdecl_list:
 	  cdecl 	{ [$1] } 
 	| cdecl_list cdecl { $2::$1 } 
 
+scope:
+	  PRIVATE { Private }
+	| PUBLIC  { Public }
+
 cdecl:
 		scope CLASS ID LBRACE cbody RBRACE { {
 			cscope = $1;
 			cname = $3;
 			cbody = $5
 		} }
-	| 	scope CLASS ID LBRACE cbody RBRACE { {
-			cscope = $1;
-			cname = $3;
-			cbody = $5
-		} }
+		
 
 cbody: /* make sure defined in ast, rename to variables */
 	/* nothing */ { { 
@@ -76,11 +76,6 @@ cbody: /* make sure defined in ast, rename to variables */
 			constructors = $1.constructors;
 			methods = $2 :: $1.methods;
 		} }
-
-/* variables */
-scope:
-	  PRIVATE { Private }
-	| PUBLIC  { Public }
 
 vdecl:
 	scope datatype ID {{ 
