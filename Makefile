@@ -1,9 +1,9 @@
-OBJS = ast.cmo parser.cmo scanner.cmo javamp.cmo 
+OBJS = ast.cmo parser.cmo scanner.cmo javapm.cmo 
 
 YACC = ocamlyacc
 
-javamp: $(OBJS)
-	ocamlc -o javamp $(OBJS)
+javapm: $(OBJS)
+	ocamlc -o javapm $(OBJS)
 
 scanner.ml: scanner.mll
 	ocamllex scanner.mll
@@ -19,11 +19,11 @@ parser.ml parser.mli: parser.mly
 
 .PHONY: clean
 clean:
-	rm -f javamp parser.ml parser.mli scanner.ml \
-	    *.cmo *.cmi *.out *.diff *.output javamp *.dSYM
+	rm -f javapm parser.ml parser.mli scanner.ml \
+	    *.cmo *.cmi *.out *.diff *.output javapm *.dSYM
 
 .PHONY: all
-all: clean javamp
+all: clean javapm
 
 ast.cmo :
 ast.cmx :
@@ -31,6 +31,6 @@ parser.cmo : ast.cmo parser.cmi
 parser.cmx : ast.cmx parser.cmi
 scanner.cmo : parser.cmi
 scanner.cmx : parser.cmx
-javamp.cmo :
-javamp.cmx :
+javapm.cmo :
+javapm.cmx :
 parser.cmi : ast.cmo
