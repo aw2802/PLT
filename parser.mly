@@ -135,10 +135,12 @@ formals_opt: /* nothing */ { [] }
 
 formal_list: 
 	  datatype ID { 
-	  	[ { vtype = $1;
+	  	[ { vscope = Private;
+	  		vtype = $1;
 	  		vname = $2; } ] }
 	| formal_list COMMA datatype ID 
-		{ { vtype = $3;
+		{ { vscope = Private;
+			vtype = $3;
 			vname = $4;
 			} 
 			:: $1 
