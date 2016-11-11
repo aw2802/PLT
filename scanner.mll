@@ -4,12 +4,11 @@ let whitespace = [' ' '\t' '\r' '\n']
 let ascii = ([' '-'!' '#'-'[' ']'-'~'])
 let alpha = ['a'-'z' 'A'-'Z']
 let digit = ['0'-'9']
-let inty = digit+ 
-let floaty = (digit+) '.' (digit+)
-(* @TODO: if all we have are numbers (floats) what to do with ints? *)
+let int = digit+ 
+let float = (digit+) '.' (digit+)
 
 let id = (alpha | '_') (alpha | digit | '_')*
-let chary = ''' (ascii) '''
+let char = ''' (ascii) '''
 
 rule token = parse 
 	whitespace { token lexbuf }
@@ -53,21 +52,22 @@ rule token = parse
 
   (* Primitive Data Types and Return Types *)
   | "char"      { JCHAR }
-  (**| "number"    { FLOAT }**)
+  | "int"       { JINT }
+  | "float"     { JFLOAT }
   | "void"      { JVOID }
   | "boolean"   { JBOOLEAN }
   | "true"      { TRUE }
   | "false"     { FALSE }
 
   (* Classes *)
-  | "class"     { CLASS }
-  | "new" 	{ NEW 	}
+  | "class"   { CLASS }
+  | "new" 	  { NEW 	}
   | "public"	{ PUBLIC }
   | "private"	{ PRIVATE }
   
-  | inty as lxm    { INT_LITERAL(int_of_string lxm) }
-  | floaty as lxm  { FLOAT_LITERAL(float_of_string lxm) }
-  | chary as lxm   { CHAR_LITERAL(String.get lxm 1) }
+  | int as lxm    { INT_LITERAL(int_of_string lxm) }
+  | float as lxm  { FLOAT_LITERAL(float_of_string lxm) }
+  | char as lxm   { CHAR_LITERAL(String.get lxm 1) }
   | '"'( ('\\'('/'|'\\'| 'b' | 'f' | 'n' | 'r' | 't'))|([^'"']) )*'"' as lxm { STRING_LITERAL(lxm) }
   | id as lxm      { ID(lxm) }
   | eof           { EOF }
@@ -80,21 +80,3 @@ and comment = parse
 and singleComment = parse
   '\n' { token lexbuf }
 | _    { singleComment lexbuf }
-
-(* from https://realworldocaml.org/v1/en/html/parsing-with-ocamllex-and-menhir.html, to be modified *)
-(**and read_string buf =
-  parse
-  | '"'       { STRING (Buffer.contents buf) }
-  | '\\' '/'  { Buffer.add_char buf '/'; read_string buf lexbuf }
-  | '\\' '\\' { Buffer.add_char buf '\\'; read_string buf lexbuf }
-  | '\\' 'b'  { Buffer.add_char buf '\b'; read_string buf lexbuf }
-  | '\\' 'f'  { Buffer.add_char buf '\012'; read_string buf lexbuf }
-  | '\\' 'n'  { Buffer.add_char buf '\n'; read_string buf lexbuf }
-  | '\\' 'r'  { Buffer.add_char buf '\r'; read_string buf lexbuf }
-  | '\\' 't'  { Buffer.add_char buf '\t'; read_string buf lexbuf }
-  | [^ '"' '\\']+
-    { Buffer.add_string buf (Lexing.lexeme lexbuf);
-      read_string buf lexbuf
-    }
-  | _ { raise (SyntaxError ("Illegal string character: " ^ Lexing.lexeme lexbuf)) }
-  | eof { raise (SyntaxError ("String is not terminated")) }**)
