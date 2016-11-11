@@ -35,13 +35,13 @@
 %%
 
 program:
-	cdecls EOF { $1 } 
+	cdecls EOF { Program($1) } 
 
-cdecls: cdecl_list { List.rev $1 } /* REVERSE ???! */
+cdecls: cdecl_list { List.rev $1 } 
 
 cdecl_list: 
-	  cdecl 	{ [$1] } /* BRACES WTF  */
-	| cdecl_list cdecl { $2::$1 } /* WE DON'T GET LISTS */
+	  cdecl 	{ [$1] } 
+	| cdecl_list cdecl { $2::$1 } 
 
 cdecl:
 		scope CLASS ID LBRACE cbody RBRACE { {
