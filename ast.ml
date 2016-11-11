@@ -35,7 +35,9 @@ type expr =
   | Bool_Lit of bool
 	| Noexpr
 	| Binop of expr * op * expr 
+  | Unop of op * expr
 	| Assign of string * expr
+  | FuncCall of string * expr list  
 	| Null 
 
 (* Statements *)

@@ -193,7 +193,7 @@ expr:
 	| NOT expr { Unop(Not, $2) }
 	| ID ASSIGN expr { Assign($1, $3) }
 	| LPAREN expr RPAREN { $2 }
-	| ID LPAREN actuals_opt RPAREN { Call($1, $3) }	
+	| ID LPAREN actuals_opt RPAREN { FuncCall($1, $3) }	
 
 
 expr_opt:
