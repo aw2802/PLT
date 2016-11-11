@@ -141,14 +141,9 @@ formals_opt: /* nothing */ { [] }
 
 formal_list: 
 	  formal { 
-	  	[ { $1
-} ] }
-	| formal_list COMMA datatype ID 
-		{ { 
-			vtype = $3;
-			vname = $4;
-			} 
-			:: $1 
+	  	[$1] }
+	| formal_list COMMA formal
+		{ $3 :: $1 
 		}
 
 actuals_opt:
