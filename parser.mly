@@ -127,7 +127,7 @@ type_tag:
 	| name	  { Object($1) }
 
 datatype:
-	type_tag   { Data_type($1) }
+	type_tag   { $1 }
 
 
 formals_opt: /* nothing */ { [] }
