@@ -14,6 +14,8 @@ OR | AND | NOT
 
 type scope = Private | Public
 
+type formal = Formal of data_type * string 
+
 (* Variable Declarations *)
 type vdecl = {
   vscope: scope;
@@ -45,7 +47,7 @@ type stmt =
 type func_decl = {
   fscope : scope;
   fname : string; (* name of the function *)
-  fformals : vdecl list; (* formal params *)
+  fformals : formal list; (* formal params *)
   freturn : data_type; (* return type *)
   fbody : stmt list; (* statements, including local variable declarations *)
 }

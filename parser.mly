@@ -146,7 +146,7 @@ formal_list:
 			:: $1 
 		}
 
-		formal:
+formal:
 	datatype ID { Formal($1, $2) }
 
 actuals_opt:
