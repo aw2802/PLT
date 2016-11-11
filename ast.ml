@@ -14,11 +14,14 @@ OR | AND | NOT
 
 type scope = Private | Public
 
-type formal = Formal of data_type * string 
-
 (* Variable Declarations *)
 type vdecl = {
   vscope: scope;
+  vtype: data_type;
+  vname: string;
+}
+
+type formal = {
   vtype: data_type;
   vname: string;
 }
