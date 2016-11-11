@@ -8,8 +8,8 @@ type data_type =
 
   
 (* Operators *)
-type op = Plus | Minus | Divide | Times | Eq | Neq | Lt | Leq | Gt | Geq |
-OR | AND | NOT 
+type op = Add | Sub | Div | Mult | Equal | Neq | Less | Leq | Greater | Geq |
+Or | And | Not
 (* removed assign from op list, may need to add back *)
 
 type scope = Private | Public
