@@ -140,11 +140,8 @@ formals_opt: /* nothing */ { [] }
 	| formal_list { List.rev $1 }
 
 formal_list: 
-	  formal { 
-	  	[$1] }
-	| formal_list COMMA formal
-		{ $3 :: $1 
-		}
+	  formal { [$1] }
+	| formal_list COMMA formal { $3 :: $1 }
 
 actuals_opt:
 		/* nothing */ { [] }
@@ -163,7 +160,7 @@ stmt_list:
 
 stmt:
 	  expr SEMI { Expr $1 }
-	| vdecl SEMI {$1}
+	| vdecl SEMI { VarDecl($1) }
 	| RETURN SEMI { Return Noexpr }
 	| RETURN expr SEMI { Return $2 }
 	| LBRACE stmt_list RBRACE { Block(List.rev $2) }
