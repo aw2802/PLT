@@ -86,8 +86,8 @@ vdecl:
 
 
 /* constructors */
-constructor: /* how to reference class name? CONSTRUCTOR SHOULD BE CNAME*/     
-	name /* vs constructor?*/ LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE {
+constructor:    
+	ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE {
 		{
 			fscope = Public;
 			fname = $1;
