@@ -156,7 +156,7 @@ stmt_list:
 
 stmt:
 	  expr SEMI { Expr $1 }
-	| vdecl SEMI { VarDecl $1 }
+	| vdecl SEMI { VarDecl ($1) }
 	| RETURN SEMI { Return Noexpr }
 	| RETURN expr SEMI { Return $2 }
 	| LBRACE stmt_list RBRACE { Block(List.rev $2) }
