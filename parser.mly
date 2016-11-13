@@ -78,7 +78,7 @@ cbody: /* make sure defined in ast, rename to variables */
 		} }
 
 vdecl:
-	scope datatype ID {{ 
+	scope datatype ID SEMI{{ 
 		vscope = $1;
 		vtype = $2;
 		vname = $3;
@@ -156,7 +156,7 @@ stmt_list:
 
 stmt:
 	  expr SEMI { Expr $1 }
-	| vdecl SEMI { VarDecl ($1) }
+	| vdecl { VarDecl ($1) }
 	| RETURN SEMI { Return Noexpr }
 	| RETURN expr SEMI { Return $2 }
 	| LBRACE stmt_list RBRACE { Block(List.rev $2) }
