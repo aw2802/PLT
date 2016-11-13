@@ -115,12 +115,9 @@ primitive:  JCHAR 		{ JChar }
 		  | JBOOLEAN 	{ JBoolean }
 		  | JVOID 		{ JVoid }
 
-name:
-	CLASS ID { $2 }
-
 type_tag:
 	  primitive { $1 }
-	| name	  { Object($1) }
+	| CLASS ID	{ Object($2) }
 
 datatype:
 	type_tag   { $1 }
