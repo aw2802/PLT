@@ -1,11 +1,16 @@
+open Ast
 
-let filename = Sys.argv.(1) ^ ".javapm" in
+let _ = print_string("HI");;
 
-let in_channel = open_in Sys.argv.(1) in
+(**
+let _ =
+	let filename = Sys.argv.(1) ^ ".javapm" in
 
-let lexbuf = Lexing.from_channel in_channel in
+	let in_channel = open_in Sys.argv.(1) in
 
-let program = Parser.program Scanner.token lexbuf in
-let outprog = Codegen.stubby program in
+	let lexbuf = Lexing.from_channel in_channel in
 
-print_string (outprog)
+	let program = Parser.program Scanner.token lexbuf in
+	let outprog = Codegen.stubby program in
+
+	print_string ("HIIIIIII");;**)

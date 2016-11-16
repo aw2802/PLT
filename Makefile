@@ -3,7 +3,7 @@ OBJS = ast.cmx parser.cmx scanner.cmx codegen.cmx javapm.cmx
 YACC = ocamlyacc
 
 javapm: $(OBJS)
-	 ocamlfind ocamlopt -linkpkg -package llvm -package llvm.analysis -o javapm 
+	ocamlfind ocamlopt -linkpkg -package llvm -package llvm.analysis -o javapm $(OBJS)
 
 scanner.ml: scanner.mll
 	ocamllex scanner.mll
