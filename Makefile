@@ -1,9 +1,9 @@
-OBJS = ast.cmo parser.cmo scanner.cmo javapm.cmo 
+OBJS = ast.cmo parser.cmo scanner.cmo codegen.cmo javapm.cmo 
 
 YACC = ocamlyacc
 
 javapm: $(OBJS)
-	ocamlc -o javapm $(OBJS)
+	 ocamlfind ocamlopt -linkpkg -package llvm -package llvm.analysis -o javapm 
 
 scanner.ml: scanner.mll
 	ocamllex scanner.mll
@@ -16,6 +16,9 @@ parser.ml parser.mli: parser.mly
 
 %.cmi: %.mli
 	ocamlc -c $<
+
+%.cmx: %.ml
+	ocamlfind ocamlopt -c -package llvm $<
 
 .PHONY: clean
 clean:
@@ -31,6 +34,8 @@ parser.cmo : ast.cmo parser.cmi
 parser.cmx : ast.cmx parser.cmi
 scanner.cmo : parser.cmi
 scanner.cmx : parser.cmx
-javapm.cmo :
-javapm.cmx :
+codegen.cmo : ast.cmo
+codegen.cmx : ast.cmx
+javapm.cmo : scanner.cmo parser.cmo codegen.cmo ast.cmo
+javapm.cmx : scanner.cmx parser.cmx codegen.cmx ast.cmx
 parser.cmi : ast.cmo
