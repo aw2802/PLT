@@ -8,5 +8,4 @@ let lexbuf = Lexing.from_channel in_channel in
 let program = Parser.program Scanner.token lexbuf in
 let outprog = Codegen.stubby program in
 
-let headers = outprog 
-		in Printf.fprintf (open_out filename)  headers
+let headers = Printf.fprintf outprog
