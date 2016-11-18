@@ -1,8 +1,5 @@
 open Ast
 
-let _ = print_string("HI");;
-
-(**
 let _ =
 	let filename = Sys.argv.(1) ^ ".javapm" in
 
@@ -13,4 +10,4 @@ let _ =
 	let program = Parser.program Scanner.token lexbuf in
 	let outprog = Codegen.stubby program in
 
-	print_string ("HIIIIIII");;**)
+	print_string ("HIIIIIII");;
