@@ -10,4 +10,4 @@ let _ =
 	let program = Parser.program Scanner.token lexbuf in
 	let outprog = Codegen.stubby program in
 
-	print_string ("HIIIIIII");;
+	print_string (outprog);;
