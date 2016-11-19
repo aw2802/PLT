@@ -7,8 +7,8 @@ type svdecl = {
 }
 
 type sformal = {
-	svtype: data_type;
-	svname: string;
+	sformal_type: data_type;
+	sformal_name: string;
 }
 
 type sexpr = 
