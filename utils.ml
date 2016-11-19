@@ -1,8 +1,6 @@
 (* Pretty Printer *)
 open Ast
 open Parser
-open Parser
-open Processor
 
 (* let save file string =
 	let channel 
@@ -40,6 +38,6 @@ let str_of_op = function
 
 let str_of_vname = function
 		Id(s) -> s;
-
+(**
 let str_of_vdecl =
-	"" ^ str_of_scope vdecl.scope ^ " " ^ str_of_primitives vdecl.vtype ^ " " ^ str_of_vname vdecl.name 
+	"" ^ str_of_scope vdecl.scope ^ " " ^ str_of_primitives vdecl.vtype ^ " " ^ str_of_vname vdecl.name **)

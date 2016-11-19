@@ -2,6 +2,7 @@
 LLVM Code Generator
 *)
 
+open Utils
 open Llvm
 open Hashtbl
 open Ast
@@ -74,7 +75,7 @@ let translate sast =
 	
 	let generate_class_struct c = 
 		let class_t = Hashtbl.find class_type_table c.scname in
-		let scope_list = List.map (function svdecl -> svdecl.svscope) c.scbody.svariables in 
+		let scope_list = List.map (function svdecl -> str_of_scope svdecl.svscope) c.scbody.svariables in 
 		let type_list = List.map (function svdecl -> get_llvm_type svdecl.svtype) c.scbody.svariables in 
 		let name_list = List.map (function svdecl -> svdecl.svname) c.scbody.svariables in
 		let scope_list = "scope" :: scope_list in
@@ -84,7 +85,7 @@ let translate sast =
 		List.iteri (
 			fun i f ->
 			let n = c.scname ^ "." ^ f ^ "_" ^ List.nth scope_list i in
-			Hastbl.add class_variable_idx_table n i;
+			Hashtbl.add class_variable_idx_table n i;
 			)
 		name_list;
 		(* @TODO: scope_list --> an array for const access + figure out how to deal
