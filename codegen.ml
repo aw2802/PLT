@@ -35,5 +35,14 @@ let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *
 	| _ -> raise(Failure("Invalid Data Type"))
 	(** | A.Object --> @TODO **) 
 
+let find_func_in_module fname = 
+	match (L.lookup_function fname the_module) with
+		  None -> raise(Failure("Function: " ^ fname ^ " not found in module."))
+		| Some f -> f
 
+(** code gen top level begins here **)
+(**
+let translate ast = 
+	
+	let classes = ast.**) 
 		
