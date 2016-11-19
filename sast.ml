@@ -44,7 +44,7 @@ type func_type = User | Reserved
 type sfunc_decl = {
 	sfscope: scope;
 	sfname: string;
-	sfformals: formal list;
+	sfformals: sformal list;
 	sfreturn: data_type;
 	sfbody: sstmt list;
 	functype: func_type;
@@ -60,7 +60,7 @@ type scbody = {
 type sclass_decl = {
 	scscope: scope;
 	scname: string;
-	scbody: cbody;
+	scbody: scbody;
 }
 
 type sprogram = {
