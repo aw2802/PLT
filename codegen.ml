@@ -26,6 +26,7 @@ let str_t = L.pointer_type i8_t;;
 let void_t = L.void_type context;; (* void *)
 
 let class_type_table:(string, lltype) Hashtbl.t = Hashtbl.create 100
+let class_variable_idx_table:(string, int) Hashtbl.t = Hashtbl.create 100
 
 let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	  A.JChar -> i8_t
@@ -62,12 +63,50 @@ let translate sast =
 	let _ = util_func () in
 	
 	(** begin generating class structure here **)
+	
+	(* for each class in the program, add classname --> class_type mapping *)
 	let add_class_type_table cls = 
 		let class_type = L.named_struct_type context cls.scname in
 		Hashtbl.add class_type_table cls.scname class_type
 	in
 	
 	let _ = List.map add_class_type_table classes in 
-	print_endline("hi");
-	(**let get_vdecl_type 
-	let class_struc	**)
+	
+	let generate_class_struct c = 
+		let class_t = Hashtbl.find class_type_table c.scname in
+		let scope_list = List.map (function svdecl -> svdecl.svscope) c.scbody.svariables in 
+		let type_list = List.map (function svdecl -> get_llvm_type svdecl.svtype) c.scbody.svariables in
+		let name_list = List.map (function svdecl -> svdecl.svname) c.scbody.svariables in
+		let scope_list = "scopey" :: scope_list in
+		let type_list = i32_t :: type_list in
+		let name_list = ".key"  :: name_list in
+		let type_array = (Array.of_list type_list) in
+		List.iteri (
+			fun i f ->
+			let n = c.scname ^ "." ^ f ^ "_" ^ List.nth scope_list i in
+			Hastbl.add class_variable_idx_table n i;
+			)
+		name_list;
+		(* @TODO: scope_list --> an array for const access + figure out how to deal
+		with scoping issues re: storing a var's scope *)
+
+		L.struct_set_body class_t type_array true
+	in
+	let _ = List.map generate_class_struct classes in
+	
+	(** function definition begins here **)
+	let func_define sfdecl = 
+		
+		let fscope = sfdecl.sfscope in
+		let fname = sfdecl.sfname in
+		let is_actual_param = ref false in
+		let params = List.map (fun f -> get_llvm_type f.svtype) sfdecl.sfformals in
+		let fty = L.function_type (get_llvm_type sfdecl.sfreturn) (Array.of_list params)
+		in
+		L.define_function fname fty the_module
+	in
+	let _ = List.map func_define functions in
+	
+	(** function generation utils begins here **)
+	print_endline("woohoooooo");;
+		
