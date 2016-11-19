@@ -1,7 +1,6 @@
 (* Pretty Printer *)
-open Ast
-open Parser
 
+open Ast
 (* let save file string =
 	let channel 
 

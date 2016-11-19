@@ -101,7 +101,7 @@ let translate sast =
 		let fscope = sfdecl.sfscope in
 		let fname = sfdecl.sfname in
 		let is_actual_param = ref false in
-		let params = List.map (fun f -> get_llvm_type f.svtype) sfdecl.sfformals in
+		let params = List.map (fun f -> get_llvm_type f.sformal_type) sfdecl.sfformals in
 		let fty = L.function_type (get_llvm_type sfdecl.sfreturn) (Array.of_list params)
 		in
 		L.define_function fname fty the_module
@@ -109,5 +109,42 @@ let translate sast =
 	let _ = List.map func_define functions in
 	
 	(** function generation utils begins here **)
-	print_endline("woohoooooo");;
-		
+	let rec stmt_gen llbuilder = function
+	  SBlock sl	 -> List.hd (List.map (stmt_gen llbuilder) sl)
+	(*@TODO	| SVarDecl vdecl -> *)
+	| SReturn (e,d)	 -> 
+		let return_gen d expr llbuilder = 
+			match expr with
+				SId(name, d) ->
+				 (match d with 
+				 (* @TODO Object *)
+				 | SNoexpr -> L.build_return_void llbuilder
+				 | _ 	   -> L.build_ret (expr_gen llbuilder expr) llbuilder
+			in
+			return_gen d e builder
+	| SExpr (se, _)  -> expr_gen llbuilder se
+	
+	(* control flow *)
+	| SIf (e, s1, s2)->
+		let if_gen expr then_stmt else_stmt llbuilder = 
+			let condition = expr_gen llbuilder expr in
+			let start_block = L.insertion_block llbuilder in
+			let parent_block = L.block_parent start_block in
+			let then_block   = L.appen_block context "then" parent_function in
+			L.position_at_end then_block llbuilder;
+
+			let then_val = stmt_gen llbuilder then_stmt in
+			let new_then_block = L.insertion_block llbuilder in
+			let else_block = L.append_block context "else" parent_function in
+			L.position_at_end else_block llbuilder;
+
+			let else_val = stmt_gen llbuilder else_stmt in
+			let new_else_block = L.insertion_block llbuilder in
+			let merge_block = L.append_block context "ifcont" parent_function in
+			L.position_at_end merge_block builder;
+
+			let incoming = [(then_val, new_then_block); (else_val, new_else_block)] in
+			let phi = L.build_phi incoming "iftmp" builder in
+			L.position_at_end start_block llbuilder;
+			
+

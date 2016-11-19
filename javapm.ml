@@ -1,4 +1,5 @@
 open Ast
+open Sast
 
 let _ =
 	let filename = Sys.argv.(1) ^ ".javapm" in
@@ -7,7 +8,8 @@ let _ =
 
 	let lexbuf = Lexing.from_channel in_channel in
 
-	let program = Parser.program Scanner.token lexbuf in
-	let outprog = Codegen.stubby program in
-
-	print_string (outprog);;
+	let ast  = Parser.program Scanner.token lexbuf in
+(**	let sast = Semant.check ast in
+	let outprog = Codegen.translate sast in
+	print_string (outprog);;**)
+	print_string ("hi");
