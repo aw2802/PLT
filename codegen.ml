@@ -201,6 +201,33 @@ let translate sast =
 				| And	-> L.build_and e1 e2 "and_tmp" llbuilder
 				| Or	-> L.build_or e1 e2 "or_tmp" llbuilder
 				| _ 	-> raise(Failure("Invalid Operator for integer"))
-			in print_string ("hallo")
+			in
+			let binop_type_cast lhs rhs lhsType rhsType llbuilder = 
+				match (lhsType, rhsType) with
+				  JInt, JInt	 -> (lhs, rhs), JInt
+				| JInt, JChar	 -> (build_uitofp lhs i8_t "tmp" llbuilder, rhs), JChar
+				| JInt, JFloat -> (build_sitofp lhs f_t "tmp" llbuilder, rhs), JFloat
+				| JChar, JInt  -> (lhs, build_uitofp rhs i8_t "tmp" llbuilder), JChar
+				| JChar, JChar -> (lhs, rhs), JChar
+				| JBoolean, JBoolean -> (lhs, rhs), JBoolean
+				| JFloat, JInt -> (lhs, build_sitofp rhs f_t "tmp" llbuilder), JFloat
+				| JFloat, JFloat 	-> (lhs, rhs), JFloat
+				| 	_ -> raise (Failure("binop type not supported"))
+			in 
+			let (e1, e2), d = binop_type_cast e1 e2 type1 type2 llbuilder 
+			in
+			
+			let type_handler d = match d with (** missing object **)
+				JFloat   -> float_ops op e1 e2
+			|	JInt
+			|   JBoolean 
+			| 	JChar 	-> 	int_ops op e1 e2
+			|   _ -> raise (Failure("Invalid binop type"))
+			
+			in
+			type_handler d
+		in
+		binop_gen e1 op e2 d llbuilder
+
 		in
 		print_string ("wahoo");;
