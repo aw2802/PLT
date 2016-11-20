@@ -107,7 +107,8 @@ let translate sast =
 		L.define_function fname fty the_module
 	in
 	let _ = List.map func_define functions in
-	
+the_module;
+(*	
 	(** function generation utils begins here **)
 	let rec stmt_gen llbuilder = function
 	  SBlock sl	 -> List.hd (List.map (stmt_gen llbuilder) sl)
@@ -245,4 +246,4 @@ let translate sast =
 	| SFunCall (fname, param_list, d, _) -> "stubbed"
  
 			
-			
+*)			
