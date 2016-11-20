@@ -128,8 +128,8 @@ let translate sast =
 		let if_gen expr then_stmt else_stmt llbuilder = 
 			let condition = expr_gen llbuilder expr in
 			let start_block = L.insertion_block llbuilder in
-			let parent_block = L.block_parent start_block in
-			let then_block   = L.appen_block context "then" parent_function in
+			let parent_function = L.block_parent start_block in
+			let then_block   = L.append_block context "then" parent_function in
 			L.position_at_end then_block llbuilder;
 
 			let then_val = stmt_gen llbuilder then_stmt in
@@ -158,4 +158,15 @@ let translate sast =
 	| SFor (se1, se2, se3, s) -> for_gen se1 se2 se3 s llbuilder
 	| SWhile (se, s)	  -> while_gen se s llbuilder
 
-
+	(* expression generation *)
+	and expr_gen llbuilder = function
+		  SInt_Lit (i)		-> L.con_int i32_t i
+		| SBoolean_Lit (b)	-> if b then L.const_int i1_t 1 else L.const_int i1_t 0
+		| SFloat_Lit (f)	-> L.const_int f_t (Char.code c)
+		| SString_Lit (s)	-> L.build_global_stringptr s "tmp" llbuilder
+		| SChar_Lit (c)		-> L.const_int i8_t (Char.code c)
+		| SNull			-> L.const_null (**@TODO double check this**) 
+		| SId (id, d)		-> id_gen true false is d llbuilder
+		
+in
+print_endline ("End codegen`");
