@@ -115,11 +115,10 @@ let translate sast =
 	| SReturn (e,d)	 -> 
 		let return_gen d expr llbuilder = 
 			match expr with
-				SId(name, d) ->
-				 (match d with 
-				 (* @TODO Object *)
-				 | SNoexpr -> L.build_return_void llbuilder
-				 | _ 	   -> L.build_ret (expr_gen llbuilder expr) llbuilder
+				(* @TODO SId(name, d) -> *)
+				(* @TODO Object *)
+				 SNoexpr -> build_ret_void llbuilder
+				| _ 	  -> build_ret (expr_gen llbuilder expr) llbuilder
 			in
 			return_gen d e builder
 	| SExpr (se, _)  -> expr_gen llbuilder se
@@ -146,5 +145,17 @@ let translate sast =
 			let incoming = [(then_val, new_then_block); (else_val, new_else_block)] in
 			let phi = L.build_phi incoming "iftmp" builder in
 			L.position_at_end start_block llbuilder;
-			
+			ignore (build_cond_br condition then_block else_block llbuilder);
+			position_at_end new_then_block llbuilder;
+			ignore (build_br merge_block llbuilder);
+			position_at_end new_else_block llbuilder;
+			ignore (build_br merge_block llbuilder);
+			(* set the builder to the end of the merge *)
+			L.position_at_end merge_block llbuilder;
+			phi
+		in
+		if_gen e s1 s2 llbuilder
+	| SFor (se1, se2, se3, s) -> for_gen se1 se2 se3 s llbuilder
+	| SWhile (se, s)	  -> while_gen se s llbuilder
+
 
