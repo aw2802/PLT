@@ -168,6 +168,7 @@ let translate sast =
 		| SNull			-> L.const_null (**@TODO double check this**) 
 		| SId (id, d)		-> id_gen true false id d llbuilder
 		| SBinop (e1, op, e2, d) -> 
+		     let binop_gen e1 op e2 d llbuilder =
 			let t1 = Semant.typeOfSexpr e1 in
 			let t2 = Semant.typeOfSexpr e2 in
 			let e1 = expr_gen llbuilder e1 in
@@ -218,16 +219,30 @@ let translate sast =
 			in
 			
 			let type_handler d = match d with (** missing object **)
-				JFloat   -> float_ops op e1 e2
-			|	JInt
-			|   JBoolean 
-			| 	JChar 	-> 	int_ops op e1 e2
-			|   _ -> raise (Failure("Invalid binop type"))
+				  JFloat   -> float_ops op e1 e2
+				| JInt
+				| JBoolean 
+				| JChar    -> int_ops op e1 e2
+				| _ -> raise (Failure("Invalid binop type"))
 			
 			in
 			type_handler d
 		in
 		binop_gen e1 op e2 d llbuilder
-
-		in
-		print_string ("wahoo");;
+	| SUnop (op, e, d) -> 
+		let unop_gen op e d llbuilder = 
+			let exp_t = Semant.typeOfSexpr e in
+			let e = expr_gen llbuilder e
+			let unop op exp_t e = match (op, exp_t) with
+			  (Not, JBoolean) -> L.build_not e "unot_tmp" llbuilder
+			| _ -> raise (Failure("unop not supported")) 
+			in
+			let unop_type_handler d = match d with
+				JBoolean -> unops op e_type e
+				| _ -> raise(Failure("invlaid unop type ")
+			in unop_type_handler d
+		in unop_gen op e d llbuilder
+	| SFunCall (fname, param_list, d, _) -> "stubbed"
+ 
+			
+			
