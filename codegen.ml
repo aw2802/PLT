@@ -166,7 +166,41 @@ let translate sast =
 		| SString_Lit (s)	-> L.build_global_stringptr s "tmp" llbuilder
 		| SChar_Lit (c)		-> L.const_int i8_t (Char.code c)
 		| SNull			-> L.const_null (**@TODO double check this**) 
-		| SId (id, d)		-> id_gen true false is d llbuilder
-		
-in
-print_endline ("End codegen`");
+		| SId (id, d)		-> id_gen true false id d llbuilder
+		| SBinop (e1, op, e2, d) -> 
+			let t1 = Semant.typeOfSexpr e1 in
+			let t2 = Semant.typeOfSexpr e2 in
+			let e1 = expr_gen llbuilder e1 in
+			let e2 = expr_gen llbuilder e2 in
+			let float_operations op e1 e2 =	
+				match op with (** examine O vs U **)
+				  Add 	-> L.build_fadd e1 e2 "fadd_tmp" llbuilder
+				| Sub 	-> L.build_fsub e1 e2 "fsub_tmp" llbuilder
+				| Mult 	-> L.build_fmul e1 e2 "fmult_tmp" llbuilder
+				| Div 	-> L.build_fdiv e1 e2 "fdiv_tmp" llbuilder
+				| Equal -> L.build_fcmp e1 e2 Fcmp.Oeq e1 e2 "feq_tmp" llbuilder
+				| Neq -> L.build_fcmp Fcmp.One e1 e2 "fneq_tmp" llbuilder 	
+				| Less -> L.build_fcmp Fcmp.Ult e1 e2 "fless_tmp" llbuilder
+				| Leq -> L.build_fcmp Fcmp.Ole e1 e2 "fleq_tmp" llbuilder
+				| Greater -> L.build_fcmp Fcmp.Ogt e1 e2 "fgreat_tmp" llbuilder
+				| Geq -> L.build_fcmp Fcmp.Oge e1 e2 "fgeq_tmp" llbuilder
+				| _ -> raise(Failure("Invalid operator for floats."))
+			in 
+			let int_operations op e1 e2 = 
+				match op with 
+				| Add	-> L.build_add e1 e2 "add_tmp" llbuilder
+				| Sub 	-> L.build_sub e1 e2 "sub_tmp" llbuilder
+				| Mult 	-> L.build_mul e1 e2 "mult_tmp" llbuilder
+				| Div 	-> L.build_sdiv e1 e2 "div_tmp" llbuilder
+				| Equal	-> L.build_icmp Icmp.Eq e1 e2 "eq_tmp" llbuilder
+				| Neq 	-> L.build_icmp Icmp.Ne	e1 e2 "neq_tmp" llbuilder
+				| Less	-> L.build_icmp Icmp.Slt e1 e2 "less_tmp" llbuilder
+				| Leq 	-> L.build_icmp Icmp.Sle e1 e2 "leq_tmp" llbuilder
+				| Greater -> L.build_icmp Icmp.Sgt e1 e2 "great_tmp" llbuilder
+				| Geq	-> L.build_icmp Icmp.Sge e1 e2 "geq_tmp" llbuilder
+				| And	-> L.build_and e1 e2 "and_tmp" llbuilder
+				| Or	-> L.build_or e1 e2 "or_tmp" llbuilder
+				| _ 	-> raise(Failure("Invalid Operator for integer"))
+			in print_string ("hallo")
+		in
+		print_string ("wahoo");;
