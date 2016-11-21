@@ -26,6 +26,9 @@ let f_t = L.double_type context;; (* float *)
 let str_t = L.pointer_type i8_t;; 
 let void_t = L.void_type context;; (* void *)
 
+let local_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100
+let formals_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100
+
 let class_type_table:(string, lltype) Hashtbl.t = Hashtbl.create 100
 let class_variable_idx_table:(string, int) Hashtbl.t = Hashtbl.create 100
 
@@ -155,17 +158,18 @@ let translate sast =
 			phi
 		in
 		if_gen e s1 s2 llbuilder
-	| SFor (se1, se2, se3, s) -> for_gen se1 se2 se3 s llbuilder
-	| SWhile (se, s)	  -> while_gen se s llbuilder
+(**	| SFor (se1, se2, se3, s) -> for_gen se1 se2 se3 s llbuilder
+	| SWhile (se, s)	  -> while_gen se s llbuilder **) 
+(** comment out above lines until for_gen and while_gen are defined **)
 
 	(* expression generation *)
 	and expr_gen llbuilder = function
-		  SInt_Lit (i)		-> L.con_int i32_t i
+		  SInt_Lit (i)		-> L.const_int i32_t i
 		| SBoolean_Lit (b)	-> if b then L.const_int i1_t 1 else L.const_int i1_t 0
-		| SFloat_Lit (f)	-> L.const_int f_t (Char.code c)
+		| SFloat_Lit (f)	-> L.const_float f_t f
 		| SString_Lit (s)	-> L.build_global_stringptr s "tmp" llbuilder
 		| SChar_Lit (c)		-> L.const_int i8_t (Char.code c)
-		| SNull			-> L.const_null (**@TODO double check this**) 
+	(**	| SNull			-> L.const_null @TODO double check this**) 
 		| SId (id, d)		-> id_gen true false id d llbuilder
 		| SBinop (e1, op, e2, d) -> 
 		     let binop_gen e1 op e2 d llbuilder =
@@ -232,17 +236,17 @@ let translate sast =
 	| SUnop (op, e, d) -> 
 		let unop_gen op e d llbuilder = 
 			let exp_t = Semant.typeOfSexpr e in
-			let e = expr_gen llbuilder e
+			let e = expr_gen llbuilder e in
 			let unop op exp_t e = match (op, exp_t) with
-			  (Not, JBoolean) -> L.build_not e "unot_tmp" llbuilder
-			| _ -> raise (Failure("unop not supported")) 
+			    (Not, JBoolean) -> L.build_not e "unot_tmp" llbuilder
+			  | _ -> raise (Failure("unop not supported")) 
 			in
 			let unop_type_handler d = match d with
-				JBoolean -> unops op e_type e
-				| _ -> raise(Failure("invlaid unop type ")
+				  JBoolean -> unops op e_type e
+				| _ -> raise(Failure("invlaid unop type "))
 			in unop_type_handler d
 		in unop_gen op e d llbuilder
-	| SFunCall (fname, param_list, d, _) -> 
+	| SFuncCall (fname, param_list, d, _) -> 
 		let reserved_func_gen llbuilder d expr_list = function
 			"print" -> print_func_gen expr_list llbuilder
 			| _ as call_name -> raise(Failure("function call not found: "^ call_name))
@@ -257,7 +261,9 @@ let translate sast =
   		let zero = const_int i32_t 0 in
   		let s = build_in_bounds_gep s [| zero |] "" llbuilder in
 
-  		L.build_call printf [| s |] "" builder in
+  		L.build_call printf [| s |] "" builder
+	in
+	print_string("hi");
 
 (*
 	and print_func_gen expr_list llbuilder =
@@ -298,7 +304,7 @@ let translate sast =
 		let zero = const_int i32_t 0 in
 		let s = L.build_in_bounds_gep s [| zero |] "tmp" llbuilder in
 		L.build_call printf (Array.of_list (s :: params)) "tmp" builder
-*)
+
 
 	and for_gen start cond step body llbuilder = 
 		let preheader_bb = L.insertion_block llbuilder in
@@ -312,4 +318,4 @@ let translate sast =
 		let build_func sfdecl =
 			Hashtbl.clear local_var_table;
 			Hashtbl.clear formal_table;
-			let fname = string_of_name sfdecl.sfname in
+			let fname = string_of_name sfdecl.sfname in **)
