@@ -73,10 +73,11 @@ let get_main m =
 			} 
 
 		in
+		let get_classes = get_main sprogram.classes in
 		let sprogram = 
 			{classes = List.map convertClassToSast classes;
 			 functions = [];
-			 main = get_main classes;
+			 main = get_classes;
 			 reserved = [];
 			}
 		in
