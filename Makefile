@@ -1,4 +1,4 @@
-OBJS = ast.cmx sast.cmx parser.cmx scanner.cmx utils.cmx semant.cmo codegen.cmx javapm.cmx
+OBJS = ast.cmx sast.cmx parser.cmx scanner.cmx utils.cmx semant.cmx codegen.cmx javapm.cmx
 
 YACC = ocamlyacc
 
