@@ -8,10 +8,6 @@ let createClassIndices cdecls=
 	Hashtbl.add classIndices cdecl.cname index in (*scope handling is missing*)
 	List.iteri classHandler cdecls
 
- (* Translates Ast to Sast *)
-let check program = match program with
-	 Program (classes) -> ignore (createClassIndices classes)
-	| _ -> raise (Failure ("Invalid classs syntax"));
 	
 	let convertToSast classes =
 		let convertVdeclToSast vdecl = 
@@ -72,7 +68,9 @@ let check program = match program with
 			} 
 
 		in
-		let sclasses = ignore (List.map convertClassToSast classes)
-	in
-	let sast = convertToSast classes in
-		sast
+		List.map convertClassToSast classes
+
+ (* Translates Ast to Sast *)
+let check program = match program with
+         Program (classes) -> convertToSast classes
+
