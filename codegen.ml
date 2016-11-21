@@ -247,7 +247,7 @@ let translate sast =
 				| _ -> raise(Failure("Invalid unop type "))
 			in unop_type_handler d
 		in unop_gen op e d llbuilder *)
-	| SFuncCall (fname, param_list, d, _) -> 
+	| SFuncCall (fname, expr_list, d, _) -> 
 		let reserved_func_gen llbuilder d expr_list = function
 			  "print" -> print_func_gen expr_list llbuilder
 			| _ as call_name -> raise(Failure("function call not found: "^ call_name))
@@ -270,7 +270,7 @@ let translate sast =
 			let f = L.define_function "main" fty the_module in 	
 			let llbuilder = L.builder_at_end context (L.entry_block f) in
 			
-			let _ = stmt_gen llbuilder (SBlock (main.sbody)) in 
+			let _ = stmt_gen llbuilder (SBlock (main.sfbody)) in 
 			
 			
 			L.build_ret (L.const_int i32_t 0) llbuilder
