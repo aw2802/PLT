@@ -21,12 +21,14 @@ let check program = match program with
 			svname  = vdecl.vname;
 		}
 
-		and convertFormalToSast formal =
+		in 
+		let convertFormalToSast formal =
 		{
 			sformal_type = formal.vtype;
 			sformal_name = formal.vname;
 		}
-		in rec convertExprToSast expr = match expr with
+		in
+		let rec convertExprToSast expr = match expr with
 			  Int_Lit(i)	-> SInt_Lit(i)
 			| Bool_Lit(b)	-> SBoolean_Lit(b)
 			| Float_Lit(f)	-> SFloat_Lit(f)
@@ -40,17 +42,17 @@ let check program = match program with
 			| FuncCall(s, el)		-> SFuncCall(s, (List.map convertExprToSast el), JInt, 1)
 			| Unop(op, expr)		-> SUnop(op, convertExprToSast expr, JInt)
 
-			in
-			let rec convertStmtToSast stmt = match stmt with
-				  Block(sl)			-> SBlock(List.map convertStmtToSast sl)
-				| Expr(expr)			-> SExpr(convertExprToSast expr, JInt)
-				| VarDecl(vdecl)		-> SVarDecl(convertVdeclToSast vdecl, JInt, "str")
-				| Return(expr)  		-> SReturn(convertExprToSast expr, JInt)
-				| If(expr, stmt1, stmt2)	-> SIf(convertExprToSast expr, convertStmtToSast stmt1, convertStmtToSast stmt2)
-				| For(expr1, expr2, expr3, stmt)-> SFor(convertExprToSast expr1, convertExprToSast expr2, convertExprToSast expr3, convertStmtToSast stmt)
-				| While(expr, stmt)		-> SWhile(convertExprToSast expr, convertStmtToSast stmt)
+		in
+		let rec convertStmtToSast stmt = match stmt with
+			  Block(sl)			-> SBlock(List.map convertStmtToSast sl)
+			| Expr(expr)			-> SExpr(convertExprToSast expr, JInt)
+			| VarDecl(vdecl)		-> SVarDecl(convertVdeclToSast vdecl, JInt, "str")
+			| Return(expr)  		-> SReturn(convertExprToSast expr, JInt)
+			| If(expr, stmt1, stmt2)	-> SIf(convertExprToSast expr, convertStmtToSast stmt1, convertStmtToSast stmt2)
+			| For(expr1, expr2, expr3, stmt)-> SFor(convertExprToSast expr1, convertExprToSast expr2, convertExprToSast expr3, convertStmtToSast stmt)
+			| While(expr, stmt)		-> SWhile(convertExprToSast expr, convertStmtToSast stmt)
 	
-		and
+		in
 		let convertMethodToSast func_decl = 
 		{	
 			sfscope = func_decl.fscope;
@@ -61,11 +63,11 @@ let check program = match program with
 		}
 		in
 		let convertCbodyToSast cbody =
-            {
-            	svariables = List.map convertVdeclToSast cbody.variables;
-                sconstructors = List.map convertMethodToSast cbody.constructors;
+       		{
+            		svariables = List.map convertVdeclToSast cbody.variables;
+                	sconstructors = List.map convertMethodToSast cbody.constructors;
 			 	smethods = List.map convertMethodToSast cbody.methods;
-            }
+            	}
 
 		in
 		let convertClassToSast class_decl =
@@ -79,4 +81,4 @@ let check program = match program with
 		let sclasses = ignore (List.map convertClassToSast classes)
 	in
 	let sast = convertToSast classes in
-		sast
+	sast
