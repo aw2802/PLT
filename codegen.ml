@@ -242,7 +242,62 @@ let translate sast =
 				| _ -> raise(Failure("invlaid unop type ")
 			in unop_type_handler d
 		in unop_gen op e d llbuilder
-	| SFunCall (fname, param_list, d, _) -> "stubbed"
- 
-			
-			
+	| SFunCall (fname, param_list, d, _) -> 
+		let reserved_func_gen llbuilder d expr_list = function
+			"print" -> print_func_gen expr_list llbuilder
+			| _ as call_name -> raise(Failure("function call not found: "^ call_name))
+		in
+		reserved_func_gen llbuilder d expr_list fname
+
+	and print_func_gen expr_list llbuilder =
+		let printf = find_func_in_module "printf" in
+		let tmp_count = ref 0 in
+		let incr_tmp = fun x -> incr tmp_count in
+		let map_expr_to_printfexpr expr =
+			let exprType = Semant.typOfSexpr expr in
+			match exprType with
+			JBoolean ->
+				incr_tmp();
+				let tmp_var = "tmp" ^ (string_of_int  !tmp_count) in
+				let trueStr = SString_Lit("true") in
+				let falseStr = SString_Lit("false") in
+				let id = SID(tmp_var, arr_type) in
+				ignore(stmt_gen llbuilder (SLocal(arr_type, tmp_var, SNoexpr)));
+				ignore(
+					stmt_gen llbuilder(
+						SIf( expr, SExpr(SAssign(id, trueStr, arr_type), arr_type), SExpr(SAssign(id, falseStr, arr_type), arr_type)
+)
+					)
+				);
+				expr_gen llbuilder id
+			| _ -> expr_gen llbuilder expr
+		in
+		let params = List.map map_expr_to_printfexpr expr_list in
+		let param_types = List.map (Semant.typOFSexpr) expr_list in
+		let map_param_to_string = function
+			Arraytype(JChar, 1)	-> "%s"
+			|JInt			-> "%d"
+			|JFloat			-> "%f"
+			|JBoolean		-> "%s"
+			|JChar			-> "%c"
+			|_			-> raise(Failure("Print invalid type"))
+		in
+		let const_str = List.fold_left(fun s t -> s ^ map_param_to_string t) "" param_types in 
+		let s = expr_gen llbuilder (SString_Lit(const_str))
+		let zero = const_int i32_t 0 in
+		let s = L.build_in_bounds_gep s [| zero |] "tmp" llbuilder in
+		L.build_call printf (Array.of_list (s :: params)) "tmp" builder
+
+	and for_gen start cond step body llbuilder = 
+		let preheader_bb = L.insertion_block llbuilder in
+		let the_function = L.block_parent preheader_bb in
+		let _ = expr_gen llbuilder start in
+		let loop_bb = L.append_block context "loop" the_function in
+		let step_bb = L.append_block context "step" the_function in 
+		let cond_bb = L.append_block context "cond" the_function in
+
+		
+		let build_func sfdecl =
+			Hashtbl.clear local_var_table;
+			Hashtbl.clear formal_table;
+			let fname = string_of_name sfdecl.sfname in
