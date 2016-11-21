@@ -19,8 +19,7 @@ let check program = match program with
 			 svtype  = vdecl.vtype;
 			 svname  = vdecl.vname;
 			}
-		and
-		 	convertFormalToSast formal =
+			and convertFormalToSast formal =
 				{sformal_type = formal.vtype;
 			 	 sformal_name = formal.vname;
 				}
