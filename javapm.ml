@@ -9,7 +9,7 @@ let _ =
 	let lexbuf = Lexing.from_channel in_channel in
 	let program = parser.program scanner.token lexbuf in
 
-	let finalcast =  Semant.check program in
-	let outprog = Codegen.translate finalcast in
+	(*let finalcast =  Semant.check program in *)
+	let outprog = Codegen.translate program in
 	print_string (outprog)
 
