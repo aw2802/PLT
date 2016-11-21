@@ -7,6 +7,7 @@ open Llvm
 open Hashtbl
 open Ast
 open Sast
+open Semant
 
 module L = Llvm
 module A = Ast

@@ -1,4 +1,4 @@
-OBJS = ast.cmx sast.cmx parser.cmx scanner.cmx utils.cmx codegen.cmx javapm.cmx
+OBJS = ast.cmx sast.cmx parser.cmx scanner.cmx utils.cmx semant.cmo codegen.cmx javapm.cmx
 
 YACC = ocamlyacc
 
@@ -30,8 +30,8 @@ all: clean javapm
 
 ast.cmo :
 ast.cmx :
-sast.cmo: 
-sast.cmx:
+sast.cmo : 
+sast.cmx :
 utils.cmo : ast.cmo
 utils.cmx : ast.cmx 
 codegen.cmo : ast.cmo sast.cmo utils.cmo
@@ -40,6 +40,8 @@ parser.cmo : ast.cmo sast.cmo parser.cmi
 parser.cmx : ast.cmx sast.cmx parser.cmi
 scanner.cmo : parser.cmi
 scanner.cmx : parser.cmx
+semant.cmo : sast.cmi ast.cmo
+semant.cmx : sast.cmi ast.cmx
 javapm.cmo : scanner.cmo parser.cmo codegen.cmo ast.cmo sast.cmo utils.cmo
 javapm.cmx : scanner.cmx parser.cmx codegen.cmx ast.cmx sast.cmx utils.cmo
 parser.cmi : ast.cmo 
