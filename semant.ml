@@ -9,13 +9,10 @@ let createClassIndices cdecls=
 	Hashtbl.add classIndices cdecl.cname index in (*scope handling is missing*)
 	List.iteri classHandler cdecls
 
-let iter_funcs f = function
-	match f.sfname with
-	"main" -> f
-	| _ -> ;
+let isMain f = f.sfname = "main"
 
 let get_main m =
-        List.hd (List.map iter_funcs m)
+        List.hd (List.filter isMain m)
 	
 	let convertToSast classes =
 		let convertVdeclToSast vdecl = 
@@ -79,7 +76,7 @@ let get_main m =
 		let sprogram = 
 			{classes = List.map convertClassToSast classes;
 			 functions = [];
-			 main = get_main sprogram.classes;
+			 main = get_main classes;
 			 reserved = [];
 			}
 		in
