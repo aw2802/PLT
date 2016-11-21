@@ -7,9 +7,9 @@ let _ =
 	let in_channel = open_in Sys.argv.(1) in
 
 	let lexbuf = Lexing.from_channel in_channel in
+	let program = parser.program scanner.token lexbuf in
 
-	let ast  = Parser.program Scanner.token lexbuf in
-(**	let sast = Semant.check ast in
-	let outprog = Codegen.translate sast in
-	print_string (outprog);;**)
-	print_string ("hi");
+	let finalcast =  Semant.check program in
+	let outprog = Codegen.translate finalcast in
+
+

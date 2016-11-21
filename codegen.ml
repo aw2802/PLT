@@ -251,6 +251,17 @@ let translate sast =
 
 	and print_func_gen expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
+
+		let s = build_global_stringptr "Hello, world!\n" "" llbuilder in
+
+  		let zero = const_int i32_t 0 in
+  		let s = build_in_bounds_gep s [| zero |] "" llbuilder in
+
+  		L.build_call printf [| s |] "" builder in
+
+(*
+	and print_func_gen expr_list llbuilder =
+		let printf = find_func_in_module "printf" in
 		let tmp_count = ref 0 in
 		let incr_tmp = fun x -> incr tmp_count in
 		let map_expr_to_printfexpr expr =
@@ -287,6 +298,7 @@ let translate sast =
 		let zero = const_int i32_t 0 in
 		let s = L.build_in_bounds_gep s [| zero |] "tmp" llbuilder in
 		L.build_call printf (Array.of_list (s :: params)) "tmp" builder
+*)
 
 	and for_gen start cond step body llbuilder = 
 		let preheader_bb = L.insertion_block llbuilder in
