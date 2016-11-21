@@ -16,8 +16,6 @@ let context = global_context ()
 let the_module = create_module context "javapm"
 let builder = builder context
 
-let stubby parameter = "stubed"
-
 let i32_t = L.i32_type context;; (* integer *)
 let i8_t = L.i8_type context;; (* printf format string *)
 let i1_t = L.i1_type context;; (* boolean *)
@@ -51,9 +49,9 @@ let find_func_in_module fname =
 
 let translate sast = 
 	
-	let classes = sast.classes in
-	let functions = sast.functions in
-	let main = sast.main in 
+	let classes = sast.sprogram.classes in
+	let functions = sast.sprogram.functions in
+	let main = sast.sprogram.main in 
 	
 	let util_func () = 
 		let printf_t = L.var_arg_function_type i32_t [| pointer_type i8_t |] in
