@@ -3,11 +3,19 @@ open Sast
 
 let classIndices: (string, int) Hashtbl.t =  Hashtbl.create 100
 
+  
 let createClassIndices cdecls=  
 	let classHandler index cdecl=
 	Hashtbl.add classIndices cdecl.cname index in (*scope handling is missing*)
 	List.iteri classHandler cdecls
 
+let stub_main =
+        {sfscope = Public;
+         sfname = "main";
+         sfformals = [];
+         sfreturn = JInt;
+         sfbody = [];
+        }
 	
 	let convertToSast classes =
 		let convertVdeclToSast vdecl = 
@@ -68,7 +76,14 @@ let createClassIndices cdecls=
 			} 
 
 		in
-		List.map convertClassToSast classes
+		let sprogram = 
+			{classes = List.map convertClassToSast classes;
+			 functions = [];
+			 main = stub_main ;
+			 reserved = [];
+			}
+		in
+		sprogram
 
  (* Translates Ast to Sast *)
 let check program = match program with
