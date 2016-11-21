@@ -11,5 +11,5 @@ let _ =
 
 	let finalcast =  Semant.check program in
 	let outprog = Codegen.translate finalcast in
-
+	print_string (outprog)
 
