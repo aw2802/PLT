@@ -40,13 +40,11 @@ parser.cmo : ast.cmo sast.cmo parser.cmi
 parser.cmx : ast.cmx sast.cmx parser.cmi
 scanner.cmo : parser.cmi
 scanner.cmx : parser.cmx
-<<<<<<< HEAD
 semant.cmo : sast.cmi ast.cmo
 semant.cmx : sast.cmi ast.cmx
 javapm.cmo : scanner.cmo parser.cmo codegen.cmo ast.cmo sast.cmo utils.cmo
 javapm.cmx : scanner.cmx parser.cmx codegen.cmx ast.cmx sast.cmx utils.cmo
 parser.cmi : ast.cmo 
-=======
 javapm.cmo : scanner.cmo parser.cmo codegen.cmo ast.cmo sast.cmo semant.cmo utils.cmo
 javapm.cmx : scanner.cmx parser.cmx codegen.cmx ast.cmx sast.cmx semant.cmx utils.cmo
 parser.cmi : ast.cmo
@@ -54,4 +52,3 @@ semant.cmo: ast.cmo sast.cmo
 semant.cmx: ast.cmx sast.cmx
 semant.cmx: ast.cmx sast.cmx
 
->>>>>>> test-branch
