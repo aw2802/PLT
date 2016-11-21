@@ -33,7 +33,7 @@ type sexpr =
 type sstmt = 
 	  SBlock of sstmt list
 	| SExpr of sexpr * data_type
-	| SVarDecl of vdecl * data_type * string (**fix meeeee **)
+	| SVarDecl of svdecl * data_type * string (**fix meeeee **)
 	| SReturn of sexpr * data_type
 	| SIf of sexpr * sstmt * sstmt 
 	| SFor of sexpr * sexpr * sexpr * sstmt 
@@ -47,7 +47,7 @@ type sfunc_decl = {
 	sfformals: sformal list;
 	sfreturn: data_type;
 	sfbody: sstmt list;
-	functype: func_type;
+(** @TODO causing issues in semant	functype: func_type; **)
 }
 
 type scbody = {

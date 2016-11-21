@@ -32,8 +32,6 @@ ast.cmo :
 ast.cmx :
 sast.cmo: 
 sast.cmx:
-semant.cmo: ast.cmo sast.cmo
-semant.cmx: ast.cmx sast.cmx
 utils.cmo : ast.cmo
 utils.cmx : ast.cmx 
 codegen.cmo : ast.cmo sast.cmo utils.cmo
@@ -44,4 +42,8 @@ scanner.cmo : parser.cmi
 scanner.cmx : parser.cmx
 javapm.cmo : scanner.cmo parser.cmo codegen.cmo ast.cmo sast.cmo semant.cmo utils.cmo
 javapm.cmx : scanner.cmx parser.cmx codegen.cmx ast.cmx sast.cmx semant.cmx utils.cmo
-parser.cmi : ast.cmo 
+parser.cmi : ast.cmo
+semant.cmo: ast.cmo sast.cmo
+semant.cmx: ast.cmx sast.cmx
+semant.cmx: ast.cmx sast.cmx
+
