@@ -318,8 +318,6 @@ let translate sast =
 		let zero = const_int i32_t 0 in
 		let s = L.build_in_bounds_gep s [| zero |] "tmp" llbuilder in
 		L.build_call printf (Array.of_list (s :: params)) "tmp" builder
-
-
 	and for_gen start cond step body llbuilder = 
 		let preheader_bb = L.insertion_block llbuilder in
 		let the_function = L.block_parent preheader_bb in
@@ -327,7 +325,6 @@ let translate sast =
 		let loop_bb = L.append_block context "loop" the_function in
 		let step_bb = L.append_block context "step" the_function in 
 		let cond_bb = L.append_block context "cond" the_function in
-
 		
 		let build_func sfdecl =
 			Hashtbl.clear local_var_table;
