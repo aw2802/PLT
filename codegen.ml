@@ -263,8 +263,21 @@ let translate sast =
   		let s = build_in_bounds_gep s [| zero |] "" llbuilder in
 
   		L.build_call printf [| s |] "" builder
-	in
-	print_string("hi");
+  	in
+
+	let build_main main =
+		    let fty = L.function_type i32_t[||] in 
+			let f = L.define_function "main" fty the_module in 	
+			let llbuilder = L.builder_at_end context (L.entry_block f) in
+			
+			let _ = stmt_gen llbuilder (SBlock (main.sbody)) in 
+			
+			
+			L.build_ret (L.const_int i32_t 0) llbuilder
+		in
+		let _ = build_main main in
+
+	the_module;
 
 (*
 	and print_func_gen expr_list llbuilder =
