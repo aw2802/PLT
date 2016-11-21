@@ -170,7 +170,7 @@ let translate sast =
 		| SString_Lit (s)	-> L.build_global_stringptr s "tmp" llbuilder
 		| SChar_Lit (c)		-> L.const_int i8_t (Char.code c)
 	(**	| SNull			-> L.const_null @TODO double check this**) 
-		| SId (id, d)		-> id_gen true false id d llbuilder
+	(**	| SId (id, d)		-> id_gen true false id d llbuilder **)
 		| SBinop (e1, op, e2, d) -> 
 		     let binop_gen e1 op e2 d llbuilder =
 			let t1 = Semant.typeOfSexpr e1 in
@@ -243,12 +243,12 @@ let translate sast =
 			in
 			let unop_type_handler d = match d with
 				  JBoolean -> unops op e_type e
-				| _ -> raise(Failure("invlaid unop type "))
+				| _ -> raise(Failure("Invalid unop type "))
 			in unop_type_handler d
 		in unop_gen op e d llbuilder
 	| SFuncCall (fname, param_list, d, _) -> 
 		let reserved_func_gen llbuilder d expr_list = function
-			"print" -> print_func_gen expr_list llbuilder
+			  "print" -> print_func_gen expr_list llbuilder
 			| _ as call_name -> raise(Failure("function call not found: "^ call_name))
 		in
 		reserved_func_gen llbuilder d expr_list fname
