@@ -60,7 +60,7 @@ let print_func_gen llbuilder =
   		let zero = const_int i32_t 0 in
   		let s = build_in_bounds_gep s [| zero |] "printf" llbuilder in
 
-  		L.build_call printf [| s |] "printf" builder
+  		L.build_call printf [| s |] "printf" llbuilder
 
 and rec stmt_gen llbuilder  = function 
 		 SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
