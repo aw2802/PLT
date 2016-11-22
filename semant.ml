@@ -10,10 +10,11 @@ let createClassIndices cdecls=
 	List.iteri classHandler cdecls
 
 let isMain f = f.sfname = "main"
-let get_methods class = class.scbody.smethods
-let get_main m =
-        List.hd (List.filter isMain (List.map get_methods m))
-	
+
+let get_methods l classy = List.concat [classy.scbody.smethods;l]
+
+let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
+
 	let convertToSast classes =
 		let convertVdeclToSast vdecl = 
 			{svscope = vdecl.vscope;

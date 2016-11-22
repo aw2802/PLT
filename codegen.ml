@@ -49,9 +49,9 @@ let find_func_in_module fname =
 
 let translate sast = 
 	
-	let classes = sast.sprogram.classes in
-	let functions = sast.sprogram.functions in
-	let main = sast.sprogram.main in 
+	let classes = sast.classes in
+	let functions = sast.functions in
+	let main = sast.main in 
 	
 	let util_func () = 
 		let printf_t = L.var_arg_function_type i32_t [| pointer_type i8_t |] in
