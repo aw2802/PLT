@@ -52,19 +52,23 @@ let translate sast =
 	in
 	let _ = util_func () in
 
-	let build_main main =
-		    let fty = L.function_type i32_t[||] in 
-			let f = L.define_function "main" fty the_module in 	
-			let llbuilder = L.builder_at_end context (L.entry_block f) in
-			
-			let printf = find_func_in_module "printf" in
+let print_func_gen llbuilder =
+		let printf = find_func_in_module "printf" in
 
 		let s = build_global_stringptr "Hello, world!\n" "printf" llbuilder in
 
   		let zero = const_int i32_t 0 in
   		let s = build_in_bounds_gep s [| zero |] "printf" llbuilder in
 
-  		L.build_call printf [| s |] "printf" builder in 
+  		let _ = L.build_call printf [| s |] "printf" builder
+  	in
+
+	let build_main main =
+		    let fty = L.function_type i32_t[||] in 
+			let f = L.define_function "main" fty the_module in 	
+			let llbuilder = L.builder_at_end context (L.entry_block f) in
+			
+			let _ = print_func_gen llbuilder in 
 			
 			
 			L.build_ret (L.const_int i32_t 0) llbuilder
