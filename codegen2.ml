@@ -60,7 +60,7 @@ let print_func_gen llbuilder =
   		let zero = const_int i32_t 0 in
   		let s = build_in_bounds_gep s [| zero |] "printf" llbuilder in
 
-  		let _ = L.build_call printf [| s |] "printf" builder
+  		L.build_call printf [| s |] "printf" builder
   	in
 
 	let build_main main =
