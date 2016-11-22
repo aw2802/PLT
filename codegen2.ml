@@ -70,8 +70,7 @@ let print_func_gen llbuilder =
 			
 			let _ = print_func_gen llbuilder in 
 			
-			
-			L.build_ret (L.const_int i32_t 0) llbuilder
+			let _ = L.build_ret (L.const_int i32_t 0) llbuilder
 		in
 		let _ = build_main main in
 
