@@ -1,5 +1,6 @@
 open Ast
 
+
 type svdecl = {
 	svscope: scope;
 	svtype: data_type;
@@ -69,3 +70,4 @@ type sprogram = {
 	main: sfunc_decl;
 	reserved: sfunc_decl list;
 }
+

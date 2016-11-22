@@ -32,8 +32,8 @@ ast.cmo :
 ast.cmx :
 sast.cmo: 
 sast.cmx:
-utils.cmo : ast.cmo
-utils.cmx : ast.cmx 
+utils.cmo : sast.cmo ast.cmo semant.cmo
+utils.cmx : sast.cmx ast.cmo semant.cmo
 codegen.cmo : ast.cmo sast.cmo utils.cmo
 codegen.cmx : ast.cmx sast.cmx utils.cmx
 parser.cmo : ast.cmo sast.cmo parser.cmi
