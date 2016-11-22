@@ -52,60 +52,44 @@ let translate sast =
 	in
 	let _ = util_func () in
 
-let print_func_gen llbuilder =
+	let print_func_gen expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
 
 		let s = build_global_stringptr "Hello, world!\n" "printf" llbuilder in
+	(**	let s = build_global_stringptr (List.hd expr_list) "printf" llbuilder in **)
 
   		let zero = const_int i32_t 0 in
   		let s = build_in_bounds_gep s [| zero |] "printf" llbuilder in
 
   		L.build_call printf [| s |] "printf" llbuilder
+	in
 
-and rec stmt_gen llbuilder  = function 
-		 SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
-	| SExpr (se, _)	   ->	expr_gen llbuilder se
+	let rec stmt_gen llbuilder = function 
+		  SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
+		| SExpr (se, _)	   ->	expr_gen llbuilder se
 
-and expr_gen llbuilder = function
-		SString_Lit (s)  ->	L.build_global_stringptr s "tmp" llbuilder
+	and expr_gen llbuilder = function
+		  SString_Lit (s)  ->	L.build_global_stringptr s "tmp" llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> 
-		let reserved_func_gen llbuilder d expr_list = function
+			let reserved_func_gen llbuilder d expr_list = function
 			  "print" -> print_func_gen expr_list llbuilder
-			| _ as call_name -> raise(Failure("function call not found: "^ call_name))
+			  | _ as call_name -> raise(Failure("function call not found: "^ call_name))
 		in
 		reserved_func_gen llbuilder d expr_list fname
 
 	in	
+
 
 	let build_main main =
 		    let fty = L.function_type i32_t[||] in 
 			let f = L.define_function "main" fty the_module in 	
 			let llbuilder = L.builder_at_end context (L.entry_block f) in
 			
-			let _ = stmt_gen llbuilder (SBlock (main.sbody)) in  
+			let _ = stmt_gen llbuilder (SBlock (main.sfbody)) in  
 
 			L.build_ret (L.const_int i32_t 0) llbuilder
 		in
 		let _ = build_main main in
 
 	the_module;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
