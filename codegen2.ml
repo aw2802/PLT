@@ -61,14 +61,28 @@ let print_func_gen llbuilder =
   		let s = build_in_bounds_gep s [| zero |] "printf" llbuilder in
 
   		L.build_call printf [| s |] "printf" builder
-  	in
+
+and rec stmt_gen llbuilder  = function 
+		 SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
+	| SExpr (se, _)	   ->	expr_gen llbuilder se
+
+and expr_gen llbuilder = function
+		SString_Lit (s)  ->	L.build_global_stringptr s "tmp" llbuilder
+		| SFuncCall (fname, expr_list, d, _) -> 
+		let reserved_func_gen llbuilder d expr_list = function
+			  "print" -> print_func_gen expr_list llbuilder
+			| _ as call_name -> raise(Failure("function call not found: "^ call_name))
+		in
+		reserved_func_gen llbuilder d expr_list fname
+
+	in	
 
 	let build_main main =
 		    let fty = L.function_type i32_t[||] in 
 			let f = L.define_function "main" fty the_module in 	
 			let llbuilder = L.builder_at_end context (L.entry_block f) in
 			
-			let _ = print_func_gen llbuilder in 
+			let _ = stmt_gen llbuilder (SBlock (main.sbody)) in  
 
 			L.build_ret (L.const_int i32_t 0) llbuilder
 		in
