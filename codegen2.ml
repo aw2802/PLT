@@ -55,12 +55,12 @@ let translate sast =
 let print_func_gen llbuilder =
 		let printf = find_func_in_module "printf" in
 
-		let s = build_global_stringptr "Hello, world!\n" "tmp" llbuilder in
+		let s = build_global_stringptr "Hello, world!\n" "" llbuilder in
 
   		let zero = const_int i32_t 0 in
-  		let s = build_in_bounds_gep s [| zero |] "tmp" llbuilder in
+  		let s = build_in_bounds_gep s [| zero |] "" llbuilder in
 
-  		L.build_call printf [| s |] "tmp" builder
+  		L.build_call printf [| s |] "" builder
   	in
 
 	let build_main main =
