@@ -69,8 +69,8 @@ let print_func_gen llbuilder =
 			let llbuilder = L.builder_at_end context (L.entry_block f) in
 			
 			let _ = print_func_gen llbuilder in 
-			
-			let _ = L.build_ret (L.const_int i32_t 0) llbuilder
+
+			L.build_ret (L.const_int i32_t 0) llbuilder
 		in
 		let _ = build_main main in
 
