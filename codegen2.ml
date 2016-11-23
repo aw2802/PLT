@@ -52,20 +52,6 @@ let translate sast =
 	in
 	let _ = util_func () in
 
-	let print_func_gen expr_list llbuilder =
-		let printf = find_func_in_module "printf" in
-		let map_expr_to_printfexpr expr = expr_gen llbuilder expr in
-		let params = List.map map_expr_to_printfexpr expr_list in
-
-		let s = build_global_stringptr "%s" llbuilder in
-	(**	let s = build_global_stringptr (List.hd expr_list) "printf" llbuilder in **)
-
-  		let zero = const_int i32_t 0 in
-  		let s = build_in_bounds_gep s [| zero |] "printf" llbuilder in
-
-  		L.build_call printf (Array.of_list (s :: params)) "printf" llbuilder
-	in
-
 	let rec stmt_gen llbuilder = function 
 		  SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
 		| SExpr (se, _)	   ->	expr_gen llbuilder se
@@ -79,8 +65,19 @@ let translate sast =
 		in
 		reserved_func_gen llbuilder d expr_list fname
 
-	in	
+	and print_func_gen expr_list llbuilder =
+		let printf = find_func_in_module "printf" in
+		let map_expr_to_printfexpr expr = expr_gen llbuilder expr in
+		let params = List.map map_expr_to_printfexpr expr_list in
 
+		let s = build_global_stringptr "%s" llbuilder in
+	(**	let s = build_global_stringptr (List.hd expr_list) "printf" llbuilder in **)
+
+  		let zero = const_int i32_t 0 in
+  		let s = build_in_bounds_gep s [| zero |] "printf" llbuilder in
+
+  		L.build_call printf (Array.of_list (s :: params)) "printf" llbuilder
+	in
 
 	let build_main main =
 		    let fty = L.function_type i32_t[||] in 
