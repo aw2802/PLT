@@ -1,4 +1,7 @@
-{ open Parser }
+{ 
+  open Parser
+  let unescape s = Scanf.sscanf ("\"" ^ s ^ "\"") "%S%!" (fun x -> x)
+}
 
 let whitespace = [' ' '\t' '\r' '\n']
 let ascii = ([' '-'!' '#'-'[' ']'-'~'])
