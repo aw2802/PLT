@@ -5,7 +5,8 @@
 
 let whitespace = [' ' '\t' '\r' '\n']
 let ascii = ([' '-'!' '#'-'[' ']'-'~'])
-let escape_char = '\\' ['\\' ''' '"' 'n' 'r' 't']
+let escape = '\\' ['\\' ''' '"' 'n' 'r' 't']
+let escape_char = ''' (escape) '''
 let alpha = ['a'-'z' 'A'-'Z']
 let digit = ['0'-'9']
 let int = digit+ 
@@ -14,7 +15,7 @@ let float = (digit+) '.' (digit+)
 let id = (alpha | '_') (alpha | digit | '_')*
 let char = ''' (ascii) '''
 
-let string_lit = '"'((ascii|escape_char)* as lxm)'"'
+let string_lit = '"'((ascii|escape)* as lxm)'"'
 
 rule token = parse 
 	whitespace { token lexbuf }
@@ -75,7 +76,7 @@ rule token = parse
   | int as lxm    { INT_LITERAL(int_of_string lxm) }
   | float as lxm  { FLOAT_LITERAL(float_of_string lxm) }
   | char as lxm   { CHAR_LITERAL(String.get lxm 1) }
-  | string_lit as lxm { STRING_LITERAL(lxm) }
+  | string_lit    { STRING_LITERAL(lxm) }
   | id as lxm      { ID(lxm) }
   | eof           { EOF }
   | _ as illegal  { raise (Failure("illegal character " ^ Char.escaped illegal )) }
