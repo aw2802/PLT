@@ -57,7 +57,11 @@ let translate sast =
 		| SExpr (se, _)	   ->	expr_gen llbuilder se
 
 	and expr_gen llbuilder = function
-		  SString_Lit (s)  ->	L.build_global_stringptr s "tmp" llbuilder
+		  SInt_Lit (i)     ->	L.const_int i32_t i
+		| SBoolean_Lit (b) ->	if b then L.const_int i1_t 1 else L.const_int i1_t 0
+		| SFloat_Lit (f)   ->	L.const_float f_t  f
+		| SChar_Lit (c)    ->	L.const_int i8_t (Char.code c)
+		| SString_Lit (s)  ->	L.build_global_stringptr s "tmp" llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> 
 			let reserved_func_gen llbuilder d expr_list = function
 			  "print" -> print_func_gen expr_list llbuilder
