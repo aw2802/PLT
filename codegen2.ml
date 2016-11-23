@@ -70,7 +70,7 @@ let translate sast =
 		let map_expr_to_printfexpr expr = expr_gen llbuilder expr in
 		let params = List.map map_expr_to_printfexpr expr_list in
 
-		(*let s = build_global_stringptr "%s Hello\n" llbuilder in*)
+		let s = build_global_stringptr "%s" "printf" llbuilder in
 	(**	let s = build_global_stringptr (List.hd expr_list) "printf" llbuilder in **)
 
   		let zero = const_int i32_t 0 in
