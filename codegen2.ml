@@ -75,7 +75,6 @@ let translate sast =
 		let params = List.map map_expr_to_printfexpr expr_list in
 
 		let s = build_global_stringptr "%s" "printf" llbuilder in
-	(**	let s = build_global_stringptr (List.hd expr_list) "printf" llbuilder in **)
 
   		let zero = const_int i32_t 0 in
   		let s = build_in_bounds_gep s [| zero |] "printf" llbuilder in
