@@ -54,14 +54,16 @@ let translate sast =
 
 	let print_func_gen expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
+		let map_expr_to_printfexpr expr = expr_gen llbuilder expr in
+		let params = List.map map_expr_to_printfexpr expr_list in
 
-		let s = build_global_stringptr "Hello, world!\n" "printf" llbuilder in
+		let s = build_global_stringptr "%s" llbuilder in
 	(**	let s = build_global_stringptr (List.hd expr_list) "printf" llbuilder in **)
 
   		let zero = const_int i32_t 0 in
   		let s = build_in_bounds_gep s [| zero |] "printf" llbuilder in
 
-  		L.build_call printf [| s |] "printf" llbuilder
+  		L.build_call printf (Array.of_list (s :: params)) "printf" llbuilder
 	in
 
 	let rec stmt_gen llbuilder = function 
