@@ -51,7 +51,8 @@ let translate sast =
 		()
 	in
 	let _ = util_func () in
-
+	
+	let zero = const_int i32_t 0 in
 	let rec stmt_gen llbuilder = function 
 		  SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
 		| SExpr (se, _)	   ->	expr_gen llbuilder se
@@ -61,7 +62,7 @@ let translate sast =
 		| SBoolean_Lit (b) ->	if b then L.const_int i1_t 1 else L.const_int i1_t 0
 		| SFloat_Lit (f)   ->	L.const_float f_t  f
 		| SChar_Lit (c)    ->	L.const_int i8_t (Char.code c)
-		| SString_Lit (s)  ->	build_in_bounds_gep (build_global_stringptr s "tmp" llbuilder) [| zero |] "printf" llbuilder
+		| SString_Lit (s)  ->	build_global_stringptr s "tmp" llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> 
 			let reserved_func_gen llbuilder d expr_list = function
 			  "print" -> print_func_gen expr_list llbuilder
@@ -74,9 +75,9 @@ let translate sast =
 		let map_expr_to_printfexpr expr = expr_gen llbuilder expr in
 		let params = List.map map_expr_to_printfexpr expr_list in
 
-		let s = build_global_stringptr "%s" "printf" llbuilder in
+		let s = build_global_stringptr "%s\n" "printf" llbuilder in
 
-  		let zero = const_int i32_t 0 in
+  		(**	let zero = const_int i32_t 0 in**)
   		let s = build_in_bounds_gep s [| zero |] "printf" llbuilder in
 
   		L.build_call printf (Array.of_list (s :: params)) "printf" llbuilder
