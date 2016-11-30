@@ -16,14 +16,6 @@ Or | And | Not
 
 type scope = Private | Public
 
-(* Variable Declarations *)
-type vdecl = {
-  vscope: scope;
-  vtype: data_type;
-  vname: string;
-  vexpr: expr;
-}
-
 type formal = {
   vtype: data_type;
   vname: string;
@@ -43,6 +35,14 @@ type expr =
 	| Assign of expr * expr
   | FuncCall of string * expr list  
 	| Null 
+
+  (* Variable Declarations *)
+type vdecl = {
+  vscope: scope;
+  vtype: data_type;
+  vname: string;
+  vexpr: expr;
+}
 
 (* Statements *)
 type stmt =
