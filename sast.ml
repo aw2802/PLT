@@ -35,6 +35,7 @@ type sstmt =
 	  SBlock of sstmt list
 	| SExpr of sexpr * data_type
 	| SVarDecl of svdecl
+	| SLocalVarDecl of data_type * string * sexpr
 	| SReturn of sexpr * data_type
 	| SIf of sexpr * sstmt * sstmt 
 	| SFor of sexpr * sexpr * sexpr * sstmt 
