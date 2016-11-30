@@ -84,6 +84,8 @@ vdecl:
 		vname = $3;
 		vexpr = Noexpr;
 	}}
+	| scope datatype ID ASSIGN expr SEMI {VarDecl({vscope = $1; vtype = $2; vname = $3; vexpr = $4})}
+
 
 
 /* constructors */
@@ -158,7 +160,6 @@ stmt:
 	/*| datatype ID SEMI {VarDecl({vscope = Private; vtype = $1; vname = $2;})}*/
 	| datatype ID SEMI {LocalVarDecl($1, $2, Noexpr)}
 	| datatype ID ASSIGN expr SEMI {LocalVarDecl($1, $2, $4)}
-	| scope datatype ID ASSIGN expr SEMI {VarDecl({vscope = $1; vtype = $2; vname = $3; vexpr = $4})}
 	| RETURN SEMI { Return Noexpr }
 	| RETURN expr SEMI { Return $2 }
 	| LBRACE stmt_list RBRACE { Block(List.rev $2) }
