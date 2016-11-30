@@ -17,8 +17,8 @@ Or | And | Not
 type scope = Private | Public
 
 type formal = {
-  vtype: data_type;
-  vname: string;
+  fvtype: data_type;
+  fvname: string;
 }
 
 (* Expressions *)

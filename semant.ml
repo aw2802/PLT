@@ -17,9 +17,9 @@ let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 
 	let convertToSast classes =
 		
-		let convertFormalToSast formal =
-				{sformal_type = formal.vtype;
-			 	 sformal_name = formal.vname;
+			let convertFormalToSast formal =
+				{sformal_type = formal.fvtype;
+			 	 sformal_name = formal.fvname;
 				}
 			in
 			let rec convertExprToSast expr = match expr with
@@ -42,7 +42,7 @@ let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 				svscope = vdecl.vscope;
 			 	svtype  = vdecl.vtype;
 			 	svname  = vdecl.vname;
-			 	svexpr = convertExpToSast vdecl.vexpr;
+			 	svexpr = convertExprToSast vdecl.vexpr;
 			}
 			in
 			let rec convertStmtToSast stmt = match stmt with

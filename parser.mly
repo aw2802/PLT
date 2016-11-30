@@ -133,8 +133,8 @@ datatype:
 formal:
 	datatype ID
 	 {{
-		vtype = $1;
-	  	vname = $2; 
+		fvtype = $1;
+	  	fvname = $2; 
 	  	}}
 
 formals_opt: /* nothing */ { [] }
