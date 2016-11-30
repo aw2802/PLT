@@ -16,14 +16,8 @@ let get_methods l classy = List.concat [classy.scbody.smethods;l]
 let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 
 	let convertToSast classes =
-		let convertVdeclToSast vdecl = 
-			{svscope = vdecl.vscope;
-			 svtype  = vdecl.vtype;
-			 svname  = vdecl.vname;
-			 svexpr = vdecl.vexpr;
-			}
-		and
-		 	convertFormalToSast formal =
+		
+		let convertFormalToSast formal =
 				{sformal_type = formal.vtype;
 			 	 sformal_name = formal.vname;
 				}
@@ -42,6 +36,14 @@ let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 				| FuncCall(s, el)		-> SFuncCall(s, (List.map convertExprToSast el), JInt, 1)
 				| Unop(op, expr)		-> SUnop(op, convertExprToSast expr, JInt)
 
+			in
+			let convertVdeclToSast vdecl = 
+			{
+				svscope = vdecl.vscope;
+			 	svtype  = vdecl.vtype;
+			 	svname  = vdecl.vname;
+			 	svexpr = convertExpToSast vdecl.vexpr;
+			}
 			in
 			let rec convertStmtToSast stmt = match stmt with
 				  Block(sl)			-> SBlock(List.map convertStmtToSast sl)
