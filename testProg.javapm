@@ -1,5 +1,7 @@
 public class HelloWorld {
 	public int main() {
+		int x;
+
 		print("Hello World");
 	}
 }
