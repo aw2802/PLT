@@ -84,7 +84,8 @@ vdecl:
 		vname = $3;
 		vexpr = Noexpr;
 	}}
-	| scope datatype ID ASSIGN expr SEMI {VarDecl({vscope = $1; vtype = $2; vname = $3; vexpr = $4})}
+	| scope datatype ID ASSIGN expr SEMI {{
+		vscope = $1; vtype = $2; vname = $3; vexpr = $5}}
 
 
 
