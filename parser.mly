@@ -85,7 +85,11 @@ vdecl:
 		vexpr = Noexpr;
 	}}
 	| scope datatype ID ASSIGN expr SEMI {{
-		vscope = $1; vtype = $2; vname = $3; vexpr = $5}}
+		vscope = $1; 
+		vtype = $2; 
+		vname = $3; 
+		vexpr = $5
+	}}
 
 
 
@@ -95,7 +99,7 @@ constructor:
 		{
 			fscope = Public;
 			fname = $1;
-			freturn = JVoid; (* WTFFFFF some sort of object retunr type *)
+			freturn = JVoid; 
 			fformals = $3;
 			fbody = List.rev $6;
 		        
@@ -158,7 +162,6 @@ stmt_list:
 stmt:
 	  expr SEMI { Expr $1 }
 	| vdecl { VarDecl ($1) }
-	/*| datatype ID SEMI {VarDecl({vscope = Private; vtype = $1; vname = $2;})}*/
 	| datatype ID SEMI {LocalVarDecl($1, $2, Noexpr)}
 	| datatype ID ASSIGN expr SEMI {LocalVarDecl($1, $2, $4)}
 	| RETURN SEMI { Return Noexpr }
