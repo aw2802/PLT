@@ -21,6 +21,7 @@ type vdecl = {
   vscope: scope;
   vtype: data_type;
   vname: string;
+  vexpr: expr;
 }
 
 type formal = {
@@ -48,6 +49,7 @@ type stmt =
   Block of stmt list
 | Expr of expr
 | VarDecl of vdecl 
+| LocalVarDecl of data_type * string * expr
 | Return of expr
 | If of expr * stmt * stmt
 | For of expr * expr * expr * stmt
