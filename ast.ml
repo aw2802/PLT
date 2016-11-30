@@ -34,13 +34,13 @@ type expr =
 	| Int_Lit of int
 	| Float_Lit of float
 	| Char_Lit of char
-  	| Bool_Lit of bool
-  	| String_Lit of string
+  | Bool_Lit of bool
+  | String_Lit of string
 	| Noexpr
 	| Binop of expr * op * expr 
-  	| Unop of op * expr
+  | Unop of op * expr
 	| Assign of expr * expr
-  	| FuncCall of string * expr list  
+  | FuncCall of string * expr list  
 	| Null 
 
 (* Statements *)

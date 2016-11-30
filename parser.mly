@@ -154,6 +154,7 @@ stmt_list:
 stmt:
 	  expr SEMI { Expr $1 }
 	| vdecl { VarDecl ($1) }
+	| datatype ID SEMI {VarDecl({vscope = PRIVATE; vtype = $1; vname = $2;})}
 	| RETURN SEMI { Return Noexpr }
 	| RETURN expr SEMI { Return $2 }
 	| LBRACE stmt_list RBRACE { Block(List.rev $2) }
@@ -180,7 +181,6 @@ expr:
 	| expr OR expr { Binop($1, Or, $3) }
 	| NOT expr { Unop(Not, $2) }
 	| expr ASSIGN expr { Assign($1, $3) }
-	/*| vdecl ASSIGN expr {} */
 	| LPAREN expr RPAREN { $2 }
 	| ID LPAREN actuals_opt RPAREN { FuncCall($1, $3) }	
 
