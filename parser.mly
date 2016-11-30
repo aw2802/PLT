@@ -154,7 +154,7 @@ stmt_list:
 stmt:
 	  expr SEMI { Expr $1 }
 	| vdecl { VarDecl ($1) }
-	| datatype ID SEMI {VarDecl({vscope = PRIVATE; vtype = $1; vname = $2;})}
+	| datatype ID SEMI {VarDecl({vscope = Private; vtype = $1; vname = $2;})}
 	| RETURN SEMI { Return Noexpr }
 	| RETURN expr SEMI { Return $2 }
 	| LBRACE stmt_list RBRACE { Block(List.rev $2) }
