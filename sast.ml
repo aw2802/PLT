@@ -1,11 +1,5 @@
 open Ast
 
-type svdecl = {
-	svscope: scope;
-	svtype: data_type;
-	svname: string;
-}
-
 type sformal = {
 	sformal_type: data_type;
 	sformal_name: string;
@@ -30,10 +24,17 @@ type sexpr =
 	| SObjAccess of sexpr * sexpr * data_type
 	| SObjectCreate **)
 
+type svdecl = {
+	svscope: scope;
+	svtype: data_type;
+	svname: string;
+	svexpr: sexpr;
+}
+
 type sstmt = 
 	  SBlock of sstmt list
 	| SExpr of sexpr * data_type
-	| SVarDecl of svdecl * data_type * string (**fix meeeee **)
+	| SVarDecl of svdecl
 	| SReturn of sexpr * data_type
 	| SIf of sexpr * sstmt * sstmt 
 	| SFor of sexpr * sexpr * sexpr * sstmt 

@@ -20,6 +20,7 @@ let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 			{svscope = vdecl.vscope;
 			 svtype  = vdecl.vtype;
 			 svname  = vdecl.vname;
+			 svexpr = vdecl.vexpr;
 			}
 		and
 		 	convertFormalToSast formal =
@@ -45,7 +46,7 @@ let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 			let rec convertStmtToSast stmt = match stmt with
 				  Block(sl)			-> SBlock(List.map convertStmtToSast sl)
 				| Expr(expr)			-> SExpr(convertExprToSast expr, JInt)
-				| VarDecl(vdecl)		-> SVarDecl(convertVdeclToSast vdecl, JInt, "str")
+				| VarDecl(vdecl)		-> SVarDecl(convertVdeclToSast vdecl)
 				| Return(expr)  		-> SReturn(convertExprToSast expr, JInt)
 				| If(expr, stmt1, stmt2)	-> SIf(convertExprToSast expr, convertStmtToSast stmt1, convertStmtToSast stmt2)
 				| For(expr1, expr2, expr3, stmt)-> SFor(convertExprToSast expr1, convertExprToSast expr2, convertExprToSast expr3, convertStmtToSast stmt)
