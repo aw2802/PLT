@@ -1,0 +1,24 @@
+/usr/bin/lli
+
+###### Testing test-hello
+./javapm tests/test-hello.javapm > test-hello.ll
+lli test-hello.ll > test-hello.out
+diff -b test-hello.out tests/test-hello.out > test-hello.diff
+###### SUCCESS
+
+###### Testing test-while
+./javapm tests/test-while.javapm > test-while.ll
+Fatal error: exception Match_failure("codegen2.ml", 56, 30)
+###### FAILED
+
+###### Testing fail-assign1
+< tests/fail-assign1.javapm 2> fail-assign1.err >> testall.log
+###### FAILED
+
+###### Testing fail-assign2
+< tests/fail-assign2.javapm 2> fail-assign2.err >> testall.log
+###### FAILED
+
+###### Testing fail-nomain
+< tests/fail-nomain.javapm 2> fail-nomain.err >> testall.log
+###### FAILED

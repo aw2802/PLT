@@ -23,7 +23,7 @@ parser.ml parser.mli: parser.mly
 .PHONY: clean
 clean:
 	rm -f javapm parser.ml parser.mli scanner.ml \
-	    *.cmo *.cmi *.cmx *.o *.out *.diff *.output javapm *.dSYM
+	    *.cmo *.cmi *.cmx *.o *.out *.diff *.output javapm *.dSYM *.err *.ll
 
 .PHONY: all
 all: clean javapm
