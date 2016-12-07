@@ -1,0 +1,20 @@
+public class FailExpr1{
+	int a;
+	boolean b;
+
+	public void foo(int c, boolean d)    
+	{
+	  int dd;
+	  boolean e;
+	  a + c;
+	  c - a;
+	  a * 3;
+	  c / 2;
+	  d + a; /* Error: boolean + int */
+	}
+
+	public int main()
+	{
+	  return 0;
+	}
+}

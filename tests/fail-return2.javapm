@@ -1,0 +1,14 @@
+public class FailReturn2{
+	public void foo()
+	{
+	  if (true){
+	  	return 42; /* Should return void */
+	  }
+	  else return;
+	}
+
+	public int main()
+	{
+	  return 42;
+	}
+}

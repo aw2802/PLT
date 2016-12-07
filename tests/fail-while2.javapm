@@ -1,0 +1,15 @@
+public class FailWhile2{
+	public void main()
+	{
+	  int i;
+
+	  while (true) {
+	    i = i + 1;
+	  }
+
+	  while (true) {
+	    foo(); /* foo undefined */
+	  }
+
+	}
+}

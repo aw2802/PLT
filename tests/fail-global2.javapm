@@ -1,0 +1,11 @@
+public class FailGlobal2{
+	int b;
+	boolean c;
+	int a;
+	int b; /* Duplicate global variable */
+
+	public int main()
+	{
+	  return 0;
+	}
+}

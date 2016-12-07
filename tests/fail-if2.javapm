@@ -1,0 +1,8 @@
+public class FailIf2{
+	public int main()
+	{
+	  if (true) {
+	    foo; /* Error: undeclared variable */
+	  }
+	}
+}

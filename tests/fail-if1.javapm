@@ -1,0 +1,8 @@
+public class FailIf1{
+	public int main()
+	{
+	  if (true) {}
+	  if (false) {} else {}
+	  if (42) {} /* Error: non-boolean predicate */
+	}
+}

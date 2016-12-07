@@ -1,0 +1,11 @@
+public class FailGlobal1{
+	int c;
+	boolean b;
+	void a; /* global variables should not be void */
+
+
+	public int main()
+	{
+	  return 0;
+	}
+}

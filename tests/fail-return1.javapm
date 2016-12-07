@@ -1,0 +1,6 @@
+public class FailReturn1{
+	public int main()
+	{
+	  return true; /* Should return int */
+	}
+}

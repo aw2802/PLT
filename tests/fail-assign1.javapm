@@ -1,4 +1,4 @@
-public class failAssign1{
+public class FailAssign1{
 	public void main(){
 		int i;
 		boolean boo;

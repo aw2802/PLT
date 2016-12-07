@@ -1,0 +1,13 @@
+public class FailAssign3{
+	public void myvoid()
+	{
+	  return;
+	}
+
+	public void main()
+	{
+	  int i;
+
+	  i = myvoid(); /* Fail: assigning a void to an integer */
+	}
+}

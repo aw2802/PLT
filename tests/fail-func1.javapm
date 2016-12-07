@@ -1,0 +1,14 @@
+public class FailFunc1{
+	public int foo() {}
+
+	public int bar() {}
+
+	public int baz() {}
+
+	public void bar() {} /* Error: duplicate function bar */
+
+	public int main()
+	{
+	  return 0;
+	}
+}

@@ -1,0 +1,10 @@
+public class FailIf3{
+	public int main()
+	{
+	  if (true) {
+	    42;
+	  } else {
+	    bar; /* Error: undeclared variable */
+	  }
+	}
+}
