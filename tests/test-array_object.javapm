@@ -1,0 +1,16 @@
+public class Car{
+  String color;
+  String getColor(){
+    this.color = "green";
+    return color;
+  }
+}
+
+public class TestArrayObject{
+  public void main(){
+    Car myCar = new Car();
+    Car[] carArray = new Car[5];
+    carArray[0] = myCar;
+    print(carArray[0].getColor());
+  }
+}

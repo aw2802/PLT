@@ -1,0 +1,9 @@
+public class TestNot{
+  public void main(){
+    int i = 1;
+    int j = 3;
+    if (i != 3){
+      print(0);
+    }
+  }
+}

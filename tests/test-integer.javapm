@@ -1,0 +1,7 @@
+public class testInteger{
+  public void main(){
+    int i;
+    i = 6/3;
+    print(i);
+  }
+}

@@ -1,0 +1,10 @@
+public class Car{
+  
+}
+
+public class TestObject{
+  public void main(){
+    Car myCar = new Car();
+    print("created!\n");
+  }
+}

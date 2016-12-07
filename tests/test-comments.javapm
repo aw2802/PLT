@@ -1,0 +1,11 @@
+public class TestComments{
+  public void main(){
+    int i = 10;
+    /* blah blah
+      hey hey
+    */
+
+    // comments..
+    print(i);
+  }
+}

@@ -1,0 +1,7 @@
+public class TestFloat{
+  public void main(){
+    float i;
+    i = 2.25-0.25;
+    print(i);
+  }
+}

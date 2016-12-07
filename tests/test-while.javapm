@@ -1,4 +1,4 @@
-public class testWhile{
+public class TestWhile{
 	public void main(){
 		int i;
 		i = 1;

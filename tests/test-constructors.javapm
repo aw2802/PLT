@@ -1,0 +1,13 @@
+public class Student{
+  String name;
+  Student (String x){
+    this.name = x;
+  }
+}
+
+public class TestConstructors{
+  public void main(){
+    Student Susan = new Student('Susan');
+    print (Susan.name);
+  }
+}

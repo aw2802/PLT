@@ -1,0 +1,12 @@
+public class TestLt{
+  public void main(){
+    int i = 3;
+    int j = 1;
+    if (i < j){
+      print(1);
+    }
+    else{
+      print(0);
+    }
+  }
+}

@@ -1,0 +1,9 @@
+public class TestOr{
+  public void main(){
+    int i = 1;
+    int j = 3;
+    if ((i != 1) or (j == 3)){
+      print(i, " ", j, "\n");
+    }
+  }
+}

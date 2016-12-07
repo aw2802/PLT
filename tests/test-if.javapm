@@ -1,0 +1,14 @@
+public class TestIf{
+  public void main(){
+    print(111);
+
+    if (true){
+      print(1);
+    }
+    else{
+      print(0);
+    }
+
+    print(000);
+  }
+}

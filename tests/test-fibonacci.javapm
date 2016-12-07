@@ -1,0 +1,27 @@
+public class TestFibonacci{
+  int fib(int x){
+    int z;
+    if (x < 2){
+      z = 1;
+    }
+    else{
+      z = fib(x-1) + fib(x-2); //this. needed?
+    }
+    return(z);
+  }
+
+  public void main(){
+    int x;
+    int y;
+    int z;
+    int m;
+
+    x = 5;
+    y = 6;
+    z = fib(x); //this. needed?
+
+    print(z);
+  }
+
+
+}

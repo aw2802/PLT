@@ -1,0 +1,22 @@
+public class Calculator{
+  int add(int x, int y){
+    int z;
+    z = x + y;
+    return(z);
+  }
+}
+
+public class TestFunction{
+  public void main(){
+    int x;
+    int y;
+    int z;
+    x = 10;
+    y = 5;
+
+    Calculator c = new Calculator();
+    z = c.add(x,y);
+
+    print(z);
+  }
+}
