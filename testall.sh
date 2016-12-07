@@ -161,7 +161,7 @@ if [ $# -ge 1 ]
 then
     files=$@
 else
-    files="tests/test-*.javapm"
+    files="tests/test-*.javapm tests/fail-*.javapm"
 fi
 
 for file in $files

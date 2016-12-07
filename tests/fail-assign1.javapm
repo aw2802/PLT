@@ -1,0 +1,9 @@
+public class failAssign1{
+	public void main(){
+		int i;
+		boolean boo;
+		i = 2;
+		boo = true;
+		i = false; /* Fail: assigning a boolean to an integer */
+	}
+}
