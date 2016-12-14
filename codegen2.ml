@@ -90,7 +90,7 @@ let translate sast =
 		(*SNull*)
 		| SId (n, dt)		-> get_value n llbuilder (*Dn't know if it is returning an OCaml variable with the value or if it is returning a value*)
 		(*SBinop*)
-		| SAssign (e1, e2, dt)	-> assign_to_variable (expr_gen llbuilder e1) (expr_gen llbuilder e2) llbuilder
+		| SAssign (e1, e2, dt)	-> assign_to_variable (expr_gen llbuilder e1) e2 llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> (*Need to call a regular fuction too*)
 			let reserved_func_gen llbuilder d expr_list = function
 			  "print" -> print_func_gen expr_list llbuilder
@@ -112,12 +112,12 @@ let translate sast =
 		in
 		L.build_store value var llbuilder
 *)
-	and assign_to_variable vmemory svalue llbuilder =
-		let value = match svalue with
-		| SId(id, d) -> ignore(L.build_load svalue value llbuilder); value
-		| _ -> value
+	and assign_to_variable vmemory e2 llbuilder =
+		let value = match e2 with
+		| SId(id, d) -> ignore(L.build_load (expr_gen llbuilder e2) value llbuilder); value
+		| _ -> expr_gen llbuilder e2
 		in
-		L.build_store value var llbuilder
+		L.build_store value vmemory llbuilder
 
 	and print_func_gen expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
