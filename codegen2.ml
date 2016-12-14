@@ -113,7 +113,7 @@ let translate sast =
 		L.build_store value var llbuilder
 *)
 	and assign_to_variable vmemory e2 llbuilder =
-		let temp in
+		let temp = 
 		let value = match e2 with
 		| SId(id, d) -> ignore(L.build_load (expr_gen llbuilder e2) temp llbuilder); temp
 		| _ -> expr_gen llbuilder e2
