@@ -19,7 +19,7 @@ let typOFSexpr = function
 		SInt_Lit(i)				-> SInt_Lit(i)	
 	| 	SBoolean_Lit(b)			-> SBoolean_Lit(b)	
 	| 	SFloat_Lit(f)			-> SFloat_Lit(f)
-	| 	SString_Lit(s) 			-> String_Lit(s) 
+	| 	SString_Lit(s) 			-> SString_Lit(s) 
 	| 	SChar_Lit(c) 			-> SChar_Lit(c) 
 	| 	SId(_, d) 				-> d
 	| 	SBinop(_, _, _, d) 		-> d
