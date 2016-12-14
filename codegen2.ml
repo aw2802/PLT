@@ -89,7 +89,7 @@ let translate sast =
 		| SString_Lit (s)  ->	build_global_stringptr s "tmp" llbuilder
 		(*SNull*)
 		| SId (n, dt)		-> get_value false n llbuilder (*Dn't know if it is returning an OCaml variable with the value or if it is returning a value*)
-		(*SBinop*)
+		| SBinop(e1, op, e2, dt) -> binop_gen e1 op e2
 		| SAssign (e1, e2, dt)	-> assign_to_variable (expr_gen llbuilder e1) e2 llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> (*Need to call a regular fuction too*)
 			let reserved_func_gen llbuilder d expr_list = function
@@ -97,6 +97,33 @@ let translate sast =
 			  | _ as call_name -> raise(Failure("function call not found: "^ call_name))
 			in
 			reserved_func_gen llbuilder d expr_list fname
+
+	and binop_gen e1 op e2 dt = 
+		let value1 =  match e1 with
+			| SId(id, d) -> get_value true id llbuilder
+			| _ -> expr_gen llbuilder e2
+		in
+		let value2 = match e2 with
+			| SId(id, d) -> get_value true id llbuilder
+			| _ -> expr_gen llbuilder e2	
+		in
+
+		(match op with
+			  Add 		-> L.build_add 
+			| Sub 		-> L.build_sub
+			| Mult 		-> L.build_mul 
+			| Div 		-> L.build_sdiv 
+			| Equal 	-> L.build_icmp L.Icmp.Eq 
+			| Neq 		-> L.build_icmp L.Icmp.Ne 
+			| Less 		-> L.build_icmp L.Icmp.Slt 
+			| Leq 		-> L.build_icmp L.Icmp.Sle 
+			| Greater	-> L.build_icmp L.Icmp.Sgt 
+			| Geq 		-> L.build_icmp L.Icmp.Sge
+			| And		-> L.build_and
+			| Or 		-> L.build_or 
+			| _ 		-> raise(Failure("Invalid operator for floats"))
+		) value1 value2 "tmp" llbuilder
+
 
 	and get_value deref vname llbuilder = 
 		if deref then
