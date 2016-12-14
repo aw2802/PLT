@@ -79,7 +79,7 @@ let translate sast =
 					| SNoexpr -> allocatedMemory
 					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
 			in
-			local_vardecl_gen dt vname vexpr
+			local_vardecl_gen dt vname vexpr llbuilder
 
 
 	and expr_gen llbuilder = function
