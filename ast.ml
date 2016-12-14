@@ -7,14 +7,7 @@ type data_type =
   | JFloat
   | JInt
   | Object of string
-
-type array_type =
-  | JChar * int
-  | JVoid * int
-  | JBoolean * int
-  | JFloat * int
-  | JInt * int
-  | Object of string * int 
+  | Arraytype of data_type * int
 
   
 (* Operators *)
@@ -43,7 +36,7 @@ type expr =
 	| Assign of expr * expr
   | FuncCall of string * expr list  
 	| Null 
-  | ArrayCreate of array_type * expr list
+  | ArrayCreate of data_type * expr list
   | ArrayAccess of expr * expr
 
   (* Variable Declarations *)
