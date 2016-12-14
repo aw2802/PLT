@@ -142,7 +142,7 @@ let translate sast =
 		let _ = build_main main in
 
 	(*Class generation*)
-
+(*
 	let build_classes sclass_decl =
 		let rt = L.pointer_type i64_t in
 		let void_pt = L.pointer_type i64_t in
@@ -152,6 +152,6 @@ let translate sast =
 		let llbuilder = L.builder_at_end context (entry_block f) in
 
 	let _ = List.map build_classes classes in	
-
+*)
 	the_module;
 
