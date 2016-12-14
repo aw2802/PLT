@@ -114,7 +114,7 @@ let translate sast =
 *)
 	and assign_to_variable vmemory e2 llbuilder =
 		let value = match e2 with
-		| SId(id, d) -> ignore(L.build_load (expr_gen llbuilder e2) value llbuilder); value
+		| SId(id, d) -> ignore(L.build_load (expr_gen llbuilder e2) e2 llbuilder); e2
 		| _ -> expr_gen llbuilder e2
 		in
 		L.build_store value vmemory llbuilder
