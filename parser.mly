@@ -160,7 +160,7 @@ stmt_list:
 	| stmt_list stmt { $2 :: $1 }
 
 stmt:
-	  expr SEMI { Expr $1 }
+	  expr SEMI { Expr ($1) }
 	| vdecl { VarDecl ($1) }
 	| datatype ID SEMI {LocalVarDecl($1, $2, Noexpr)}
 	| datatype ID ASSIGN expr SEMI {LocalVarDecl($1, $2, $4)}

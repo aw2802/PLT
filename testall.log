@@ -22,7 +22,9 @@ Fatal error: exception Parsing.Parse_error
 
 ###### Testing test-assign
 ./javapm tests/test-assign.javapm > test-assign.ll
-Fatal error: exception Parsing.Parse_error
+lli test-assign.ll > test-assign.out
+diff -b test-assign.out tests/test-assign.out > test-assign.diff
+FAILED test-assign.out differs from tests/test-assign.out
 ###### FAILED
 
 ###### Testing test-comments
@@ -140,8 +142,9 @@ Fatal error: exception Match_failure("codegen2.ml", 60, 30)
 
 ###### Testing test-printAdd
 ./javapm tests/test-printAdd.javapm > test-printAdd.ll
-Fatal error: exception Match_failure("codegen2.ml", 84, 26)
-###### FAILED
+lli test-printAdd.ll > test-printAdd.out
+diff -b test-printAdd.out tests/test-printAdd.out > test-printAdd.diff
+###### SUCCESS
 
 ###### Testing test-subtract
 ./javapm tests/test-subtract.javapm > test-subtract.ll
