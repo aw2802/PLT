@@ -15,6 +15,18 @@ let get_methods l classy = List.concat [classy.scbody.smethods;l]
 
 let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 
+let typOFSexpr = function(*get the type of sexpression*)
+		SInt_Lit(_)				-> SInt_Lit(_)	
+	| 	SBoolean_Lit(_)			-> SBoolean_Lit(_)	
+	| 	SFloat_Lit(_)			-> SFloat_Lit(_)
+	| 	SString_Lit(_) 			-> String_Lit(_) 
+	| 	SChar_Lit(_) 			-> SChar_Lit(_) 
+	| 	SId(_, d) 				-> d
+	| 	SBinop(_, _, _, d) 		-> d
+	| 	SAssign(_, _, d) 		-> d
+	| 	SCall(_, _, d,_)		-> d
+	|  	SUnop(_, _, d) 			-> d 
+
 	let convertToSast classes =
 		
 			let convertFormalToSast formal =

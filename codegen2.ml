@@ -124,6 +124,7 @@ let translate sast =
 		let printf = find_func_in_module "printf" in
 		let map_expr_to_printfexpr expr = expr_gen llbuilder expr in
 		let params = List.map map_expr_to_printfexpr expr_list in
+		let expr_types = List.map (Semant.typOFSexpr) expr_list in
 
 		let map_expr_to_type e = match e with
 			SInt_Lit (i)     ->	"%d"
@@ -134,7 +135,7 @@ let translate sast =
 		| _ 			-> raise (Failure("Print invalid type"))
 
 		in
-		let expr_types = List.fold_left (fun s t -> s ^ map_expr_to_type t) "" expr_list in
+		let print_types = List.fold_left (fun s t -> s ^ map_expr_to_type t) "" expr_types in
 		let s = build_global_stringptr (expr_types ^ "\n") "printf" llbuilder in
 
   		(**	let zero = const_int i32_t 0 in**)
