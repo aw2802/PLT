@@ -113,11 +113,12 @@ let translate sast =
 		L.build_store value var llbuilder
 *)
 	and assign_to_variable vmemory e2 llbuilder =
+		let temp in
 		let value = match e2 with
-		| SId(id, d) -> ignore(L.build_load (expr_gen llbuilder e2) e2 llbuilder); e2
+		| SId(id, d) -> ignore(L.build_load (expr_gen llbuilder e2) temp llbuilder); temp
 		| _ -> expr_gen llbuilder e2
 		in
-		L.build_store value vmemory llbuilder
+		L.build_store temp vmemory llbuilder
 
 	and print_func_gen expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
