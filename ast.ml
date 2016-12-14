@@ -6,7 +6,15 @@ type data_type =
   | JBoolean
   | JFloat
   | JInt
-  | Object of string 
+  | Object of string
+
+type array_type =
+  | JChar * int
+  | JVoid * int
+  | JBoolean * int
+  | JFloat * int
+  | JInt * int
+  | Object of string * int 
 
   
 (* Operators *)
@@ -35,6 +43,8 @@ type expr =
 	| Assign of expr * expr
   | FuncCall of string * expr list  
 	| Null 
+  | ArrayCreate of array_type * expr list
+  | ArrayAccess of expr * expr
 
   (* Variable Declarations *)
 type vdecl = {
