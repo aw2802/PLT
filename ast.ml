@@ -36,6 +36,7 @@ type expr =
 	| Assign of expr * expr
   | FuncCall of string * expr list  
 	| Null 
+  | CreateObject of string * expr list
 
   (* Variable Declarations *)
 type vdecl = {

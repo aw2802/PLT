@@ -18,11 +18,11 @@ type sexpr =
 	| SNoexpr
 	| SFuncCall of string * sexpr list * data_type * int (**check me y tho**)
 	| SUnop of op * sexpr * data_type
+	| SCreateObject of string * sexpr list * datatype
 (**	| SArrayCreate of data_type * sexpr list * data_type
 	| SArrayAccess of sexpr * sexpr list * data_type
 	| SArrayElements
-	| SObjAccess of sexpr * sexpr * data_type
-	| SObjectCreate **)
+	| SObjAccess of sexpr * sexpr * data_type **)
 
 type svdecl = {
 	svscope: scope;

@@ -26,6 +26,7 @@ let typOFSexpr = function
 	| 	SAssign(_, _, d) 		-> d
 	| 	SFuncCall(_, _, d,_)	-> d
 	|  	SUnop(_, _, d) 			-> d 
+	| 	SCreateObject(_,_,d)	-> d
 
 let convertToSast classes =
 	
@@ -47,6 +48,7 @@ let convertToSast classes =
 			| Assign(expr1, expr2)		-> SAssign(convertExprToSast expr1, convertExprToSast expr2, JInt)
 			| FuncCall(s, el)		-> SFuncCall(s, (List.map convertExprToSast el), JInt, 1)
 			| Unop(op, expr)		-> SUnop(op, convertExprToSast expr, JInt)
+			| CreateObject(s,el)	-> SCreateObject(s, el, Object(s))
 
 		in
 		let convertVdeclToSast vdecl = 
