@@ -98,7 +98,7 @@ let translate sast =
 			in
 			reserved_func_gen llbuilder d expr_list fname
 
-	and binop_gen e1 op e2 dt = 
+	and binop_gen e1 op e2 = 
 		let value1 =  match e1 with
 			| SId(id, d) -> get_value true id llbuilder
 			| _ -> expr_gen llbuilder e2
