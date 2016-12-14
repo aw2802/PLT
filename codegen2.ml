@@ -88,7 +88,7 @@ let translate sast =
 		| SChar_Lit (c)    ->	L.const_int i8_t (Char.code c)
 		| SString_Lit (s)  ->	build_global_stringptr s "tmp" llbuilder
 		(*SNull*)
-		| SId (n, dt)		-> get_value n llbuilder (*Dn't know if it is returning an OCaml variable with the value or if it is returning a value*)
+		| SId (n, dt)		-> get_value false n llbuilder (*Dn't know if it is returning an OCaml variable with the value or if it is returning a value*)
 		(*SBinop*)
 		| SAssign (e1, e2, dt)	-> assign_to_variable (expr_gen llbuilder e1) e2 llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> (*Need to call a regular fuction too*)
@@ -98,12 +98,20 @@ let translate sast =
 			in
 			reserved_func_gen llbuilder d expr_list fname
 
-	and get_value vname llbuilder = 
+	and get_value deref vname llbuilder = 
+		if deref then
 		let var = try Hashtbl.find global_var_table vname with 
 		| Not_found -> try Hashtbl.find local_var_table vname with 
 			| Not_found -> raise (Failure("unknown variable name " ^ vname))
 		in
 		L.build_load var vname llbuilder
+	else
+		let var = try Hashtbl.find global_var_table vname with 
+		| Not_found -> try Hashtbl.find local_var_table vname with 
+			| Not_found -> raise (Failure("unknown variable name " ^ vname))
+		in
+		ignore(L.build_load var vname llbuilder); vname
+
 (*	
 	and assign_to_variable vname value llbuilder =
 		let var = try Hashtbl.find global_var_table vname with 
