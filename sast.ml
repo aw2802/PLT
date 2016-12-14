@@ -14,7 +14,6 @@ type sexpr =
 	| SNull
 	| SId of string * data_type
 	| SBinop of sexpr * op * sexpr * data_type
-	| SAssign of string * sexpr * data_type
 	| SNoexpr
 	| SFuncCall of string * sexpr list * data_type * int (**check me y tho**)
 	| SUnop of op * sexpr * data_type
@@ -40,6 +39,7 @@ type sstmt =
 	| SIf of sexpr * sstmt * sstmt 
 	| SFor of sexpr * sexpr * sexpr * sstmt 
 	| SWhile of sexpr * sstmt
+	| SAssign of string * sexpr * data_type
 
 type func_type = User | Reserved
 

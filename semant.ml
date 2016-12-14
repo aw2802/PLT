@@ -23,7 +23,7 @@ let typOFSexpr = function
 	| 	SChar_Lit(c) 			-> JChar
 	| 	SId(_, d) 				-> d
 	| 	SBinop(_, _, _, d) 		-> d
-	| 	SAssign(_, _, d) 		-> d
+	(*| 	SAssign(_, _, d) 		-> d *)
 	| 	SFuncCall(_, _, d,_)	-> d
 	|  	SUnop(_, _, d) 			-> d 
 	| 	SCreateObject(_,_,d)	-> d
@@ -45,7 +45,6 @@ let convertToSast classes =
 			| Noexpr	-> SNoexpr
 			| Id(id)	-> SId(id, JInt) (** @TODO Sast has SId(string, datatype) **)
 			| Binop(expr1, op, expr2)	-> SBinop(convertExprToSast expr1, op, convertExprToSast expr2, JInt) (** @TODO Not sure about the data_type value. Same below **) 	
-			| Assign(id, expr2)		-> SAssign(id, convertExprToSast expr2, JInt)
 			| FuncCall(s, el)		-> SFuncCall(s, (List.map convertExprToSast el), JInt, 1)
 			| Unop(op, expr)		-> SUnop(op, convertExprToSast expr, JInt)
 			| CreateObject(s,el)	-> SCreateObject(s, (List.map convertExprToSast el), Object(s))
@@ -64,6 +63,7 @@ let convertToSast classes =
 			| Expr(expr)			-> SExpr(convertExprToSast expr, JInt)
 			| VarDecl(vdecl)		-> SVarDecl(convertVdeclToSast vdecl)
 			| LocalVarDecl(dt, id, expr)	-> SLocalVarDecl(dt, id, convertExprToSast expr)
+			| Assign(id, expr1)		-> SAssign(id, convertExprToSast expr1, (typOFSexpr expr1))
 			| Return(expr)  		-> SReturn(convertExprToSast expr, JInt)
 			| If(expr, stmt1, stmt2)	-> SIf(convertExprToSast expr, convertStmtToSast stmt1, convertStmtToSast stmt2)
 			| For(expr1, expr2, expr3, stmt)-> SFor(convertExprToSast expr1, convertExprToSast expr2, convertExprToSast expr3, convertStmtToSast stmt)
