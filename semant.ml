@@ -15,7 +15,7 @@ let get_methods l classy = List.concat [classy.scbody.smethods;l]
 
 let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 
-let typOFSexpr = function(*get the type of sexpression*)
+let typOFSexpr e = match e with
 		SInt_Lit(_)				-> SInt_Lit(_)	
 	| 	SBoolean_Lit(_)			-> SBoolean_Lit(_)	
 	| 	SFloat_Lit(_)			-> SFloat_Lit(_)
