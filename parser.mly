@@ -171,7 +171,6 @@ stmt:
 	| IF LPAREN expr RPAREN stmt ELSE stmt { If($3, $5, $7) }
 	| FOR LPAREN expr_opt SEMI expr SEMI expr_opt RPAREN stmt { For($3, $5, $7, $9) }
 	| WHILE LPAREN expr RPAREN stmt { While($3, $5) }
-	| ID ASSIGN expr SEMI { Assign($1, $3) }
 
 /* expressions */
 
@@ -190,6 +189,7 @@ expr:
 	| expr AND expr { Binop($1, And, $3) }
 	| expr OR expr { Binop($1, Or, $3) }
 	| NOT expr { Unop(Not, $2) }
+	| ID ASSIGN expr { Assign($1, $3) }
 	| LPAREN expr RPAREN { $2 }
 	| ID LPAREN actuals_opt RPAREN { FuncCall($1, $3) }	
 	| NEW ID LPAREN actuals_opt RPAREN { CreateObject($2, $4)} 

@@ -80,7 +80,6 @@ let translate sast =
 					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
 			in
 			local_vardecl_gen dt vname vexpr llbuilder
-		| SAssign (id, e1, dt)	-> assign_to_variable (get_value false id llbuilder) e1 llbuilder
 
 	and expr_gen llbuilder = function
 		  SInt_Lit (i)     ->	L.const_int i32_t i
@@ -90,7 +89,8 @@ let translate sast =
 		| SString_Lit (s)  ->	build_global_stringptr s "tmp" llbuilder
 		(*SNull*)
 		| SId (n, dt)		-> get_value false n llbuilder (*Dn't know if it is returning an OCaml variable with the value or if it is returning a value*)
-	(*	| SBinop(e1, op, e2, dt) -> binop_gen e1 op e2 llbuilder *)
+		| SBinop(e1, op, e2, dt) -> binop_gen e1 op e2 llbuilder
+		| SAssign (id, e, dt)	-> assign_to_variable (get_value false id llbuilder) e llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> (*Need to call a regular fuction too*)
 			let reserved_func_gen llbuilder d expr_list = function
 			  "print" -> print_func_gen expr_list llbuilder
@@ -140,10 +140,10 @@ let translate sast =
 		in
 		var
 
-	and assign_to_variable vmemory e1 llbuilder =
-		let value = match e1 with
+	and assign_to_variable vmemory e llbuilder =
+		let value = match e with
 		| SId(id, d) -> get_value true id llbuilder
-		| _ -> expr_gen llbuilder e1
+		| _ -> expr_gen llbuilder e
 		in
 		L.build_store value vmemory llbuilder
 

@@ -33,6 +33,7 @@ type expr =
 	| Noexpr
 	| Binop of expr * op * expr 
   | Unop of op * expr
+	| Assign of string * expr
   | FuncCall of string * expr list  
 	| Null 
   | CreateObject of string * expr list
@@ -51,7 +52,6 @@ type stmt =
 | Expr of expr
 | VarDecl of vdecl 
 | LocalVarDecl of data_type * string * expr
-| Assign of string * expr
 | Return of expr
 | If of expr * stmt * stmt
 | For of expr * expr * expr * stmt
