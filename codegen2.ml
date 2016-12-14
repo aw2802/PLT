@@ -113,14 +113,6 @@ let translate sast =
 		in
 		var
 
-(*	
-	and assign_to_variable vname value llbuilder =
-		let var = try Hashtbl.find global_var_table vname with 
-		| Not_found -> try Hashtbl.find local_var_table vname with 
-			| Not_found -> raise (Failure("unknown variable name " ^ vname))
-		in
-		L.build_store value var llbuilder
-*)
 	and assign_to_variable vmemory e2 llbuilder =
 		let value = match e2 with
 		| SId(id, d) -> get_value true id llbuilder
@@ -133,7 +125,17 @@ let translate sast =
 		let map_expr_to_printfexpr expr = expr_gen llbuilder expr in
 		let params = List.map map_expr_to_printfexpr expr_list in
 
-		let s = build_global_stringptr "%s\n" "printf" llbuilder in
+		let map_expr_to_type e = match e with
+			SInt_Lit (i)     ->	"%d"
+		| SBoolean_Lit (b) ->	"%s" (*needs to be implemented*)
+		| SFloat_Lit (f)   ->	"%f"
+		| SChar_Lit (c)    ->	"%c"
+		| SString_Lit (s) -> "%s"
+		| _ 			-> raise (Failure("Print invalid type"))
+
+		in
+		let expr_types = List.fold_left (fun s t -> s ^ map_expr_to_type t) "" expr_list in
+		let s = build_global_stringptr (expr_types ^ "\n") "printf" llbuilder in
 
   		(**	let zero = const_int i32_t 0 in**)
   		let s = build_in_bounds_gep s [| zero |] "printf" llbuilder in
