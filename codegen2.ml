@@ -127,11 +127,11 @@ let translate sast =
 		let expr_types = List.map (Semant.typOFSexpr) expr_list in
 
 		let map_expr_to_type e = match e with
-			SInt_Lit (i)     ->	"%d"
-		| SBoolean_Lit (b) ->	"%s" (*needs to be implemented*)
-		| SFloat_Lit (f)   ->	"%f"
-		| SChar_Lit (c)    ->	"%c"
-		| SString_Lit (s) -> "%s"
+			JInt     ->	"%d"
+		| JBoolean	 ->	"%s" (*needs to be implemented*)
+		| JFloat	 ->	"%f"
+		| JChar		 ->	"%c"
+		| JString	 -> "%s"
 		| _ 			-> raise (Failure("Print invalid type"))
 
 		in

@@ -16,11 +16,11 @@ let get_methods l classy = List.concat [classy.scbody.smethods;l]
 let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 
 let typOFSexpr = function
-		SInt_Lit(i)				-> SInt_Lit(i)	
-	| 	SBoolean_Lit(b)			-> SBoolean_Lit(b)	
-	| 	SFloat_Lit(f)			-> SFloat_Lit(f)
-	| 	SString_Lit(s) 			-> SString_Lit(s) 
-	| 	SChar_Lit(c) 			-> SChar_Lit(c) 
+		SInt_Lit(i)				-> JInt	
+	| 	SBoolean_Lit(b)			-> JBoolean	
+	| 	SFloat_Lit(f)			-> JFloat
+	| 	SString_Lit(s) 			-> JString
+	| 	SChar_Lit(c) 			-> JChar
 	| 	SId(_, d) 				-> d
 	| 	SBinop(_, _, _, d) 		-> d
 	| 	SAssign(_, _, d) 		-> d
