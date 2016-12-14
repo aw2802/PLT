@@ -21,6 +21,9 @@ let f_t = L.double_type context;; (* float *)
 let str_t = L.pointer_type i8_t;; 
 let void_t = L.void_type context;; (* void *)
 
+let global_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100
+let local_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100 (*Must be cleared evertime after a function is built*)
+
 let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	  A.JChar -> i8_t
 	| A.JVoid -> void_t
@@ -56,6 +59,27 @@ let translate sast =
 	let rec stmt_gen llbuilder = function 
 		  SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
 		| SExpr (se, _)	   ->	expr_gen llbuilder se
+		| SVarDecl sv		->	
+			let vardecl_gen datatype vname expr llbuilder =
+				let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
+					Hashtbl.add global_var_table vname allocatedMemory;
+				let variable_value = expr_gen llbuilder expr in 
+					match expr with
+					| SNoexpr -> allocatedMemory
+					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
+			in
+			vardecl_gen sv.svtype sv.vname sv.svexpr
+		| SLocalVarDecl (dt, vname, vexpr)		->
+			let local_vardecl_gen datatype vname expr llbuilder =
+				let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
+					Hashtbl.add local_var_table vname allocatedMemory;
+				let variable_value = expr_gen llbuilder expr in 
+					match expr with
+					| SNoexpr -> allocatedMemory
+					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
+			in
+			local_vardecl_gen dt vname vexpr
+
 
 	and expr_gen llbuilder = function
 		  SInt_Lit (i)     ->	L.const_int i32_t i
@@ -63,12 +87,30 @@ let translate sast =
 		| SFloat_Lit (f)   ->	L.const_float f_t  f
 		| SChar_Lit (c)    ->	L.const_int i8_t (Char.code c)
 		| SString_Lit (s)  ->	build_global_stringptr s "tmp" llbuilder
+		(*SNull*)
+		| SId (n, dt)		-> get_value n llbuilder (*Dn't know if it is returning an OCaml variable with the value or if it is returning a value*)
+		(*SBinop*)
+		| SAssign (e1, e2, dt)	-> assign_to_variable (expr_gen llbuilder e1) (expr_gen llbuilder e2) llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> 
 			let reserved_func_gen llbuilder d expr_list = function
 			  "print" -> print_func_gen expr_list llbuilder
 			  | _ as call_name -> raise(Failure("function call not found: "^ call_name))
 		in
 		reserved_func_gen llbuilder d expr_list fname
+
+	and get_value vname llbuilder = 
+		let var = try Hashtbl.find global_var_table vname with 
+		| Not_found -> try Hashtbl.find local_var_table vname with 
+			| Not_found -> raise (Failure("unknown variable name " ^ vname))
+		in
+		ignore(L.build_load var vname llbuilder); vname
+	
+	and assign_to_variable vname value llbuilder =
+		let var = try Hashtbl.find global_var_table vname with 
+		| Not_found -> try Hashtbl.find local_var_table vname with 
+			| Not_found -> raise (Failure("unknown variable name " ^ vname))
+		in
+		L.build_store value var llbuilder
 
 	and print_func_gen expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
