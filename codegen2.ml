@@ -103,7 +103,7 @@ let translate sast =
 		| Not_found -> try Hashtbl.find local_var_table vname with 
 			| Not_found -> raise (Failure("unknown variable name " ^ vname))
 		in
-		L.build_load var vname llbuilder)
+		L.build_load var vname llbuilder
 	
 	and assign_to_variable vname value llbuilder =
 		let var = try Hashtbl.find global_var_table vname with 
