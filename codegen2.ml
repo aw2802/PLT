@@ -104,13 +104,14 @@ let translate sast =
 		| Not_found -> try Hashtbl.find local_var_table vname with 
 			| Not_found -> raise (Failure("unknown variable name " ^ vname))
 		in
-		L.build_load var vname llbuilder
+		ignore(L.build_load var vname llbuilder); vname
+		
 	else
 		let var = try Hashtbl.find global_var_table vname with 
 		| Not_found -> try Hashtbl.find local_var_table vname with 
 			| Not_found -> raise (Failure("unknown variable name " ^ vname))
 		in
-		ignore(L.build_load var vname llbuilder); vname
+		L.build_load var vname llbuilder
 
 (*	
 	and assign_to_variable vname value llbuilder =
@@ -122,10 +123,10 @@ let translate sast =
 *)
 	and assign_to_variable vmemory e2 llbuilder =
 		let value = match e2 with
-		| SId(id, d) -> ignore(L.build_load (expr_gen llbuilder e2) temp llbuilder); temp
+		| SId(id, d) -> get_value true id llbuilder
 		| _ -> expr_gen llbuilder e2
 		in
-		L.build_store temp vmemory llbuilder
+		L.build_store value vmemory llbuilder
 
 	and print_func_gen expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
