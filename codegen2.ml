@@ -81,7 +81,6 @@ let translate sast =
 			in
 			local_vardecl_gen dt vname vexpr llbuilder
 
-
 	and expr_gen llbuilder = function
 		  SInt_Lit (i)     ->	L.const_int i32_t i
 		| SBoolean_Lit (b) ->	if b then L.const_int i1_t 1 else L.const_int i1_t 0
@@ -104,7 +103,7 @@ let translate sast =
 		| Not_found -> try Hashtbl.find local_var_table vname with 
 			| Not_found -> raise (Failure("unknown variable name " ^ vname))
 		in
-		ignore(L.build_load var vname llbuilder); vname
+		L.build_load var vname llbuilder)
 	
 	and assign_to_variable vname value llbuilder =
 		let var = try Hashtbl.find global_var_table vname with 
