@@ -39,6 +39,9 @@ type expr =
   | Tuple of expr * expr
   | CreateObject of string * expr list
   | ObjAccess of expr * expr
+	| Null 
+  (* object create *)
+  |ObjectCreate of string * expr list
 
   (* Variable Declarations *)
 type vdecl = {

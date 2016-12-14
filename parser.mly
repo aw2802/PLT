@@ -197,6 +197,8 @@ expr:
 	| NEW ID LPAREN actuals_opt RPAREN { CreateObject($2, $4)} 	  
 	| expr DOT expr { ObjAccess($1, $3)}
 	| LPAREN expr COMMA expr RPAREN  { Tuple($2, $4) }
+	/* object create */
+	| NEW ID LPAREN acutuals_opt RPAREN { ObjectCreate($2, $4)} 
 
 expr_opt:
 	/* nothing */ { Noexpr }
