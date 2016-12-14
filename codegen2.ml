@@ -41,6 +41,7 @@ let find_func_in_module fname =
 (** code gen top level begins here **)
 
 let translate sast = 
+	let classes = sast.classes in
 	let main = sast.main in 
 	
 	let util_func () = 
@@ -68,7 +69,7 @@ let translate sast =
 					| SNoexpr -> allocatedMemory
 					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
 			in
-			vardecl_gen sv.svtype sv.vname sv.svexpr
+			vardecl_gen sv.svtype sv.svname sv.svexpr
 		| SLocalVarDecl (dt, vname, vexpr)		->
 			let local_vardecl_gen datatype vname expr llbuilder =
 				let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
@@ -91,12 +92,12 @@ let translate sast =
 		| SId (n, dt)		-> get_value n llbuilder (*Dn't know if it is returning an OCaml variable with the value or if it is returning a value*)
 		(*SBinop*)
 		| SAssign (e1, e2, dt)	-> assign_to_variable (expr_gen llbuilder e1) (expr_gen llbuilder e2) llbuilder
-		| SFuncCall (fname, expr_list, d, _) -> 
+		| SFuncCall (fname, expr_list, d, _) -> (*Need to call a regular fuction too*)
 			let reserved_func_gen llbuilder d expr_list = function
 			  "print" -> print_func_gen expr_list llbuilder
 			  | _ as call_name -> raise(Failure("function call not found: "^ call_name))
-		in
-		reserved_func_gen llbuilder d expr_list fname
+			in
+			reserved_func_gen llbuilder d expr_list fname
 
 	and get_value vname llbuilder = 
 		let var = try Hashtbl.find global_var_table vname with 
@@ -125,6 +126,10 @@ let translate sast =
   		L.build_call printf (Array.of_list (s :: params)) "printf" llbuilder
 	in
 
+	(*Function generation*)
+
+
+	(*Main method generation*)
 	let build_main main =
 		    let fty = L.function_type i32_t[||] in 
 			let f = L.define_function "main" fty the_module in 	
@@ -135,6 +140,18 @@ let translate sast =
 			L.build_ret (L.const_int i32_t 0) llbuilder
 		in
 		let _ = build_main main in
+
+	(*Class generation*)
+
+	let build_classes sclass_decl =
+		let rt = L.pointer_type i64_t in
+		let void_pt = L.pointer_type i64_t in
+		let void_ppt = L.pointer_type void_pt in
+
+		let f = find_func_in_module "lookup" in
+		let llbuilder = L.builder_at_end context (entry_block f) in
+
+	let _ = List.map build_classes classes in	
 
 	the_module;
 
