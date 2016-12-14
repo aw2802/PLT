@@ -16,8 +16,8 @@ let get_methods l classy = List.concat [classy.scbody.smethods;l]
 let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 
 let typOFSexpr = function
-		SInt_Lit(_)				-> SInt_Lit(_)	
-	| 	SBoolean_Lit(_)			-> SBoolean_Lit(_)	
+		SInt_Lit(i)				-> SInt_Lit(i)	
+	| 	SBoolean_Lit(b)			-> SBoolean_Lit(b)	
 	| 	SFloat_Lit(_)			-> SFloat_Lit(_)
 	| 	SString_Lit(_) 			-> String_Lit(_) 
 	| 	SChar_Lit(_) 			-> SChar_Lit(_) 
