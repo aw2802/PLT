@@ -45,7 +45,7 @@ let convertToSast classes =
 			| Noexpr	-> SNoexpr
 			| Id(id)	-> SId(id, JInt) (** @TODO Sast has SId(string, datatype) **)
 			| Binop(expr1, op, expr2)	-> SBinop(convertExprToSast expr1, op, convertExprToSast expr2, JInt) (** @TODO Not sure about the data_type value. Same below **) 	
-			| Assign(expr1, expr2)		-> SAssign(convertExprToSast expr1, convertExprToSast expr2, JInt)
+			| Assign(id, expr2)		-> SAssign(id, convertExprToSast expr2, JInt)
 			| FuncCall(s, el)		-> SFuncCall(s, (List.map convertExprToSast el), JInt, 1)
 			| Unop(op, expr)		-> SUnop(op, convertExprToSast expr, JInt)
 			| CreateObject(s,el)	-> SCreateObject(s, (List.map convertExprToSast el), Object(s))
