@@ -18,7 +18,7 @@ type sexpr =
 	| SNoexpr
 	| SFuncCall of string * sexpr list * data_type * int (**check me y tho**)
 	| SUnop of op * sexpr * data_type
-	| SCreateObject of string * sexpr list * datatype
+	| SCreateObject of string * sexpr list * data_type
 (**	| SArrayCreate of data_type * sexpr list * data_type
 	| SArrayAccess of sexpr * sexpr list * data_type
 	| SArrayElements
