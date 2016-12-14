@@ -24,7 +24,7 @@ let typOFSexpr = function
 	| 	SId(_, d) 				-> d
 	| 	SBinop(_, _, _, d) 		-> d
 	| 	SAssign(_, _, d) 		-> d
-	| 	SCall(_, _, d,_)		-> d
+	| 	SFuncCall(_, _, d,_)	-> d
 	|  	SUnop(_, _, d) 			-> d 
 
 let convertToSast classes =
