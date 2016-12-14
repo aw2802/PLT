@@ -136,7 +136,7 @@ let translate sast =
 
 		in
 		let print_types = List.fold_left (fun s t -> s ^ map_expr_to_type t) "" expr_types in
-		let s = build_global_stringptr (expr_types ^ "\n") "printf" llbuilder in
+		let s = build_global_stringptr (print_types ^ "\n") "printf" llbuilder in
 
   		(**	let zero = const_int i32_t 0 in**)
   		let s = build_in_bounds_gep s [| zero |] "printf" llbuilder in
