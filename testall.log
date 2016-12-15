@@ -8,12 +8,12 @@ diff -b test-add.out tests/test-add.out > test-add.diff
 
 ###### Testing test-addAssign
 ./javapm tests/test-addAssign.javapm > test-addAssign.ll
-Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+Fatal error: exception Match_failure("codegen2.ml", 110, 26)
 ###### FAILED
 
 ###### Testing test-and
 ./javapm tests/test-and.javapm > test-and.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+Fatal error: exception Failure("hd")
 ###### FAILED
 
 ###### Testing test-andOp
@@ -63,8 +63,9 @@ diff -b test-div.out tests/test-div.out > test-div.diff
 
 ###### Testing test-equal
 ./javapm tests/test-equal.javapm > test-equal.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
-###### FAILED
+lli test-equal.ll > test-equal.out
+diff -b test-equal.out tests/test-equal.out > test-equal.diff
+###### SUCCESS
 
 ###### Testing test-fibonacci
 ./javapm tests/test-fibonacci.javapm > test-fibonacci.ll
@@ -73,17 +74,17 @@ Fatal error: exception Parsing.Parse_error
 
 ###### Testing test-float
 ./javapm tests/test-float.javapm > test-float.ll
-Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+Fatal error: exception Match_failure("codegen2.ml", 110, 26)
 ###### FAILED
 
 ###### Testing test-for
 ./javapm tests/test-for.javapm > test-for.ll
-Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+Fatal error: exception Match_failure("codegen2.ml", 110, 26)
 ###### FAILED
 
 ###### Testing test-for_nest
 ./javapm tests/test-for_nest.javapm > test-for_nest.ll
-Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+Fatal error: exception Match_failure("codegen2.ml", 110, 26)
 ###### FAILED
 
 ###### Testing test-func_in_object
@@ -93,18 +94,20 @@ Fatal error: exception Parsing.Parse_error
 
 ###### Testing test-gcd
 ./javapm tests/test-gcd.javapm > test-gcd.ll
-Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+Fatal error: exception Match_failure("codegen2.ml", 110, 26)
 ###### FAILED
 
 ###### Testing test-geq
 ./javapm tests/test-geq.javapm > test-geq.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
-###### FAILED
+lli test-geq.ll > test-geq.out
+diff -b test-geq.out tests/test-geq.out > test-geq.diff
+###### SUCCESS
 
 ###### Testing test-gt
 ./javapm tests/test-gt.javapm > test-gt.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
-###### FAILED
+lli test-gt.ll > test-gt.out
+diff -b test-gt.out tests/test-gt.out > test-gt.diff
+###### SUCCESS
 
 ###### Testing test-hello
 ./javapm tests/test-hello.javapm > test-hello.ll
@@ -114,28 +117,31 @@ diff -b test-hello.out tests/test-hello.out > test-hello.diff
 
 ###### Testing test-if
 ./javapm tests/test-if.javapm > test-if.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
-###### FAILED
+lli test-if.ll > test-if.out
+diff -b test-if.out tests/test-if.out > test-if.diff
+###### SUCCESS
 
 ###### Testing test-if_nest
 ./javapm tests/test-if_nest.javapm > test-if_nest.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+Fatal error: exception Failure("hd")
 ###### FAILED
 
 ###### Testing test-integer
 ./javapm tests/test-integer.javapm > test-integer.ll
-Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+Fatal error: exception Match_failure("codegen2.ml", 110, 26)
 ###### FAILED
 
 ###### Testing test-leq
 ./javapm tests/test-leq.javapm > test-leq.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
-###### FAILED
+lli test-leq.ll > test-leq.out
+diff -b test-leq.out tests/test-leq.out > test-leq.diff
+###### SUCCESS
 
 ###### Testing test-lt
 ./javapm tests/test-lt.javapm > test-lt.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
-###### FAILED
+lli test-lt.ll > test-lt.out
+diff -b test-lt.out tests/test-lt.out > test-lt.diff
+###### SUCCESS
 
 ###### Testing test-mult
 ./javapm tests/test-mult.javapm > test-mult.ll
@@ -145,13 +151,14 @@ diff -b test-mult.out tests/test-mult.out > test-mult.diff
 
 ###### Testing test-not
 ./javapm tests/test-not.javapm > test-not.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+Fatal error: exception Failure("hd")
 ###### FAILED
 
 ###### Testing test-notEqual
 ./javapm tests/test-notEqual.javapm > test-notEqual.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
-###### FAILED
+lli test-notEqual.ll > test-notEqual.out
+diff -b test-notEqual.out tests/test-notEqual.out > test-notEqual.diff
+###### SUCCESS
 
 ###### Testing test-object
 ./javapm tests/test-object.javapm > test-object.ll
@@ -160,7 +167,7 @@ Fatal error: exception Parsing.Parse_error
 
 ###### Testing test-or
 ./javapm tests/test-or.javapm > test-or.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+Fatal error: exception Failure("hd")
 ###### FAILED
 
 ###### Testing test-printAdd
@@ -177,15 +184,15 @@ diff -b test-subtract.out tests/test-subtract.out > test-subtract.diff
 
 ###### Testing test-while
 ./javapm tests/test-while.javapm > test-while.ll
-Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+Fatal error: exception Match_failure("codegen2.ml", 110, 26)
 ###### FAILED
 
 ###### Testing test-while_nest
 ./javapm tests/test-while_nest.javapm > test-while_nest.ll
-Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+Fatal error: exception Match_failure("codegen2.ml", 110, 26)
 ###### FAILED
 
 ###### Testing test-whille_for_nested
 ./javapm tests/test-whille_for_nested.javapm > test-whille_for_nested.ll
-Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+Fatal error: exception Match_failure("codegen2.ml", 110, 26)
 ###### FAILED
