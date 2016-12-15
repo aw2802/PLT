@@ -92,15 +92,13 @@ lli: test-float.ll:14:16: error: constexpr requires integer operands
 ./javapm tests/test-for.javapm > test-for.ll
 lli test-for.ll > test-for.out
 diff -b test-for.out tests/test-for.out > test-for.diff
-FAILED test-for.out differs from tests/test-for.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-for_nest
 ./javapm tests/test-for_nest.javapm > test-for_nest.ll
 lli test-for_nest.ll > test-for_nest.out
 diff -b test-for_nest.out tests/test-for_nest.out > test-for_nest.diff
-FAILED test-for_nest.out differs from tests/test-for_nest.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-func_in_object
 ./javapm tests/test-func_in_object.javapm > test-func_in_object.ll
