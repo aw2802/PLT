@@ -81,6 +81,44 @@ let translate sast =
 			in
 			local_vardecl_gen dt vname vexpr llbuilder
 		| SIf(e, s1, s2) -> generate_if e s1 s2 llbuilder
+		| SWhile(e, s) -> generate_while e s llbuilder
+
+
+	and generate_while e s llbuilder =
+
+		let start_block = L.insertion_block llbuilder in
+		let parent_function = L.block_parent start_block in
+
+		let pred_block = L.append_block context "while" parent_function in 
+		ignore (L.build_br pred_block llbuilder);
+
+		L.position_at_end pred_block llbuilder;
+
+		let body_block = L.append_block context "while_body" the_function in
+		L.position_at_end body_block llbuilder;
+		
+		let stmt = stmt_gen llbuilder s in
+		L.build_br pred_block llbuilder;
+
+
+		let pred_builder = L.builder_at_end context pred_block in
+		let boolean_condition = expr_gen pred_builder e in
+
+		let merge_block = L.append_block context "merge" the_function in
+		L.position_at_end pred_block llbuilder;
+		L.build_br merge_block llbuilder;
+
+		let whileStatement = L.build_cond_br boolean_condition body_block merge_block pred_builder in
+		
+		L.position_at_end merge_block llbuilder;
+
+		whileStatement
+
+
+		(*| SFor(e1, e2, e3, s) -> generate_for e1 e2 e3 s llbuilder
+
+	and generate_for e1 e2 e3 s =
+*)
 
 	and generate_if e s1 s2 llbuilder =
 		let boolean_condition = expr_gen llbuilder e in
