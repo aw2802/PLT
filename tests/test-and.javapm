@@ -2,7 +2,10 @@ public class TestAnd {
   public void main(){
     int i = 1;
     int j = 3;
-    if ((i == 1) and (j == 3)){
+    if (true and false){
+	print("hi");    
+    }
+    else {
       print(i);
       print(j);
     }

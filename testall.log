@@ -14,8 +14,9 @@ diff -b test-addAssign.out tests/test-addAssign.out > test-addAssign.diff
 
 ###### Testing test-and
 ./javapm tests/test-and.javapm > test-and.ll
-Fatal error: exception Failure("hd")
-###### FAILED
+lli test-and.ll > test-and.out
+diff -b test-and.out tests/test-and.out > test-and.diff
+###### SUCCESS
 
 ###### Testing test-andOp
 ./javapm tests/test-andOp.javapm > test-andOp.ll
@@ -43,6 +44,12 @@ Fatal error: exception Parsing.Parse_error
 ./javapm tests/test-assign.javapm > test-assign.ll
 lli test-assign.ll > test-assign.out
 diff -b test-assign.out tests/test-assign.out > test-assign.diff
+###### SUCCESS
+
+###### Testing test-bool
+./javapm tests/test-bool.javapm > test-bool.ll
+lli test-bool.ll > test-bool.out
+diff -b test-bool.out tests/test-bool.out > test-bool.diff
 ###### SUCCESS
 
 ###### Testing test-comments
