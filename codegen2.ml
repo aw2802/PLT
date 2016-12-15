@@ -82,6 +82,7 @@ let translate sast =
 			local_vardecl_gen dt vname vexpr llbuilder
 		| SIf(e, s1, s2) -> generate_if e s1 s2 llbuilder
 		| SWhile(e, s) -> generate_while e s llbuilder
+		| SFor(e1, e2, e3, s) -> generate_for e1 e2 e3 s llbuilder
 
 
 	and generate_while e s llbuilder =
@@ -109,11 +110,9 @@ let translate sast =
 
 		whileStatement
 
-
-		(*| SFor(e1, e2, e3, s) -> generate_for e1 e2 e3 s llbuilder
-
-	and generate_for e1 e2 e3 s =
-*)
+	and generate_for e1 e2 e3 s llbuilder =
+		expr_gen llbuilder e1;
+		generate_while e2 (List.concat (stmt_gen llbuilder s) (expr_gen llbuilder e3)) llbuilder
 
 	and generate_if e s1 s2 llbuilder =
 		let boolean_condition = expr_gen llbuilder e in
