@@ -22,6 +22,13 @@ lli test-andOp.ll > test-andOp.out
 diff -b test-andOp.out tests/test-andOp.out > test-andOp.diff
 ###### SUCCESS
 
+###### Testing test-arithmetic
+./javapm tests/test-arithmetic.javapm > test-arithmetic.ll
+lli test-arithmetic.ll > test-arithmetic.out
+diff -b test-arithmetic.out tests/test-arithmetic.out > test-arithmetic.diff
+FAILED test-arithmetic.out differs from tests/test-arithmetic.out
+###### FAILED
+
 ###### Testing test-array
 ./javapm tests/test-array.javapm > test-array.ll
 Fatal error: exception Parsing.Parse_error
@@ -47,6 +54,13 @@ diff -b test-comments.out tests/test-comments.out > test-comments.diff
 ###### Testing test-constructors
 ./javapm tests/test-constructors.javapm > test-constructors.ll
 Fatal error: exception Parsing.Parse_error
+###### FAILED
+
+###### Testing test-div
+./javapm tests/test-div.javapm > test-div.ll
+lli test-div.ll > test-div.out
+diff -b test-div.out tests/test-div.out > test-div.diff
+FAILED test-div.out differs from tests/test-div.out
 ###### FAILED
 
 ###### Testing test-equal
@@ -127,7 +141,9 @@ Fatal error: exception Match_failure("codegen2.ml", 60, 30)
 
 ###### Testing test-mult
 ./javapm tests/test-mult.javapm > test-mult.ll
-Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+lli test-mult.ll > test-mult.out
+diff -b test-mult.out tests/test-mult.out > test-mult.diff
+FAILED test-mult.out differs from tests/test-mult.out
 ###### FAILED
 
 ###### Testing test-not
@@ -158,7 +174,11 @@ diff -b test-printAdd.out tests/test-printAdd.out > test-printAdd.diff
 
 ###### Testing test-subtract
 ./javapm tests/test-subtract.javapm > test-subtract.ll
-Fatal error: exception Parsing.Parse_error
+Both operands to a binary operator are not of the same type!
+  %tmp = sub i32* %i, i32 %i1
+Stored value type does not match pointer operand type!
+  store i32* %tmp, i32* %j
+ i32LLVM ERROR: Broken module found, compilation aborted!
 ###### FAILED
 
 ###### Testing test-while
