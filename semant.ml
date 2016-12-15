@@ -24,6 +24,7 @@ let typOFSexpr = function
 	| 	SId(_, d) 				-> d
 	| 	SBinop(_, _, _, d) 		-> d
 	(*| 	SAssign(_, _, d) 		-> d *)
+	|   SAssign(_, _, _, d) 	-> d
 	| 	SFuncCall(_, _, d,_)	-> d
 	|  	SUnop(_, _, d) 			-> d 
 	| 	SCreateObject(_,_,d)	-> d
