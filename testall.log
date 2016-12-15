@@ -1,14 +1,169 @@
 /usr/bin/lli
 
+###### Testing test-add
+./javapm tests/test-add.javapm > test-add.ll
+Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+###### FAILED
+
+###### Testing test-and
+./javapm tests/test-and.javapm > test-and.ll
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+###### FAILED
+
+###### Testing test-array
+./javapm tests/test-array.javapm > test-array.ll
+Fatal error: exception Parsing.Parse_error
+###### FAILED
+
+###### Testing test-array_object
+./javapm tests/test-array_object.javapm > test-array_object.ll
+Fatal error: exception Parsing.Parse_error
+###### FAILED
+
+###### Testing test-assign
+./javapm tests/test-assign.javapm > test-assign.ll
+lli test-assign.ll > test-assign.out
+diff -b test-assign.out tests/test-assign.out > test-assign.diff
+FAILED test-assign.out differs from tests/test-assign.out
+###### FAILED
+
+###### Testing test-comments
+./javapm tests/test-comments.javapm > test-comments.ll
+lli test-comments.ll > test-comments.out
+diff -b test-comments.out tests/test-comments.out > test-comments.diff
+FAILED test-comments.out differs from tests/test-comments.out
+###### FAILED
+
+###### Testing test-constructors
+./javapm tests/test-constructors.javapm > test-constructors.ll
+Fatal error: exception Parsing.Parse_error
+###### FAILED
+
+###### Testing test-equal
+./javapm tests/test-equal.javapm > test-equal.ll
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+###### FAILED
+
+###### Testing test-fibonacci
+./javapm tests/test-fibonacci.javapm > test-fibonacci.ll
+Fatal error: exception Parsing.Parse_error
+###### FAILED
+
+###### Testing test-float
+./javapm tests/test-float.javapm > test-float.ll
+Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+###### FAILED
+
+###### Testing test-for
+./javapm tests/test-for.javapm > test-for.ll
+Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+###### FAILED
+
+###### Testing test-for_nest
+./javapm tests/test-for_nest.javapm > test-for_nest.ll
+Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+###### FAILED
+
+###### Testing test-func_in_object
+./javapm tests/test-func_in_object.javapm > test-func_in_object.ll
+Fatal error: exception Parsing.Parse_error
+###### FAILED
+
+###### Testing test-gcd
+./javapm tests/test-gcd.javapm > test-gcd.ll
+Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+###### FAILED
+
+###### Testing test-geq
+./javapm tests/test-geq.javapm > test-geq.ll
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+###### FAILED
+
+###### Testing test-gt
+./javapm tests/test-gt.javapm > test-gt.ll
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+###### FAILED
+
 ###### Testing test-hello
 ./javapm tests/test-hello.javapm > test-hello.ll
 lli test-hello.ll > test-hello.out
 diff -b test-hello.out tests/test-hello.out > test-hello.diff
 ###### SUCCESS
 
+###### Testing test-if
+./javapm tests/test-if.javapm > test-if.ll
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+###### FAILED
+
+###### Testing test-if_nest
+./javapm tests/test-if_nest.javapm > test-if_nest.ll
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+###### FAILED
+
+###### Testing test-integer
+./javapm tests/test-integer.javapm > test-integer.ll
+Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+###### FAILED
+
+###### Testing test-leq
+./javapm tests/test-leq.javapm > test-leq.ll
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+###### FAILED
+
+###### Testing test-lt
+./javapm tests/test-lt.javapm > test-lt.ll
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+###### FAILED
+
+###### Testing test-mult
+./javapm tests/test-mult.javapm > test-mult.ll
+Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+###### FAILED
+
+###### Testing test-not
+./javapm tests/test-not.javapm > test-not.ll
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+###### FAILED
+
+###### Testing test-notEqual
+./javapm tests/test-notEqual.javapm > test-notEqual.ll
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+###### FAILED
+
+###### Testing test-object
+./javapm tests/test-object.javapm > test-object.ll
+Fatal error: exception Parsing.Parse_error
+###### FAILED
+
+###### Testing test-or
+./javapm tests/test-or.javapm > test-or.ll
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+###### FAILED
+
+###### Testing test-printAdd
+./javapm tests/test-printAdd.javapm > test-printAdd.ll
+lli test-printAdd.ll > test-printAdd.out
+diff -b test-printAdd.out tests/test-printAdd.out > test-printAdd.diff
+###### SUCCESS
+
+###### Testing test-subtract
+./javapm tests/test-subtract.javapm > test-subtract.ll
+Fatal error: exception Parsing.Parse_error
+###### FAILED
+
 ###### Testing test-while
 ./javapm tests/test-while.javapm > test-while.ll
-Fatal error: exception Match_failure("codegen2.ml", 56, 30)
+Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+###### FAILED
+
+###### Testing test-while_nest
+./javapm tests/test-while_nest.javapm > test-while_nest.ll
+Fatal error: exception Match_failure("codegen2.ml", 84, 26)
+###### FAILED
+
+###### Testing test-whille_for_nested
+./javapm tests/test-whille_for_nested.javapm > test-whille_for_nested.ll
+Fatal error: exception Match_failure("codegen2.ml", 84, 26)
 ###### FAILED
 
 ###### Testing fail-assign1
@@ -19,6 +174,118 @@ Fatal error: exception Match_failure("codegen2.ml", 56, 30)
 < tests/fail-assign2.javapm 2> fail-assign2.err >> testall.log
 ###### FAILED
 
+###### Testing fail-assign3
+< tests/fail-assign3.javapm 2> fail-assign3.err >> testall.log
+###### FAILED
+
+###### Testing fail-dead1
+< tests/fail-dead1.javapm 2> fail-dead1.err >> testall.log
+###### FAILED
+
+###### Testing fail-dead2
+< tests/fail-dead2.javapm 2> fail-dead2.err >> testall.log
+###### FAILED
+
+###### Testing fail-expr1
+< tests/fail-expr1.javapm 2> fail-expr1.err >> testall.log
+###### FAILED
+
+###### Testing fail-expr2
+< tests/fail-expr2.javapm 2> fail-expr2.err >> testall.log
+###### FAILED
+
+###### Testing fail-for1
+< tests/fail-for1.javapm 2> fail-for1.err >> testall.log
+###### FAILED
+
+###### Testing fail-for2
+< tests/fail-for2.javapm 2> fail-for2.err >> testall.log
+###### FAILED
+
+###### Testing fail-for3
+< tests/fail-for3.javapm 2> fail-for3.err >> testall.log
+###### FAILED
+
+###### Testing fail-for4
+< tests/fail-for4.javapm 2> fail-for4.err >> testall.log
+###### FAILED
+
+###### Testing fail-for5
+< tests/fail-for5.javapm 2> fail-for5.err >> testall.log
+###### FAILED
+
+###### Testing fail-func1
+< tests/fail-func1.javapm 2> fail-func1.err >> testall.log
+###### FAILED
+
+###### Testing fail-func2
+< tests/fail-func2.javapm 2> fail-func2.err >> testall.log
+###### FAILED
+
+###### Testing fail-func3
+< tests/fail-func3.javapm 2> fail-func3.err >> testall.log
+###### FAILED
+
+###### Testing fail-func4
+< tests/fail-func4.javapm 2> fail-func4.err >> testall.log
+###### FAILED
+
+###### Testing fail-func5
+< tests/fail-func5.javapm 2> fail-func5.err >> testall.log
+###### FAILED
+
+###### Testing fail-func6
+< tests/fail-func6.javapm 2> fail-func6.err >> testall.log
+###### FAILED
+
+###### Testing fail-func7
+< tests/fail-func7.javapm 2> fail-func7.err >> testall.log
+###### FAILED
+
+###### Testing fail-func8
+< tests/fail-func8.javapm 2> fail-func8.err >> testall.log
+###### FAILED
+
+###### Testing fail-func9
+< tests/fail-func9.javapm 2> fail-func9.err >> testall.log
+###### FAILED
+
+###### Testing fail-global1
+< tests/fail-global1.javapm 2> fail-global1.err >> testall.log
+###### FAILED
+
+###### Testing fail-global2
+< tests/fail-global2.javapm 2> fail-global2.err >> testall.log
+###### FAILED
+
+###### Testing fail-if1
+< tests/fail-if1.javapm 2> fail-if1.err >> testall.log
+###### FAILED
+
+###### Testing fail-if2
+< tests/fail-if2.javapm 2> fail-if2.err >> testall.log
+###### FAILED
+
+###### Testing fail-if3
+< tests/fail-if3.javapm 2> fail-if3.err >> testall.log
+###### FAILED
+
 ###### Testing fail-nomain
 < tests/fail-nomain.javapm 2> fail-nomain.err >> testall.log
+###### FAILED
+
+###### Testing fail-return1
+< tests/fail-return1.javapm 2> fail-return1.err >> testall.log
+###### FAILED
+
+###### Testing fail-return2
+< tests/fail-return2.javapm 2> fail-return2.err >> testall.log
+###### FAILED
+
+###### Testing fail-while1
+< tests/fail-while1.javapm 2> fail-while1.err >> testall.log
+###### FAILED
+
+###### Testing fail-while2
+< tests/fail-while2.javapm 2> fail-while2.err >> testall.log
 ###### FAILED

@@ -1,0 +1,7 @@
+public class TestAdd{
+  public void main(){
+  	
+  	int x = 4;
+    print(x + 1);
+  }
+}

@@ -1,7 +1,7 @@
 %{ open Ast %}
 
 %token CLASS PUBLIC PRIVATE
-%token JBOOLEAN JCHAR JINT JFLOAT JVOID TRUE FALSE NULL JTUPLE
+%token JBOOLEAN JCHAR JINT JFLOAT JVOID JSTRING TRUE FALSE NULL JTUPLE
 %token SEMI LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET COMMA DOT
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT AND OR 
 %token EQ NEQ LT LEQ GT GEQ 
@@ -162,7 +162,7 @@ stmt_list:
 	| stmt_list stmt { $2 :: $1 }
 
 stmt:
-	  expr SEMI { Expr $1 }
+	  expr SEMI { Expr ($1) }
 	| vdecl { VarDecl ($1) }
 	| datatype ID SEMI {LocalVarDecl($1, $2, Noexpr)}
 	| datatype ID ASSIGN expr SEMI {LocalVarDecl($1, $2, $4)}
@@ -191,9 +191,11 @@ expr:
 	| expr AND expr { Binop($1, And, $3) }
 	| expr OR expr { Binop($1, Or, $3) }
 	| NOT expr { Unop(Not, $2) }
-	| expr ASSIGN expr { Assign($1, $3) }
-	| LPAREN expr RPAREN { $2 } 
+	| ID ASSIGN expr { Assign($1, $3) }
+	| LPAREN expr RPAREN { $2 }
 	| ID LPAREN actuals_opt RPAREN { FuncCall($1, $3) }	
+	| NEW ID LPAREN actuals_opt RPAREN { CreateObject($2, $4)} 	  
+	| expr DOT expr { ObjAccess($1, $3)}
 	| LPAREN expr COMMA expr RPAREN  { Tuple($2, $4) }
 
 expr_opt:

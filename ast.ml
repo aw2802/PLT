@@ -6,6 +6,7 @@ type data_type =
   | JBoolean
   | JFloat
   | JInt
+  | JString
   | Object of string 
   | JTuple of data_type * data_type
   
@@ -32,10 +33,13 @@ type expr =
   | Noexpr
   | Binop of expr * op * expr 
   | Unop of op * expr
+<<<<<<< HEAD
   | Assign of expr * expr
   | FuncCall of string * expr list  
   | Null
   | Tuple of expr * expr
+  | CreateObject of string * expr list
+  | ObjAccess of expr * expr
 
   (* Variable Declarations *)
 type vdecl = {

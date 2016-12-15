@@ -21,6 +21,9 @@ let f_t = L.double_type context;; (* float *)
 let str_t = L.pointer_type i8_t;; 
 let void_t = L.void_type context;; (* void *)
 
+let global_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100
+let local_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100 (*Must be cleared evertime after a function is built*)
+
 let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	  A.JChar -> i8_t
 	| A.JVoid -> void_t
@@ -38,6 +41,7 @@ let find_func_in_module fname =
 (** code gen top level begins here **)
 
 let translate sast = 
+	let classes = sast.classes in
 	let main = sast.main in 
 	
 	let util_func () = 
@@ -56,6 +60,26 @@ let translate sast =
 	let rec stmt_gen llbuilder = function 
 		  SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
 		| SExpr (se, _)	   ->	expr_gen llbuilder se
+		| SVarDecl sv		->	
+			let vardecl_gen datatype vname expr llbuilder =
+				let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
+					Hashtbl.add global_var_table vname allocatedMemory;
+				let variable_value = expr_gen llbuilder expr in 
+					match expr with
+					| SNoexpr -> allocatedMemory
+					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
+			in
+			vardecl_gen sv.svtype sv.svname sv.svexpr llbuilder
+		| SLocalVarDecl (dt, vname, vexpr)		->
+			let local_vardecl_gen datatype vname expr llbuilder =
+				let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
+					Hashtbl.add local_var_table vname allocatedMemory;
+				let variable_value = expr_gen llbuilder expr in 
+					match expr with
+					| SNoexpr -> allocatedMemory
+					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
+			in
+			local_vardecl_gen dt vname vexpr llbuilder
 
 	and expr_gen llbuilder = function
 		  SInt_Lit (i)     ->	L.const_int i32_t i
@@ -63,19 +87,84 @@ let translate sast =
 		| SFloat_Lit (f)   ->	L.const_float f_t  f
 		| SChar_Lit (c)    ->	L.const_int i8_t (Char.code c)
 		| SString_Lit (s)  ->	build_global_stringptr s "tmp" llbuilder
-		| SFuncCall (fname, expr_list, d, _) -> 
+		(*SNull*)
+		| SId (n, dt)		-> get_value false n llbuilder (*Dn't know if it is returning an OCaml variable with the value or if it is returning a value*)
+		| SBinop(e1, op, e2, dt) -> binop_gen e1 op e2 llbuilder
+		| SAssign (id, e, dt)	-> assign_to_variable (get_value false id llbuilder) e llbuilder
+		| SFuncCall (fname, expr_list, d, _) -> (*Need to call a regular fuction too*)
 			let reserved_func_gen llbuilder d expr_list = function
 			  "print" -> print_func_gen expr_list llbuilder
 			  | _ as call_name -> raise(Failure("function call not found: "^ call_name))
+			in
+			reserved_func_gen llbuilder d expr_list fname
+
+	and binop_gen e1 op e2 llbuilder = 
+		let value1 =  match e1 with
+			| SId(id, d) -> get_value true id llbuilder
+			| _ -> expr_gen llbuilder e2
 		in
-		reserved_func_gen llbuilder d expr_list fname
+		let value2 = match e2 with
+			| SId(id, d) -> get_value true id llbuilder
+			| _ -> expr_gen llbuilder e2	
+		in
+
+		(match op with
+			  Add 		-> L.build_add 
+			| Sub 		-> L.build_sub
+			| Mult 		-> L.build_mul 
+			| Div 		-> L.build_sdiv 
+			| Equal 	-> L.build_icmp L.Icmp.Eq 
+			| Neq 		-> L.build_icmp L.Icmp.Ne 
+			| Less 		-> L.build_icmp L.Icmp.Slt 
+			| Leq 		-> L.build_icmp L.Icmp.Sle 
+			| Greater	-> L.build_icmp L.Icmp.Sgt 
+			| Geq 		-> L.build_icmp L.Icmp.Sge
+			| And		-> L.build_and
+			| Or 		-> L.build_or 
+			| _ 		-> raise(Failure("Invalid operator for floats"))
+		) value1 value2 "tmp" llbuilder
+
+
+	and get_value deref vname llbuilder = 
+		if deref then
+		let var = try Hashtbl.find global_var_table vname with 
+		| Not_found -> try Hashtbl.find local_var_table vname with 
+			| Not_found -> raise (Failure("unknown variable name " ^ vname))
+		in
+		L.build_load var vname llbuilder
+		
+	else
+		let var = try Hashtbl.find global_var_table vname with 
+		| Not_found -> try Hashtbl.find local_var_table vname with 
+			| Not_found -> raise (Failure("unknown variable name " ^ vname))
+		in
+		var
+
+	and assign_to_variable vmemory e llbuilder =
+		let value = match e with
+		| SId(id, d) -> get_value true id llbuilder
+		| _ -> expr_gen llbuilder e
+		in
+		L.build_store value vmemory llbuilder
 
 	and print_func_gen expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
 		let map_expr_to_printfexpr expr = expr_gen llbuilder expr in
+		(** @TODO: Call the right get_value, breaks function call when given only a variable name**)
 		let params = List.map map_expr_to_printfexpr expr_list in
+		let expr_types = List.map (Semant.typOFSexpr) expr_list in
 
-		let s = build_global_stringptr "%s\n" "printf" llbuilder in
+		let map_expr_to_type e = match e with
+			JInt     ->	"%d"
+		| JBoolean	 ->	"%s" (*needs to be implemented*)
+		| JFloat	 ->	"%f"
+		| JChar		 ->	"%c"
+		| JString	 -> "%s"
+		| _ 			-> raise (Failure("Print invalid type"))
+
+		in
+		let print_types = List.fold_left (fun s t -> s ^ map_expr_to_type t) "" expr_types in
+		let s = build_global_stringptr (print_types ^ "\n") "printf" llbuilder in
 
   		(**	let zero = const_int i32_t 0 in**)
   		let s = build_in_bounds_gep s [| zero |] "printf" llbuilder in
@@ -83,6 +172,10 @@ let translate sast =
   		L.build_call printf (Array.of_list (s :: params)) "printf" llbuilder
 	in
 
+	(*Function generation*)
+
+
+	(*Main method generation*)
 	let build_main main =
 		    let fty = L.function_type i32_t[||] in 
 			let f = L.define_function "main" fty the_module in 	
@@ -94,5 +187,17 @@ let translate sast =
 		in
 		let _ = build_main main in
 
+	(*Class generation*)
+(*
+	let build_classes sclass_decl =
+		let rt = L.pointer_type i64_t in
+		let void_pt = L.pointer_type i64_t in
+		let void_ppt = L.pointer_type void_pt in
+
+		let f = find_func_in_module "lookup" in
+		let llbuilder = L.builder_at_end context (entry_block f) in
+
+	let _ = List.map build_classes classes in	
+*)
 	the_module;
 
