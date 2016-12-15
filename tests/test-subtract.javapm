@@ -1,8 +1,7 @@
 public class TestSubtract{
   public void main(){
-    int i= 5;
-    int j;
-    j = -(-i);
+    int i = 5;
+    int j = 10 - i;
     print(j);
   }
 }

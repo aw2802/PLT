@@ -1,0 +1,6 @@
+public class TestDivision{
+  public void main(){
+    int i = 10 / 5;
+    print(i);
+  }
+}

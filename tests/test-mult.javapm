@@ -1,7 +1,6 @@
 public class TestMult{
   public void main(){
-    int i;
-    i = 10 * 5;
+    int i = 10 * 5;
     print(i);
   }
 }
