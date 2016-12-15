@@ -99,7 +99,8 @@ let translate sast =
 		L.position_at_end else_block llbuilder;
 		let stmt2 = stmt_gen llbuilder s2 in
 		L.build_br merge_block llbuilder;
-		
+		L.position_at_end merge_block llbuilder;
+
 		L.build_cond_br boolean_condition then_block else_block llbuilder
 
 	and expr_gen llbuilder = function
