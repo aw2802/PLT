@@ -102,7 +102,7 @@ let translate sast =
 		
 		ignore (L.build_cond_br boolean_condition then_block else_block llbuilder);
 
-		L.position_at_end merge_block builder
+		L.position_at_end merge_block llbuilder
 
 	and expr_gen llbuilder = function
 		  SInt_Lit (i)     ->	L.const_int i32_t i
