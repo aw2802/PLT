@@ -94,7 +94,7 @@ let translate sast =
 
 		L.position_at_end pred_block llbuilder;
 
-		let body_block = L.append_block context "while_body" the_function in
+		let body_block = L.append_block context "while_body" parent_function in
 		L.position_at_end body_block llbuilder;
 		
 		let stmt = stmt_gen llbuilder s in
