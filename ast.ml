@@ -7,7 +7,7 @@ type data_type =
   | JFloat
   | JInt
   | Object of string 
-
+  | JTuple of data_type * data_type
   
 (* Operators *)
 type op = Add | Sub | Div | Mult | Equal | Neq | Less | Leq | Greater | Geq |
@@ -24,17 +24,18 @@ type formal = {
 (* Expressions *)
 type expr =
     Id of string
-	| Int_Lit of int
-	| Float_Lit of float
-	| Char_Lit of char
+  | Int_Lit of int
+  | Float_Lit of float
+  | Char_Lit of char
   | Bool_Lit of bool
   | String_Lit of string
-	| Noexpr
-	| Binop of expr * op * expr 
+  | Noexpr
+  | Binop of expr * op * expr 
   | Unop of op * expr
-	| Assign of expr * expr
+  | Assign of expr * expr
   | FuncCall of string * expr list  
-	| Null 
+  | Null
+  | Tuple of expr * expr
 
   (* Variable Declarations *)
 type vdecl = {

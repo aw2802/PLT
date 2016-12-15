@@ -1,7 +1,7 @@
 %{ open Ast %}
 
 %token CLASS PUBLIC PRIVATE
-%token JBOOLEAN JCHAR JINT JFLOAT JVOID TRUE FALSE NULL
+%token JBOOLEAN JCHAR JINT JFLOAT JVOID TRUE FALSE NULL JTUPLE
 %token SEMI LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET COMMA DOT
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT AND OR 
 %token EQ NEQ LT LEQ GT GEQ 
@@ -117,14 +117,16 @@ fdecl:
 			fbody = List.rev $8 } }
 
 /* datatypes + formal & actual params */
-primitive:  JCHAR 		{ JChar }
-		  | JINT		{ JInt }
-		  | JFLOAT 		{ JFloat } 
-		  | JBOOLEAN 	{ JBoolean }
-		  | JVOID 		{ JVoid }
-
+primitive:  
+	  JCHAR 					{ JChar }
+	| JINT						{ JInt }
+	| JFLOAT				 	{ JFloat } 
+	| JBOOLEAN 					{ JBoolean }
+	| JVOID 					{ JVoid }
+	| JTUPLE LPAREN datatype COMMA datatype RPAREN		{ JTuple($3, $5) }
+		
 type_tag:
-	  primitive { $1 }
+	  primitive 	{ $1 }
 	| CLASS ID	{ Object($2) }
 
 datatype:
@@ -190,8 +192,9 @@ expr:
 	| expr OR expr { Binop($1, Or, $3) }
 	| NOT expr { Unop(Not, $2) }
 	| expr ASSIGN expr { Assign($1, $3) }
-	| LPAREN expr RPAREN { $2 }
+	| LPAREN expr RPAREN { $2 } 
 	| ID LPAREN actuals_opt RPAREN { FuncCall($1, $3) }	
+	| LPAREN expr COMMA expr RPAREN  { Tuple($2, $4) }
 
 expr_opt:
 	/* nothing */ { Noexpr }
@@ -200,9 +203,9 @@ expr_opt:
 literals:
 	  INT_LITERAL      		{ Int_Lit($1) }
 	| FLOAT_LITERAL    		{ Float_Lit($1) }
-	| TRUE			   		{ Bool_Lit(true) }
-	| FALSE			   		{ Bool_Lit(false) }
+	| TRUE			   	{ Bool_Lit(true) }
+	| FALSE			   	{ Bool_Lit(false) }
 	| STRING_LITERAL   		{ String_Lit($1) }  
 	| CHAR_LITERAL			{ Char_Lit($1) }
-	| ID 			   		{ Id($1) }	
-	| NULL				    { Null }
+	| ID 			   	{ Id($1) }	
+	| NULL				{ Null }
