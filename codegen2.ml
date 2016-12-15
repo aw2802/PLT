@@ -58,7 +58,7 @@ let translate sast =
 	
 	let zero = const_int i32_t 0 in
 	let rec stmt_gen llbuilder = function 
-		  SBlock sl        ->	List.fold_left stmt llbuilder sl
+		  SBlock sl        ->	List.fold_left stmt_gen llbuilder sl
 		| SExpr (se, _)	   ->	expr_gen llbuilder se
 		| SVarDecl sv		->	
 			let vardecl_gen datatype vname expr llbuilder =
