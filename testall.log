@@ -2,6 +2,12 @@
 
 ###### Testing test-add
 ./javapm tests/test-add.javapm > test-add.ll
+lli test-add.ll > test-add.out
+diff -b test-add.out tests/test-add.out > test-add.diff
+###### SUCCESS
+
+###### Testing test-addAssign
+./javapm tests/test-addAssign.javapm > test-addAssign.ll
 Fatal error: exception Match_failure("codegen2.ml", 84, 26)
 ###### FAILED
 
@@ -9,6 +15,12 @@ Fatal error: exception Match_failure("codegen2.ml", 84, 26)
 ./javapm tests/test-and.javapm > test-and.ll
 Fatal error: exception Match_failure("codegen2.ml", 60, 30)
 ###### FAILED
+
+###### Testing test-andOp
+./javapm tests/test-andOp.javapm > test-andOp.ll
+lli test-andOp.ll > test-andOp.out
+diff -b test-andOp.out tests/test-andOp.out > test-andOp.diff
+###### SUCCESS
 
 ###### Testing test-array
 ./javapm tests/test-array.javapm > test-array.ll
@@ -24,15 +36,13 @@ Fatal error: exception Parsing.Parse_error
 ./javapm tests/test-assign.javapm > test-assign.ll
 lli test-assign.ll > test-assign.out
 diff -b test-assign.out tests/test-assign.out > test-assign.diff
-FAILED test-assign.out differs from tests/test-assign.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-comments
 ./javapm tests/test-comments.javapm > test-comments.ll
 lli test-comments.ll > test-comments.out
 diff -b test-comments.out tests/test-comments.out > test-comments.diff
-FAILED test-comments.out differs from tests/test-comments.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-constructors
 ./javapm tests/test-constructors.javapm > test-constructors.ll
@@ -164,128 +174,4 @@ Fatal error: exception Match_failure("codegen2.ml", 84, 26)
 ###### Testing test-whille_for_nested
 ./javapm tests/test-whille_for_nested.javapm > test-whille_for_nested.ll
 Fatal error: exception Match_failure("codegen2.ml", 84, 26)
-###### FAILED
-
-###### Testing fail-assign1
-< tests/fail-assign1.javapm 2> fail-assign1.err >> testall.log
-###### FAILED
-
-###### Testing fail-assign2
-< tests/fail-assign2.javapm 2> fail-assign2.err >> testall.log
-###### FAILED
-
-###### Testing fail-assign3
-< tests/fail-assign3.javapm 2> fail-assign3.err >> testall.log
-###### FAILED
-
-###### Testing fail-dead1
-< tests/fail-dead1.javapm 2> fail-dead1.err >> testall.log
-###### FAILED
-
-###### Testing fail-dead2
-< tests/fail-dead2.javapm 2> fail-dead2.err >> testall.log
-###### FAILED
-
-###### Testing fail-expr1
-< tests/fail-expr1.javapm 2> fail-expr1.err >> testall.log
-###### FAILED
-
-###### Testing fail-expr2
-< tests/fail-expr2.javapm 2> fail-expr2.err >> testall.log
-###### FAILED
-
-###### Testing fail-for1
-< tests/fail-for1.javapm 2> fail-for1.err >> testall.log
-###### FAILED
-
-###### Testing fail-for2
-< tests/fail-for2.javapm 2> fail-for2.err >> testall.log
-###### FAILED
-
-###### Testing fail-for3
-< tests/fail-for3.javapm 2> fail-for3.err >> testall.log
-###### FAILED
-
-###### Testing fail-for4
-< tests/fail-for4.javapm 2> fail-for4.err >> testall.log
-###### FAILED
-
-###### Testing fail-for5
-< tests/fail-for5.javapm 2> fail-for5.err >> testall.log
-###### FAILED
-
-###### Testing fail-func1
-< tests/fail-func1.javapm 2> fail-func1.err >> testall.log
-###### FAILED
-
-###### Testing fail-func2
-< tests/fail-func2.javapm 2> fail-func2.err >> testall.log
-###### FAILED
-
-###### Testing fail-func3
-< tests/fail-func3.javapm 2> fail-func3.err >> testall.log
-###### FAILED
-
-###### Testing fail-func4
-< tests/fail-func4.javapm 2> fail-func4.err >> testall.log
-###### FAILED
-
-###### Testing fail-func5
-< tests/fail-func5.javapm 2> fail-func5.err >> testall.log
-###### FAILED
-
-###### Testing fail-func6
-< tests/fail-func6.javapm 2> fail-func6.err >> testall.log
-###### FAILED
-
-###### Testing fail-func7
-< tests/fail-func7.javapm 2> fail-func7.err >> testall.log
-###### FAILED
-
-###### Testing fail-func8
-< tests/fail-func8.javapm 2> fail-func8.err >> testall.log
-###### FAILED
-
-###### Testing fail-func9
-< tests/fail-func9.javapm 2> fail-func9.err >> testall.log
-###### FAILED
-
-###### Testing fail-global1
-< tests/fail-global1.javapm 2> fail-global1.err >> testall.log
-###### FAILED
-
-###### Testing fail-global2
-< tests/fail-global2.javapm 2> fail-global2.err >> testall.log
-###### FAILED
-
-###### Testing fail-if1
-< tests/fail-if1.javapm 2> fail-if1.err >> testall.log
-###### FAILED
-
-###### Testing fail-if2
-< tests/fail-if2.javapm 2> fail-if2.err >> testall.log
-###### FAILED
-
-###### Testing fail-if3
-< tests/fail-if3.javapm 2> fail-if3.err >> testall.log
-###### FAILED
-
-###### Testing fail-nomain
-< tests/fail-nomain.javapm 2> fail-nomain.err >> testall.log
-###### FAILED
-
-###### Testing fail-return1
-< tests/fail-return1.javapm 2> fail-return1.err >> testall.log
-###### FAILED
-
-###### Testing fail-return2
-< tests/fail-return2.javapm 2> fail-return2.err >> testall.log
-###### FAILED
-
-###### Testing fail-while1
-< tests/fail-while1.javapm 2> fail-while1.err >> testall.log
-###### FAILED
-
-###### Testing fail-while2
-< tests/fail-while2.javapm 2> fail-while2.err >> testall.log
 ###### FAILED
