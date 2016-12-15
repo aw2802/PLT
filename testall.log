@@ -105,8 +105,9 @@ Fatal error: exception Parsing.Parse_error
 
 ###### Testing test-gcd
 ./javapm tests/test-gcd.javapm > test-gcd.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
-###### FAILED
+lli test-gcd.ll > test-gcd.out
+diff -b test-gcd.out tests/test-gcd.out > test-gcd.diff
+###### SUCCESS
 
 ###### Testing test-geq
 ./javapm tests/test-geq.javapm > test-geq.ll
@@ -202,13 +203,15 @@ diff -b test-subtract.out tests/test-subtract.out > test-subtract.diff
 
 ###### Testing test-while
 ./javapm tests/test-while.javapm > test-while.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
-###### FAILED
+lli test-while.ll > test-while.out
+diff -b test-while.out tests/test-while.out > test-while.diff
+###### SUCCESS
 
 ###### Testing test-while_nest
 ./javapm tests/test-while_nest.javapm > test-while_nest.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
-###### FAILED
+lli test-while_nest.ll > test-while_nest.out
+diff -b test-while_nest.out tests/test-while_nest.out > test-while_nest.diff
+###### SUCCESS
 
 ###### Testing test-whille_for_nested
 ./javapm tests/test-whille_for_nested.javapm > test-whille_for_nested.ll

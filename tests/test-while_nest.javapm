@@ -1,11 +1,11 @@
 public class TestWhileNested{
   public void main(){
-    int i = 1;
+    int i = 0;
     int j;
-    while (i < 5){
-      j = 2;
-      while (j < 4){
-        print("i = ", i, " ", "j = ", j, "\n");
+    while (i < 1){
+      j = 0;
+      while (j < 3){
+        print("Inside");
         j = j+1;
       }
       i = i+1;
