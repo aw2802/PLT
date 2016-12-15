@@ -92,6 +92,7 @@ let translate sast =
 
 		let then_block = L.append_block context "then" parent_function in
 		L.position_at_end then_block llbuilder;
+		
 		let stmt1 = stmt_gen llbuilder s1 in
 		L.build_br merge_block llbuilder;
 
@@ -100,10 +101,11 @@ let translate sast =
 		let stmt2 = stmt_gen llbuilder s2 in
 		L.build_br merge_block llbuilder;
 
-		let if_instruction = L.build_cond_br boolean_condition then_block else_block llbuilder in
+		L.position_at_end start_block llbuilder;
+		let ifStatement = L.build_cond_br boolean_condition then_block else_block llbuilder in
 		L.position_at_end merge_block llbuilder;
 
-		if_instruction
+		ifStatement
 
 	and expr_gen llbuilder = function
 		  SInt_Lit (i)     ->	L.const_int i32_t i
