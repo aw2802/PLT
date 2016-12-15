@@ -33,8 +33,7 @@ type expr =
   | Noexpr
   | Binop of expr * op * expr 
   | Unop of op * expr
-<<<<<<< HEAD
-  | Assign of expr * expr
+  | Assign of string * expr
   | FuncCall of string * expr list  
   | Null
   | Tuple of expr * expr
