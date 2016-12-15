@@ -104,7 +104,7 @@ let translate sast =
 		let pred_builder = L.builder_at_end context pred_block in
 		let boolean_condition = expr_gen pred_builder e in
 
-		let merge_block = L.append_block context "merge" the_function in
+		let merge_block = L.append_block context "merge" parent_function in
 		L.position_at_end pred_block llbuilder;
 		L.build_br merge_block llbuilder;
 
