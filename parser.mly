@@ -194,6 +194,7 @@ expr:
 	| ID LPAREN actuals_opt RPAREN { FuncCall($1, $3) }	
 	| NEW ID LPAREN actuals_opt RPAREN { CreateObject($2, $4)} 	  
 	| expr DOT expr { ObjAccess($1, $3)}
+
 expr_opt:
 	/* nothing */ { Noexpr }
 	| expr { $1 }
