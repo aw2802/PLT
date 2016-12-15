@@ -2,14 +2,21 @@ public class TestIfNested{
   public void main(){
     int i = 2;
     int j = 4;
-    if (true)
-    {
+    if (true){
       if (i == 2){
-        if (i < j)
-        {
+        if (i < j){
           print(j);
         }
+        else{
+
+        }
       }
+      else{
+
+      }
+    }
+    else{
+    
     }
   }
 }
