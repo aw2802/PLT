@@ -92,14 +92,11 @@ let translate sast =
 		let pred_block = L.append_block context "while" parent_function in 
 		ignore (L.build_br pred_block llbuilder);
 
-		L.position_at_end pred_block llbuilder;
-
 		let body_block = L.append_block context "while_body" parent_function in
 		L.position_at_end body_block llbuilder;
 		
 		let stmt = stmt_gen llbuilder s in
-		L.build_br pred_block llbuilder;
-
+		ignore(L.build_br pred_block llbuilder);
 
 		L.position_at_end pred_block llbuilder;
 
