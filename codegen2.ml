@@ -111,7 +111,10 @@ let translate sast =
 
 	and generate_for e1 e2 e3 s llbuilder =
 		expr_gen llbuilder e1;
-		let sbody = stmt_gen llbuilder s in
+		let sbody = match s with
+			| SBlock sl -> sl
+			| _ -> raise(Failure("Body of for is not a block"))
+		in
 		let endBlock = [(expr_gen llbuilder e3)] in
 		let sl = List.concat sbody ; endBlock in
 		let whileBlock = SBlock(sl) in
