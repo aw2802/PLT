@@ -1,0 +1,11 @@
+public class TestBool {
+
+	public void main() {
+		if(true and true) {
+			print("true and true");
+		}
+		else {
+			print("Nope");
+		}
+	}
+}
