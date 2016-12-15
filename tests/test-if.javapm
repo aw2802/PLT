@@ -9,6 +9,6 @@ public class TestIf{
       print(0);
     }
 
-    print(000);
+    print("Wahoo");
   }
 }
