@@ -84,7 +84,6 @@ let translate sast =
 		| SWhile(e, s) -> generate_while e s llbuilder
 		| SFor(e1, e2, e3, s) -> generate_for e1 e2 e3 s llbuilder
 
-
 	and generate_while e s llbuilder =
 
 		let start_block = L.insertion_block llbuilder in
@@ -112,7 +111,12 @@ let translate sast =
 
 	and generate_for e1 e2 e3 s llbuilder =
 		expr_gen llbuilder e1;
-		generate_while e2 SBlock(List.concat (stmt_gen llbuilder s); [(expr_gen llbuilder e3)]) llbuilder
+		let sbody = stmt_gen llbuilder s in
+		let endBlock = [(expr_gen llbuilder e3)] in
+		let sl = List.concat sbody ; endBlock in
+		let whileBlock = SBlock(sl) in
+
+		generate_while e2 whileBlock llbuilder
 
 	and generate_if e s1 s2 llbuilder =
 		let boolean_condition = expr_gen llbuilder e in
