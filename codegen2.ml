@@ -100,7 +100,7 @@ let translate sast =
 		let stmt2 = stmt_gen llbuilder s2 in
 		L.build_br merge_block llbuilder;
 		
-		ignore (L.build_cond_br boolean_condition stmt1 stmt2 llbuilder);
+		ignore (L.build_cond_br boolean_condition then_block else_block llbuilder);
 
 		L.position_at_end merge_block builder
 
