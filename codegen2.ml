@@ -99,13 +99,9 @@ let translate sast =
 			reserved_func_gen llbuilder d expr_list fname
 
 	and binop_gen e1 op e2 llbuilder = 
-		let value1 =  match e1 with
-			| SId(id, d) -> get_value true id llbuilder
-			| _ -> expr_gen llbuilder e2
+		let value1 =  expr_gen llbuilder e2
 		in
-		let value2 = match e2 with
-			| SId(id, d) -> get_value true id llbuilder
-			| _ -> expr_gen llbuilder e2	
+		let value2 = expr_gen llbuilder e2	
 		in
 
 		(match op with
@@ -121,7 +117,7 @@ let translate sast =
 			| Geq 		-> L.build_icmp L.Icmp.Sge
 			| And		-> L.build_and
 			| Or 		-> L.build_or 
-			| _ 		-> raise(Failure("Invalid operator for floats"))
+			| _ 		-> raise(Failure("Invalid operator for ints"))
 		) value1 value2 "tmp" llbuilder
 
 
