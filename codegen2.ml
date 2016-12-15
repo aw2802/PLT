@@ -149,8 +149,10 @@ let translate sast =
 
 	and print_func_gen expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
-		let map_expr_to_printfexpr expr = expr_gen llbuilder expr in
-		(** @TODO: Call the right get_value, breaks function call when given only a variable name**)
+		let map_expr_to_printfexpr expr = match expr with
+			| SId(id, d) -> get_value true id llbuilder
+			| _ -> expr_gen llbuilder expr
+		in
 		let params = List.map map_expr_to_printfexpr expr_list in
 		let expr_types = List.map (Semant.typOFSexpr) expr_list in
 
