@@ -112,7 +112,7 @@ let translate sast =
 
 	and generate_for e1 e2 e3 s llbuilder =
 		expr_gen llbuilder e1;
-		generate_while e2 (List.concat (stmt_gen llbuilder s); (expr_gen llbuilder e3)) llbuilder
+		generate_while e2 SBlock(List.concat (stmt_gen llbuilder s); (expr_gen llbuilder e3)) llbuilder
 
 	and generate_if e s1 s2 llbuilder =
 		let boolean_condition = expr_gen llbuilder e in
