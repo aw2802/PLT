@@ -90,23 +90,20 @@ let translate sast =
 		let parent_function = L.block_parent start_block in
 
 		let pred_block = L.append_block context "while" parent_function in 
-		ignore (L.build_br pred_block llbuilder);
+		L.build_br pred_block llbuilder;
 
 		let body_block = L.append_block context "while_body" parent_function in
-		L.position_at_end body_block llbuilder;
+		let body_builder = L.builder_at_end context body_block in	
 		
-		let stmt = stmt_gen llbuilder s in
-		ignore(L.build_br pred_block llbuilder);
+		let stmt = stmt_gen body_builder s in
+		L.build_br pred_block body_builder;
 
-		L.position_at_end pred_block llbuilder;
+		let pred_builder = L.builder_at_end context pred_block in
 
-		let boolean_condition = expr_gen llbuilder e in
-
+		let boolean_condition = expr_gen pred_builder e in
 		let merge_block = L.append_block context "merge" parent_function in
-		
-		L.build_br merge_block llbuilder;
 
-		let whileStatement = L.build_cond_br boolean_condition body_block merge_block llbuilder in
+		let whileStatement = L.build_cond_br boolean_condition body_block merge_block pred_builder in
 		
 		L.position_at_end merge_block llbuilder;
 
