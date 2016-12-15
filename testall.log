@@ -90,12 +90,16 @@ lli: test-float.ll:14:16: error: constexpr requires integer operands
 
 ###### Testing test-for
 ./javapm tests/test-for.javapm > test-for.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+lli test-for.ll > test-for.out
+diff -b test-for.out tests/test-for.out > test-for.diff
+FAILED test-for.out differs from tests/test-for.out
 ###### FAILED
 
 ###### Testing test-for_nest
 ./javapm tests/test-for_nest.javapm > test-for_nest.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+lli test-for_nest.ll > test-for_nest.out
+diff -b test-for_nest.out tests/test-for_nest.out > test-for_nest.diff
+FAILED test-for_nest.out differs from tests/test-for_nest.out
 ###### FAILED
 
 ###### Testing test-func_in_object
@@ -135,8 +139,9 @@ diff -b test-if.out tests/test-if.out > test-if.diff
 
 ###### Testing test-if_nest
 ./javapm tests/test-if_nest.javapm > test-if_nest.ll
-Fatal error: exception Failure("hd")
-###### FAILED
+lli test-if_nest.ll > test-if_nest.out
+diff -b test-if_nest.out tests/test-if_nest.out > test-if_nest.diff
+###### SUCCESS
 
 ###### Testing test-initialize
 ./javapm tests/test-initialize.javapm > test-initialize.ll
@@ -215,5 +220,7 @@ diff -b test-while_nest.out tests/test-while_nest.out > test-while_nest.diff
 
 ###### Testing test-whille_for_nested
 ./javapm tests/test-whille_for_nested.javapm > test-whille_for_nested.ll
-Fatal error: exception Match_failure("codegen2.ml", 60, 30)
+lli test-whille_for_nested.ll > test-whille_for_nested.out
+diff -b test-whille_for_nested.out tests/test-whille_for_nested.out > test-whille_for_nested.diff
+FAILED test-whille_for_nested.out differs from tests/test-whille_for_nested.out
 ###### FAILED
