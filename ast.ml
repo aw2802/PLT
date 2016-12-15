@@ -37,7 +37,7 @@ type expr =
   | FuncCall of string * expr list  
 	| Null 
   | ArrayCreate of data_type * expr list
-  | ArrayAccess of expr * expr
+  | ArrayAccess of expr * expr list
 
   (* Variable Declarations *)
 type vdecl = {

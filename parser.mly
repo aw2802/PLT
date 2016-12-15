@@ -201,6 +201,7 @@ expr:
 	| LPAREN expr RPAREN { $2 }
 	| ID LPAREN actuals_opt RPAREN { FuncCall($1, $3) }
 	| NEW type_tag brackets_args RBRACKET { ArrayCreate($2 , List.rev $3)}
+	| expr brackets_args RBRACKET { ArrayAccess($1, List.rev $2) }
 
 brackets_args:
 		LBRACKET expr { [$2] }
