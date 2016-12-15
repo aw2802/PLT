@@ -8,15 +8,15 @@ public class TestIfNested{
           print(j);
         }
         else{
-
+          print("In else 1");
         }
       }
       else{
-
+        print("In else 2");
       }
     }
     else{
-    
+      print("In else 3");
     }
   }
 }
