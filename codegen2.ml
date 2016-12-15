@@ -58,8 +58,8 @@ let translate sast =
 	
 	let zero = const_int i32_t 0 in
 	let rec stmt_gen llbuilder = function 
-		  SBlock sl        ->	List.fold_left stmt_gen llbuilder sl
-		| SExpr (se, _)	   ->	ignore(expr_gen llbuilder se); llbuilder
+		  SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
+		| SExpr (se, _)	   ->	expr_gen llbuilder se
 		| SVarDecl sv		->	
 			let vardecl_gen datatype vname expr llbuilder =
 				let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
@@ -67,7 +67,7 @@ let translate sast =
 				let variable_value = expr_gen llbuilder expr in 
 					match expr with
 					| SNoexpr -> allocatedMemory
-					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); llbuilder
+					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
 			in
 			vardecl_gen sv.svtype sv.svname sv.svexpr llbuilder
 		| SLocalVarDecl (dt, vname, vexpr)		->
@@ -77,7 +77,7 @@ let translate sast =
 				let variable_value = expr_gen llbuilder expr in 
 					match expr with
 					| SNoexpr -> allocatedMemory
-					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); llbuilder
+					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
 			in
 			local_vardecl_gen dt vname vexpr llbuilder
 		| SIf(e, s1, s2) -> generate_if e s1 s2 llbuilder
@@ -107,7 +107,7 @@ let translate sast =
 		
 		L.position_at_end merge_block llbuilder;
 
-		(*whileStatement *)
+		whileStatement
 
 	and generate_for e1 e2 e3 s llbuilder =
 		expr_gen llbuilder e1;
@@ -141,7 +141,7 @@ let translate sast =
 		let ifStatement = L.build_cond_br boolean_condition then_block else_block llbuilder in
 		L.position_at_end merge_block llbuilder;
 
-		(*ifStatement*)
+		ifStatement
 
 	and expr_gen llbuilder = function
 		  SInt_Lit (i)     ->	L.const_int i32_t i
