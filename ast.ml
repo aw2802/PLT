@@ -37,6 +37,7 @@ type expr =
   | FuncCall of string * expr list  
 	| Null 
   | CreateObject of string * expr list
+  | ObjAccess of expr * expr
 
   (* Variable Declarations *)
 type vdecl = {

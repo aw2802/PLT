@@ -192,8 +192,8 @@ expr:
 	| ID ASSIGN expr { Assign($1, $3) }
 	| LPAREN expr RPAREN { $2 }
 	| ID LPAREN actuals_opt RPAREN { FuncCall($1, $3) }	
-	| NEW ID LPAREN actuals_opt RPAREN { CreateObject($2, $4)} 
-
+	| NEW ID LPAREN actuals_opt RPAREN { CreateObject($2, $4)} 	  
+	| expr DOT expr { ObjAccess($1, $3)}
 expr_opt:
 	/* nothing */ { Noexpr }
 	| expr { $1 }
