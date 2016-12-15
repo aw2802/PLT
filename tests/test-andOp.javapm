@@ -1,0 +1,6 @@
+public class TestAndOp {
+	public void main() {
+		print(1 and 0);
+		print(1 and 1);
+	}
+}

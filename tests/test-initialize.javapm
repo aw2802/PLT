@@ -1,0 +1,7 @@
+public class TestInitialize {
+	public void main() {
+		int x;
+		print("It's okay not to initialize.");
+	}
+
+}

@@ -5,7 +5,7 @@ public class TestAdd{
     print(i);
 
     int j;
-    j = i + 1;
+    j = 2 + 1;
     print(j);
   }
 }

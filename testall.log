@@ -8,8 +8,9 @@ diff -b test-add.out tests/test-add.out > test-add.diff
 
 ###### Testing test-addAssign
 ./javapm tests/test-addAssign.javapm > test-addAssign.ll
-Fatal error: exception Match_failure("codegen2.ml", 110, 26)
-###### FAILED
+lli test-addAssign.ll > test-addAssign.out
+diff -b test-addAssign.out tests/test-addAssign.out > test-addAssign.diff
+###### SUCCESS
 
 ###### Testing test-and
 ./javapm tests/test-and.javapm > test-and.ll
@@ -74,17 +75,20 @@ Fatal error: exception Parsing.Parse_error
 
 ###### Testing test-float
 ./javapm tests/test-float.javapm > test-float.ll
-Fatal error: exception Match_failure("codegen2.ml", 110, 26)
+lli test-float.ll > test-float.out
+lli: test-float.ll:14:16: error: constexpr requires integer operands
+  store double sub (double 2.250000e+00, double 2.500000e-01), double* %i
+               ^
 ###### FAILED
 
 ###### Testing test-for
 ./javapm tests/test-for.javapm > test-for.ll
-Fatal error: exception Match_failure("codegen2.ml", 110, 26)
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
 ###### FAILED
 
 ###### Testing test-for_nest
 ./javapm tests/test-for_nest.javapm > test-for_nest.ll
-Fatal error: exception Match_failure("codegen2.ml", 110, 26)
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
 ###### FAILED
 
 ###### Testing test-func_in_object
@@ -94,7 +98,7 @@ Fatal error: exception Parsing.Parse_error
 
 ###### Testing test-gcd
 ./javapm tests/test-gcd.javapm > test-gcd.ll
-Fatal error: exception Match_failure("codegen2.ml", 110, 26)
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
 ###### FAILED
 
 ###### Testing test-geq
@@ -126,10 +130,17 @@ diff -b test-if.out tests/test-if.out > test-if.diff
 Fatal error: exception Failure("hd")
 ###### FAILED
 
+###### Testing test-initialize
+./javapm tests/test-initialize.javapm > test-initialize.ll
+lli test-initialize.ll > test-initialize.out
+diff -b test-initialize.out tests/test-initialize.out > test-initialize.diff
+###### SUCCESS
+
 ###### Testing test-integer
 ./javapm tests/test-integer.javapm > test-integer.ll
-Fatal error: exception Match_failure("codegen2.ml", 110, 26)
-###### FAILED
+lli test-integer.ll > test-integer.out
+diff -b test-integer.out tests/test-integer.out > test-integer.diff
+###### SUCCESS
 
 ###### Testing test-leq
 ./javapm tests/test-leq.javapm > test-leq.ll
@@ -184,15 +195,15 @@ diff -b test-subtract.out tests/test-subtract.out > test-subtract.diff
 
 ###### Testing test-while
 ./javapm tests/test-while.javapm > test-while.ll
-Fatal error: exception Match_failure("codegen2.ml", 110, 26)
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
 ###### FAILED
 
 ###### Testing test-while_nest
 ./javapm tests/test-while_nest.javapm > test-while_nest.ll
-Fatal error: exception Match_failure("codegen2.ml", 110, 26)
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
 ###### FAILED
 
 ###### Testing test-whille_for_nested
 ./javapm tests/test-whille_for_nested.javapm > test-whille_for_nested.ll
-Fatal error: exception Match_failure("codegen2.ml", 110, 26)
+Fatal error: exception Match_failure("codegen2.ml", 60, 30)
 ###### FAILED
