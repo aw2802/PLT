@@ -5,5 +5,8 @@ public class TestNot{
     if (i != 3){
       print(0);
     }
+    else{
+    	print(1);
+    }
   }
 }
