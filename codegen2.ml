@@ -80,6 +80,29 @@ let translate sast =
 					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
 			in
 			local_vardecl_gen dt vname vexpr llbuilder
+		| SIf(e, s1, s2) -> generate_if e s1 s2 llbuilder
+
+	and generate_if e s1 s2 llbuilder =
+		let boolean_condition = expr_gen llbuilder e in
+		let stmt1 = stmt_gen llbuilder s1 in
+		let stmt2 = stmt_gen llbuilder s2 in
+
+		let start_block = L.insertion_block llbuilder in
+		let parent_function = L.block_parent start_block in
+
+		let then_block = L.append_block context "then" parent_function in
+		L.position_at_end then_block llbuilder;
+
+		let new_then_block = L.insertion_block llbuilder in
+		let else_block = L.append_block context "else" parent_function in
+		L.position_at_end else_block llbuilder;
+
+		let new_else_block = L.insertion_block llbuilder in	
+		let merge_bb = L.append_block context "merge" parent_function in
+
+		ignore (L.build_cond_br boolean_condition stmt1 stmt2 llbuilder);
+
+		L.position_at_end merge_block builder;
 
 	and expr_gen llbuilder = function
 		  SInt_Lit (i)     ->	L.const_int i32_t i
