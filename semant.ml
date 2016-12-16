@@ -30,7 +30,8 @@ let typOFSexpr = function
 	| 	SFuncCall(_, _, d,_)	-> d
 	|  	SUnop(_, _, d) 			-> d 
 	| 	SCreateObject(_,_,d)	-> d
-	| 	SObjAccess(_,_,d) -> d
+	| 	SObjAccess(_, _, d)		-> d
+
 let convertToSast classes =
 	
 		let convertFormalToSast formal =
@@ -57,7 +58,8 @@ let convertToSast classes =
 			| CreateObject(s,el)	-> SCreateObject(s, (List.map convertExprToSast el), Object(s))
 			| ObjAccess(e1,e2) -> SObjAccess(convertExprToSast e1, convertExprToSast e2, JInt) (* Just a placeholder *)
 			| TupleCreate(dl, el)	-> STupleCreate(dl, (List.map convertExprToSast el), Tuple(dl))
-			| TupleAccess(e1, e2)	-> STupleAccess(convertExprToSast e1, convertExprToSast e2, JInt) (* @TODO *)		
+			| TupleAccess(e1, e2)	-> STupleAccess(convertExprToSast e1, convertExprToSast e2, JInt) (* @TODO *)	
+
 	in
 		let convertVdeclToSast vdecl = 
 		{
