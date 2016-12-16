@@ -137,7 +137,7 @@ datatype:
 	| array_type { $1 }
 
 brackets:
-	  /* nothing */	{ $1 }
+	  /* nothing */	{ 1 }
 	| brackets RBRACKET LBRACKET { $1 + 1 }
 
 formal:
@@ -206,7 +206,7 @@ expr:
 	| expr DOT expr { ObjAccess($1, $3)}
 	| LPAREN expr COMMA expr RPAREN  { Tuple($2, $4) }
 	| NEW type_tag brackets_args RBRACKET { ArrayCreate($2, List.rev $3) }
-	| expr brackets_args RBRACKETS { ArrayAccess($1, List.rev $2) }
+	| expr brackets_args RBRACKET { ArrayAccess($1, List.rev $2) }
 
 brackets_args:
 	  LBRACKET expr { [$2] }
