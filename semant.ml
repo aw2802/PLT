@@ -23,8 +23,9 @@ let typOFSexpr = function
 	| 	SChar_Lit(c) 			-> JChar
 	| 	SId(_, d) 				-> d
 	| 	SBinop(_, _, _, d) 		-> d
-	(*| 	SAssign(_, _, d) 		-> d *)
 	|   SAssign(_, _, d) 		-> d
+	| 	SArrayCreate(_, _, d)	-> d
+	| 	SArrayAccess(_, _, d) 	-> d
 	| 	SFuncCall(_, _, d,_)	-> d
 	|  	SUnop(_, _, d) 			-> d 
 	| 	SCreateObject(_,_,d)	-> d
@@ -46,6 +47,8 @@ let convertToSast classes =
 			| Noexpr	-> SNoexpr
 			| Id(id)	-> SId(id, JInt) (** @TODO Sast has SId(string, datatype) **)
 			| Binop(expr1, op, expr2)	-> SBinop(convertExprToSast expr1, op, convertExprToSast expr2, JInt) (** @TODO Not sure about the data_type value. Same below **) 	
+			| ArrayCreate(d, el)  -> checkArrayInitialize( convertExprToSast d, el)
+			| ArrayAccess(e, el)  -> checkArrayAccess(convertExprToSast e, el)
 			| Assign(id, e)		-> SAssign(id, convertExprToSast e, JInt)
 			| FuncCall(s, el)		-> SFuncCall(s, (List.map convertExprToSast el), JInt, 1)
 			| Unop(op, expr)		-> SUnop(op, convertExprToSast expr, JInt)
