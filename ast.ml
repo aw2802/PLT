@@ -8,7 +8,7 @@ type data_type =
   | JInt
   | JString
   | Object of string 
-  | JTuple of data_type * data_type
+  | Tuple of data_type list
   
 (* Operators *)
 type op = Add | Sub | Div | Mult | Equal | Neq | Less | Leq | Greater | Geq |
@@ -36,9 +36,10 @@ type expr =
   | Assign of string * expr
   | FuncCall of string * expr list  
   | Null
-  | Tuple of expr * expr
   | CreateObject of string * expr list
   | ObjAccess of expr * expr
+  | TupleCreate of data_type list * expr list
+  | TupleAccess of expr * expr
 
   (* Variable Declarations *)
 type vdecl = {

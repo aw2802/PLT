@@ -1,7 +1,7 @@
 %{ open Ast %}
 
 %token CLASS PUBLIC PRIVATE
-%token JBOOLEAN JCHAR JINT JFLOAT JVOID JSTRING TRUE FALSE NULL JTUPLE
+%token JBOOLEAN JCHAR JINT JFLOAT JVOID JSTRING TRUE FALSE NULL TUPLE
 %token SEMI LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET COMMA DOT
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT AND OR 
 %token EQ NEQ LT LEQ GT GEQ 
@@ -116,6 +116,13 @@ fdecl:
 			fformals = $5;
 			fbody = List.rev $8 } }
 
+tdatatype_args:
+                datatype                        {[$1]}
+        |       tdatatype_args COMMA datatype   {$3 :: $1}
+
+tuple_type :
+        TUPLE LT tdatatype_args GT { Tuple($3) }
+
 /* datatypes + formal & actual params */
 primitive:  
 	  JCHAR 					{ JChar }
@@ -123,14 +130,14 @@ primitive:
 	| JFLOAT				 	{ JFloat } 
 	| JBOOLEAN 					{ JBoolean }
 	| JVOID 					{ JVoid }
-	| JTUPLE LPAREN datatype COMMA datatype RPAREN		{ JTuple($3, $5) }
 		
 type_tag:
 	  primitive 	{ $1 }
 	| CLASS ID	{ Object($2) }
 
 datatype:
-	type_tag   { $1 }
+	  type_tag   { $1 }
+	| tuple_type { $1 }
 
 formal:
 	datatype ID
@@ -153,7 +160,6 @@ actuals_opt:
 actuals_list:
 		expr                    { [$1] }
 	| 	actuals_list COMMA expr { $3 :: $1 }
-
 
 /* statements */
 
@@ -196,7 +202,8 @@ expr:
 	| ID LPAREN actuals_opt RPAREN { FuncCall($1, $3) }	
 	| NEW ID LPAREN actuals_opt RPAREN { CreateObject($2, $4)} 	  
 	| expr DOT expr { ObjAccess($1, $3)}
-	| LPAREN expr COMMA expr RPAREN  { Tuple($2, $4) }
+	| NEW TUPLE LT tdatatype_args GT LPAREN actuals_opt RPAREN  { TupleCreate($4, $7) } 
+	| expr LBRACKET expr RBRACKET {TupleAccess($1, $3)}
 
 expr_opt:
 	/* nothing */ { Noexpr }
