@@ -54,7 +54,7 @@ let translate sast =
 
 		let _ = L.declare_function "printf" printf_t the_module in
 		let _ = L.declare_function "malloc" malloc_t the_module in
-		let _ = L.declare_function "lookup" lookup_t the_module in
+		let _ = L.define_function "lookup" lookup_t the_module in
 		()
 	in
 	let _ = util_func () in
