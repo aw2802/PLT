@@ -7,7 +7,8 @@ type data_type =
   | JFloat
   | JInt
   | JString
-  | Object of string 
+  | Object of string
+  | Arraytype of data_type * int 
   | JTuple of data_type * data_type
   
 (* Operators *)
@@ -39,6 +40,8 @@ type expr =
   | Tuple of expr * expr
   | CreateObject of string * expr list
   | ObjAccess of expr * expr
+  | ArrayCreate of data_type * expr list
+  | ArrayAccess of expr * expr list
 
   (* Variable Declarations *)
 type vdecl = {
