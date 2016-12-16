@@ -3,7 +3,7 @@ public class TestOr{
     int i = 1;
     int j = 3;
     if ((i != 1) or (j == 3)){
-      print("J was 3!");
+      println("J was 3!");
     }
   }
 }

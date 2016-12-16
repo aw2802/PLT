@@ -2,10 +2,10 @@ public class TestAdd{
   public void main(){
     int i;
     i = 1 + 1; 
-    print(i);
+    println(i);
 
     int j;
     j = 2 + 1;
-    print(j);
+    println(j);
   }
 }

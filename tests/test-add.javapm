@@ -1,9 +1,9 @@
 public class TestAdd{
   public void main(){
     int i = 1 + 1; 
-    print(i);
+    println(i);
 
     int j = i + 1;
-    print(j);
+    println(j);
   }
 }

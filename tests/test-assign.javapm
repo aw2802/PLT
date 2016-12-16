@@ -1,7 +1,7 @@
 public class TestAssign {
 	public void main() {
 		int x = 5;
-		print(x);
+		println(x);
 	}
 
 }
