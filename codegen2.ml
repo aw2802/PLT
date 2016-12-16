@@ -69,7 +69,7 @@ let translate sast =
 	let _ = List.map add_classes_to_hashTable classes in
 
 	let define_classes c = 
-		let struct_t = Hashtbl.find struct_typ_table s.scname in
+		let struct_t = Hashtbl.find struct_typ_table c.scname in
 		let type_list = List.map (function SVarDecl(sv) -> get_llvm_type sv.svtype) c.scbody.svariables in
 		let name_list = List.map (function SVarDecl(sv) -> get_llvm_type sv.svname) c.scbody.svariables in
 		let type_list = i32_t :: type_list in
