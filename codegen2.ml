@@ -228,7 +228,7 @@ let translate sast =
 		in
 		let print_types = List.fold_left (fun s t -> s ^ map_expr_to_type t) "" expr_types in
 		if newLine then
-			print_types = print_types ^ "\n"
+			let print_types = print_types ^ "\n"
 		in
 		let s = build_global_stringptr (print_types) "printf" llbuilder in
 
