@@ -9,8 +9,8 @@ type data_type =
   | JString
   | Object of string
   | Arraytype of data_type * int 
-  | JTuple of data_type * data_type
-  
+  | Tuple of data_type list
+ 
 (* Operators *)
 type op = Add | Sub | Div | Mult | Equal | Neq | Less | Leq | Greater | Geq |
 Or | And | Not
@@ -37,9 +37,10 @@ type expr =
   | Assign of string * expr
   | FuncCall of string * expr list  
   | Null
-  | Tuple of expr * expr
   | CreateObject of string * expr list
   | ObjAccess of expr * expr
+  | TupleCreate of data_type list * expr list
+  | TupleAccess of expr * expr
   | ArrayCreate of data_type * expr list
   | ArrayAccess of expr * expr list
 

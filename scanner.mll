@@ -66,7 +66,7 @@ rule token = parse
   | "true"      { TRUE }
   | "false"     { FALSE }
   | "null"      { NULL }
-  | "tuple<>" 	{ JTUPLE }
+  | "Tuple" 	{ TUPLE }
 
  (* | "tuple" { JTuple($3, $5) }*)
 
