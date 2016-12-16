@@ -341,7 +341,7 @@ let translate sast =
 		let void_ppt = L.pointer_type void_pt in
 
 		let f = find_func_in_module "lookup" in
-		let llbuilder = L.builder_at_end context (entry_block f) 
+		let llbuilder = L.builder_at_end context (entry_block f) in
 
 		let len = List.length sclass_decl in
 		let total_len = ref 0 in
