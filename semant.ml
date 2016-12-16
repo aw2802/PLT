@@ -1,6 +1,8 @@
 open Ast
 open Sast
 
+module StringMap = Map.Make(String)
+
 let classIndices: (string, int) Hashtbl.t =  Hashtbl.create 10
   
 let createClassIndices cdecls=  
@@ -8,6 +10,40 @@ let createClassIndices cdecls=
 	Hashtbl.add classIndices cdecl.cname index in (*scope handling is missing*)
 	List.iteri classHandler cdecls
 
+type methodSignature = {
+	fname : string;
+	fformalTypes: data_type list; 
+}
+
+type classMap = {
+        variableMap: Ast.vdecl StringMap.t;
+        constructorMap: methodSignature StringMap.t;
+        methodMap:  methodSignature StringMap.t;
+}
+
+type classEnv = {
+	className: string;
+	classMaps: classMap StringMap.t;
+}
+
+type env = {
+        envClassName: string;
+        envClassMaps: classMap StringMap.t;
+        envClassMap: classMap;
+        envLocals: Ast.vdecl StringMap.t;
+        envParams: Ast.formal StringMap.t;
+        envReturnType: data_type;
+}
+
+let updateEnv env envName = {
+	envClassName = envName;
+	envClassMaps = env.envClassMaps;
+	envClassMap  = env.envClassMap;
+	envLocals    = env.envLocals;
+	envParams    = env.envParams;
+	envReturnType = env.envReturnType;
+}
+	
 let isMain f = f.sfname = "main"
 
 let get_methods l classy = List.concat [classy.scbody.smethods;l]
@@ -31,8 +67,7 @@ let typOFSexpr = function
 	|  	SUnop(_, _, d) 			-> d 
 	| 	SCreateObject(_,_,d)	-> d
 
-let convertToSast classes =
-	
+let convertToSast classes = 
 		let convertFormalToSast formal =
 		{
 			sformal_type = formal.fvtype;
@@ -86,7 +121,7 @@ let convertToSast classes =
 		sfbody = List.map convertStmtToSast func_decl.fbody;
 	}
 	in
-	let convertCbodyToSast cbody =
+	let convertCbodyToSast cbody classMap =
 	{
 		svariables = List.map convertVdeclToSast cbody.variables;
         sconstructors = List.map convertMethodToSast cbody.constructors;
@@ -94,15 +129,35 @@ let convertToSast classes =
     }
 
 	in
-	let convertClassToSast class_decl =
-	{
-		scscope = class_decl.cscope;
-		scname  = class_decl.cname;
-		scbody	 = convertCbodyToSast class_decl.cbody;
-	} 
+	let checkClass class_decl classEnv = 
+		3
+	in
+	let convertClassToSast class_decl classEnv =
+		classEnv.className = class_decl.cname;
+		checkClass class_decl classEnv;
+		let classMap = {
+			variableMap = StringMap.empty;
+			constructorMap = StringMap.empty;
+			methodMap = StringMap.empty;
+		} in
+		let result =
+		{
+			scscope = class_decl.cscope;
+			scname  = class_decl.cname;
+			scbody	 = convertCbodyToSast class_decl.cbody classMap;
+		} in
+		classEnv.classMaps = StringMap.add classEnv.className classMap classEnv.classMaps;
+		result
 
 	in
-	let get_classes = List.map convertClassToSast classes in
+	let classEnv = {
+		className = "";
+		classMaps = StringMap.empty;
+	}
+	in
+	let get_classes =
+		List.map (fun c -> convertClassToSast c classEnv) classes
+	in
 	let sprogram = 
 	{
 		classes = get_classes;
