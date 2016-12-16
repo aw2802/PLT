@@ -294,6 +294,32 @@ let translate sast =
 
 	(*Function generation*)
 
+	let build_function sfunc_decl =
+		Hashtbl.clear local_var_table;
+
+		let f = find_func_in_module sfunc_decl.sfname in 	
+		let llbuilder = L.builder_at_end context (L.entry_block f) in 
+
+		(*L.position_at_end (L.entry_block f) llbuilder; *)
+
+		let init_formals f sfformals =
+			let sfformals = Array.of_list (sfformals) in
+			Array.iteri (
+				fun i a ->
+		        	let formal = sfformals.(i) in
+		        	stmt_gen llbuilder SLocalVarDecl(formal.sformal_type, formal.sformal_name, SNoexpr);
+		    ) 
+		    (params f)
+		in
+		let _ = init_formals f sfunc_decl.sfformals in 
+
+		let _  = stmt_gen llbuilder (SBlock (sfunc_decl.sfbody)) in 
+		if sfunc_decl.sfreturn = JVoid
+		then ignore (L.build_ret_void llbuilder);
+		()
+	in
+	let _ = List.map build_function functions in
+
 
 	(*Main method generation*)
 	let build_main main =
