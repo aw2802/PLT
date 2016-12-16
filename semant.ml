@@ -14,6 +14,8 @@ let get_methods l classy = List.concat [classy.scbody.smethods;l]
 
 let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 
+let get_methods_minus_main m = List.filter isMain (List.fold_left get_methods [] m)
+
 let typOFSexpr = function
 		SInt_Lit(i)			-> JInt	
 	| 	SBoolean_Lit(b)			-> JBoolean	
@@ -103,7 +105,7 @@ let convertToSast classes =
 	let get_classes = List.map convertClassToSast classes in
 	let sprogram = 
 	{
-		classes = get_classes;
+		classes = get_methods_minus_main get_classes;
 		functions = [];
 		main = get_main get_classes;
 		reserved = [];
