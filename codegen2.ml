@@ -63,9 +63,9 @@ let translate sast =
 
 	let define_classes c =
 		let struct_typ = L.named_struct_type context c.scname in
-		ignore(Hashtbl.add struct_typ_table c.scname struct_typ);
+		Hashtbl.add struct_typ_table c.scname struct_type in
 
-		let type_list = List.map (function SVarDecl(sv) -> get_llvm_type sv.svtype) c.scbody
+		let type_list = List.map (function SVarDecl(sv) -> get_llvm_type sv.svtype) c.scbody.svariables
 	in
 	let _ = List.map define_classes classes in
 
