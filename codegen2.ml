@@ -63,12 +63,11 @@ let translate sast =
 
 	let define_classes c =
 		let struct_typ = L.named_struct_type context c.scname in
-		Hashtbl.add struct_typ_table c.scname struct_typ;
+		Hashtbl.add struct_typ_table c.scname struct_typ
 
-		let type_list = c.scbody.svariables
+		(*let type_list = c.scbody.svariables*)
 	in
 	let _ = List.map define_classes classes in
-
 
 
 
