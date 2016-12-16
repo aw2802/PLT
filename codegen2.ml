@@ -93,7 +93,7 @@ let translate sast =
 		let types_of_parameters = List.rev ( List.fold_left 
 		(fun l -> 
 			(function 
-			  sformal-> get_llvm_type sformal::l 
+			  sformal-> get_llvm_type sformal.sformal_type::l 
 			| _ -> ignore(is_var_arg = ref true); l
 			)
 		)
