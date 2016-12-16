@@ -253,17 +253,17 @@ let translate sast =
 		in
 		let _ = build_main main in
 
-	(*Class generation*)
-(*
+	(*Class generation
+
 	let build_classes sclass_decl =
 		let rt = L.pointer_type i64_t in
 		let void_pt = L.pointer_type i64_t in
 		let void_ppt = L.pointer_type void_pt in
 
 		let f = find_func_in_module "lookup" in
-		let llbuilder = L.builder_at_end context (entry_block f) in
+		let llbuilder = L.builder_at_end context (entry_block f) 
+	in
+	let _ = List.map build_classes classes in	*)
 
-	let _ = List.map build_classes classes in	
-*)
 	the_module;
 
