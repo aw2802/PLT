@@ -5,5 +5,8 @@ public class TestOr{
     if ((i != 1) or (j == 3)){
       println("J was 3!");
     }
+    else {
+      println("Dummy print");	
+    }
   }
 }

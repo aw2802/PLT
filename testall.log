@@ -190,8 +190,9 @@ Fatal error: exception Parsing.Parse_error
 
 ###### Testing test-or
 ./javapm tests/test-or.javapm > test-or.ll
-Fatal error: exception Failure("hd")
-###### FAILED
+lli test-or.ll > test-or.out
+diff -b test-or.out tests/test-or.out > test-or.diff
+###### SUCCESS
 
 ###### Testing test-printAdd
 ./javapm tests/test-printAdd.javapm > test-printAdd.ll
@@ -211,15 +212,14 @@ lli test-while.ll > test-while.out
 diff -b test-while.out tests/test-while.out > test-while.diff
 ###### SUCCESS
 
+###### Testing test-while_for_nested
+./javapm tests/test-while_for_nested.javapm > test-while_for_nested.ll
+lli test-while_for_nested.ll > test-while_for_nested.out
+diff -b test-while_for_nested.out tests/test-while_for_nested.out > test-while_for_nested.diff
+###### SUCCESS
+
 ###### Testing test-while_nest
 ./javapm tests/test-while_nest.javapm > test-while_nest.ll
 lli test-while_nest.ll > test-while_nest.out
 diff -b test-while_nest.out tests/test-while_nest.out > test-while_nest.diff
 ###### SUCCESS
-
-###### Testing test-whille_for_nested
-./javapm tests/test-whille_for_nested.javapm > test-whille_for_nested.ll
-lli test-whille_for_nested.ll > test-whille_for_nested.out
-diff -b test-whille_for_nested.out tests/test-whille_for_nested.out > test-whille_for_nested.diff
-FAILED test-whille_for_nested.out differs from tests/test-whille_for_nested.out
-###### FAILED
