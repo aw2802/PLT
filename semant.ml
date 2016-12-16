@@ -28,6 +28,7 @@ let typOFSexpr = function
 	| 	SFuncCall(_, _, d,_)	-> d
 	|  	SUnop(_, _, d) 			-> d 
 	| 	SCreateObject(_,_,d)	-> d
+	|   SObjAccess(_,_,d) -> d
 
 let convertToSast classes =
 	
