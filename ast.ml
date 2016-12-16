@@ -7,9 +7,10 @@ type data_type =
   | JFloat
   | JInt
   | JString
-  | Object of string 
+  | Object of string
+  | Arraytype of data_type * int 
   | Tuple of data_type list
-  
+ 
 (* Operators *)
 type op = Add | Sub | Div | Mult | Equal | Neq | Less | Leq | Greater | Geq |
 Or | And | Not
@@ -40,6 +41,8 @@ type expr =
   | ObjAccess of expr * expr
   | TupleCreate of data_type list * expr list
   | TupleAccess of expr * expr
+  | ArrayCreate of data_type * expr list
+  | ArrayAccess of expr * expr list
 
   (* Variable Declarations *)
 type vdecl = {
