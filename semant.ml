@@ -51,7 +51,7 @@ let convertToSast classes =
 			| FuncCall(s, el)		-> SFuncCall(s, (List.map convertExprToSast el), JInt, 1)
 			| Unop(op, expr)		-> SUnop(op, convertExprToSast expr, JInt)
 			| CreateObject(s,el)	-> SCreateObject(s, (List.map convertExprToSast el), Object(s))
-
+			| ObjAccess(expr1, expr2) -> 
 		in
 		let convertVdeclToSast vdecl = 
 		{
