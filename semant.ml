@@ -105,8 +105,8 @@ let convertToSast classes =
 	let get_classes = List.map convertClassToSast classes in
 	let sprogram = 
 	{
-		classes = get_methods_minus_main get_classes;
-		functions = [];
+		classes = get_classes;
+		functions = get_methods_minus_main get_classes;
 		main = get_main get_classes;
 		reserved = [];
 	}
