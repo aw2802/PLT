@@ -23,6 +23,7 @@ let void_t = L.void_type context;; (* void *)
 
 let global_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100
 let local_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100 (*Must be cleared evertime after a function is built*)
+let struct_typ_table:(string, lltype) Hashtbl.t = Hashtbl.create 100
 
 let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	  A.JChar -> i8_t
@@ -57,6 +58,18 @@ let translate sast =
 	let _ = util_func () in
 	
 	let zero = const_int i32_t 0 in
+
+	(*Define Classes*)
+
+	let add_classes_to_hashTable class_list =
+		let struct_typ = L.named_struct_type context cls.scname in
+		Hashtbl.add struct_typ_table cls.scname struct_typ
+	in
+	let _ = List.map add_struct_typ_table classes in
+
+
+	(*Stmt and expr handling*)
+
 	let rec stmt_gen llbuilder = function 
 		  SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
 		| SExpr (se, _)	   ->	expr_gen llbuilder se
