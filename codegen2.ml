@@ -61,11 +61,15 @@ let translate sast =
 
 	(*Define Classes*)
 
-	let add_classes_to_hashTable class_list =
-		let struct_typ = L.named_struct_type context cls.scname in
-		Hashtbl.add struct_typ_table cls.scname struct_typ
+	let define_classes c =
+		let struct_typ = L.named_struct_type context c.scname in
+		Hashtbl.add struct_typ_table c.scname struct_typ;
+
+		let type_list = c.scbody.svariables
 	in
-	let _ = List.map add_struct_typ_table classes in
+	let _ = List.map define_classes classes in
+
+
 
 
 	(*Stmt and expr handling*)
