@@ -16,14 +16,14 @@ let get_methods l classy = List.concat [classy.scbody.smethods;l]
 let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 
 let typOFSexpr = function
-		SInt_Lit(i)				-> JInt	
+		SInt_Lit(i)			-> JInt	
 	| 	SBoolean_Lit(b)			-> JBoolean	
 	| 	SFloat_Lit(f)			-> JFloat
 	| 	SString_Lit(s) 			-> JString
 	| 	SChar_Lit(c) 			-> JChar
-	| 	SId(_, d) 				-> d
+	| 	SId(_, d) 			-> d
 	| 	SBinop(_, _, _, d) 		-> d
-	|   SAssign(_, _, d) 		-> d
+	|   	SAssign(_, _, d) 		-> d
 	| 	SArrayCreate(_, _, d)	-> d
 	| 	SArrayAccess(_, _, d) 	-> d
 	| 	SFuncCall(_, _, d,_)	-> d
@@ -47,20 +47,21 @@ let convertToSast classes =
 			| Noexpr	-> SNoexpr
 			| Id(id)	-> SId(id, JInt) (** @TODO Sast has SId(string, datatype) **)
 			| Binop(expr1, op, expr2)	-> SBinop(convertExprToSast expr1, op, convertExprToSast expr2, JInt) (** @TODO Not sure about the data_type value. Same below **) 	
-			| ArrayCreate(d, el)  -> checkArrayInitialize( convertExprToSast d, el)
-			| ArrayAccess(e, el)  -> checkArrayAccess(convertExprToSast e, el)
+			| ArrayCreate(d, el)  -> SArrayCreate(d, (List.map convertExprToSast el), JInt) (* @TODO *)
+			| ArrayAccess(e, el)  -> SArrayAccess(convertExprToSast e, (List.map convertExprToSast el), JInt) (* @TODO *)
 			| Assign(id, e)		-> SAssign(id, convertExprToSast e, JInt)
 			| FuncCall(s, el)		-> SFuncCall(s, (List.map convertExprToSast el), JInt, 1)
 			| Unop(op, expr)		-> SUnop(op, convertExprToSast expr, JInt)
 			| CreateObject(s,el)	-> SCreateObject(s, (List.map convertExprToSast el), Object(s))
-
-		in
+			| TupleCreate(dl, el)	-> STupleCreate(dl, (List.map convertExprToSast el), Tuple(dl))
+			| TupleAccess(e1, e2)	-> STupleAccess(convertExprToSast e1, convertExprToSast e2, JInt) (* @TODO *)		
+	in
 		let convertVdeclToSast vdecl = 
 		{
 			svscope = vdecl.vscope;
 		 	svtype  = vdecl.vtype;
 		 	svname  = vdecl.vname;
-		 	svexpr = convertExprToSast vdecl.vexpr;
+		 	svexpr 	= convertExprToSast vdecl.vexpr;
 		}
 		in
 		let rec convertStmtToSast stmt = match stmt with
