@@ -45,6 +45,7 @@ let find_func_in_module fname =
 let translate sast = 
 	let classes = sast.classes in
 	let main = sast.main in 
+	let functions = sast.functions in
 	
 	let util_func () = 
 		let printf_t = L.var_arg_function_type i32_t [| pointer_type i8_t |] in
@@ -84,6 +85,31 @@ let translate sast =
 		L.struct_set_body struct_t type_array true
 	in
 	let _ = List.map define_classes classes in	
+
+	(*Define Functions*)
+	let define_functions f =
+		let fname = f.sfname in
+		let is_var_arg = ref false in
+		let types_of_parameters = List.rev ( List.fold_left 
+		(fun l -> 
+			(function 
+			  sformal-> get_llvm_type sformal::l 
+			| _ -> ignore(is_var_arg = ref true); l
+			)
+		)
+		[]  f.sfformals)	
+		in 
+
+		let fty = 
+			if !is_var_arg 
+				then L.var_arg_function_type (get_llvm_type f.sfreturn)
+				(Array.of_list types_of_parameters)
+			else L.function_type (get_llvm_type f.sfreturn)
+				(Array.of_list types_of_parameters)			
+		in 
+		L.define_function fname fty the_module (*The function name should be Class.fname?*)
+	in
+	let _ = List.map define_functions functions in
 
 
 	(*Stmt and expr handling*)
