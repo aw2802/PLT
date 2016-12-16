@@ -151,8 +151,8 @@ let translate sast =
 		| SAssign (id, e, dt)	-> assign_to_variable (get_value false id llbuilder) e llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> (*Need to call a regular fuction too*)
 			let reserved_func_gen llbuilder d expr_list = function
-			  "print" -> print_func_gen false expr_list llbuilder
-			  | "println" -> print_func_gen true expr_list llbuilder
+			  "print" -> print_func_gen "" expr_list llbuilder
+			  | "println" -> print_func_gen "\n" expr_list llbuilder
 			  | _ as call_name -> raise(Failure("function call not found: "^ call_name))
 			in
 			reserved_func_gen llbuilder d expr_list fname
@@ -227,9 +227,7 @@ let translate sast =
 
 		in
 		let print_types = List.fold_left (fun s t -> s ^ map_expr_to_type t) "" expr_types in
-		if newLine then
-			let print_types = (print_types ^ "\n") in
-		let s = build_global_stringptr (print_types) "printf" llbuilder in
+		let s = build_global_stringptr (print_types ^ newLine) "printf" llbuilder in
 
   		(**	let zero = const_int i32_t 0 in**)
   		let s = build_in_bounds_gep s [| zero |] "printf" llbuilder in
