@@ -83,7 +83,7 @@ Fatal error: exception Parsing.Parse_error
 ###### Testing test-float
 ./javapm tests/test-float.javapm > test-float.ll
 lli test-float.ll > test-float.out
-lli: test-float.ll:14:16: error: constexpr requires integer operands
+lli: test-float.ll:27:16: error: constexpr requires integer operands
   store double sub (double 2.250000e+00, double 2.500000e-01), double* %i
                ^
 ###### FAILED

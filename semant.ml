@@ -14,7 +14,7 @@ let get_methods l classy = List.concat [classy.scbody.smethods;l]
 
 let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 
-let get_methods_minus_main m = List.filter !isMain (List.fold_left get_methods [] m)
+let get_methods_minus_main m = snd (List.partition isMain (List.fold_left get_methods [] m))
 
 let typOFSexpr = function
 		SInt_Lit(i)			-> JInt	
