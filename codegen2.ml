@@ -333,7 +333,7 @@ let translate sast =
 		in
 		let _ = build_main main in
 
-	(*Class generation
+	(*Class generation *)
 
 	let build_classes sclass_decl =
 		let rt = L.pointer_type i64_t in
@@ -342,8 +342,47 @@ let translate sast =
 
 		let f = find_func_in_module "lookup" in
 		let llbuilder = L.builder_at_end context (entry_block f) 
+
+		let len = List.length sclass_decl in
+		let total_len = ref 0 in
+		let scdecl_llvm_arr = L.build_array_alloca void_ppt (const_int i32_t len) "tmp" llbuilder in
+
+		let handle_scdecl scdecl = 
+			let index = Hashtbl.find Semant.classIndices scdecl.scname in
+			let len = List.length scdecl.scbody.smethods in
+			let sfdecl_llvm_arr = L.build_array_alloca void_pt (const_int i32_t len) "tmp" llbuilder in
+
+			let handle_fdecl i sfdecl = 
+				let fptr = find_func_in_module sfdecl.sfname in
+				let fptr = L.build_pointercast fptr void_pt "tmp" llbuilder in
+
+				let ep = L.build_gep sfdecl_llvm_arr [| (const_int i32_t i) |] "tmp" llbuilder in
+				ignore(L.build_store fptr ep llbuilder);
+			in 
+			List.iteri handle_fdecl scdecl.scbody.smethods;
+			total_len := !total_len + len;
+
+			let ep = L.build_gep scdecl_llvm_arr [| (const_int i32_t index) |] "tmp" llbuilder in
+			ignore(build_store sfdecl_llvm_arr ep llbuilder);
+		in
+		List.iter handle_scdecl sclass_decl;
+
+		let c_index = param f 0 in
+		let f_index = param f 1 in
+		L.set_value_name "c_index" c_index;
+		L.set_value_name "f_index" f_index;
+
+		if !total_len == 0 then
+			L.build_ret (const_null rt) llbuilder
+		else
+			let vtbl = L.build_gep scdecl_llvm_arr [| c_index |] "tmp" llbuilder in
+			let vtbl = L.build_load vtbl "tmp" llbuilder in
+			let fptr = L.build_gep vtbl [| f_index |] "tmp" llbuilder in
+			let fptr = L.build_load fptr "tmp" llbuilder in
+
+			L.build_ret fptr llbuilder 
 	in
-	let _ = List.map build_classes classes in	*)
+	let _ = List.map build_classes classes in
 
 	the_module;
 

@@ -60,7 +60,6 @@ type scbody = {
 	smethods: sfunc_decl list; 
 }
 
-
 type sclass_decl = {
 	scscope: scope;
 	scname: string;

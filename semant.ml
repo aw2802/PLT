@@ -1,8 +1,7 @@
 open Ast
 open Sast
 
-let classIndices: (string, int) Hashtbl.t =  Hashtbl.create 100
-
+let classIndices: (string, int) Hashtbl.t =  Hashtbl.create 10
   
 let createClassIndices cdecls=  
 	let classHandler index cdecl=
@@ -14,6 +13,11 @@ let isMain f = f.sfname = "main"
 let get_methods l classy = List.concat [classy.scbody.smethods;l]
 
 let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
+
+let createStructIndexes cdecls= 
+	let classHandler index cdecl=
+	Hashtbl.add classIndices cdecl.cname index in 
+	List.iteri classHandler cdecls
 
 let typOFSexpr = function
 		SInt_Lit(i)			-> JInt	
@@ -109,5 +113,5 @@ let convertToSast classes =
 
  (* Translates Ast to Sast *)
 let check program = match program with
-         Program (classes) -> convertToSast classes
+         Program (classes) -> ignore (createClassIndexes classes); convertToSast classes
 
