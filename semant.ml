@@ -14,11 +14,6 @@ let get_methods l classy = List.concat [classy.scbody.smethods;l]
 
 let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 
-let createStructIndexes cdecls= 
-	let classHandler index cdecl=
-	Hashtbl.add classIndices cdecl.cname index in 
-	List.iteri classHandler cdecls
-
 let typOFSexpr = function
 		SInt_Lit(i)			-> JInt	
 	| 	SBoolean_Lit(b)			-> JBoolean	
@@ -37,9 +32,10 @@ let typOFSexpr = function
 let convertToSast classes =
 	
 		let convertFormalToSast formal =
-			{sformal_type = formal.fvtype;
-		 	 sformal_name = formal.fvname;
-			}
+		{
+			sformal_type = formal.fvtype;
+		 	sformal_name = formal.fvname;
+		}
 		in
 		let rec convertExprToSast expr = match expr with
 			  Int_Lit(i)	-> SInt_Lit(i)
@@ -80,38 +76,42 @@ let convertToSast classes =
 
 	in
 	let convertMethodToSast func_decl = 
-		{sfscope = func_decl.fscope;
-		 sfname = func_decl.fname;
-		 sfformals = List.map convertFormalToSast func_decl.fformals; 
-		 sfreturn = func_decl.freturn;
-		 sfbody = List.map convertStmtToSast func_decl.fbody;
-		}
+	{
+		sfscope = func_decl.fscope;
+		sfname = func_decl.fname;
+		sfformals = List.map convertFormalToSast func_decl.fformals; 
+		sfreturn = func_decl.freturn;
+		sfbody = List.map convertStmtToSast func_decl.fbody;
+	}
 	in
 	let convertCbodyToSast cbody =
-                    {svariables = List.map convertVdeclToSast cbody.variables;
-                     sconstructors = List.map convertMethodToSast cbody.constructors;
-		 smethods = List.map convertMethodToSast cbody.methods;
-                    }
+	{
+		svariables = List.map convertVdeclToSast cbody.variables;
+        sconstructors = List.map convertMethodToSast cbody.constructors;
+		smethods = List.map convertMethodToSast cbody.methods;
+    }
 
 	in
 	let convertClassToSast class_decl =
-		{scscope = class_decl.cscope;
-		 scname  = class_decl.cname;
-		 scbody	 = convertCbodyToSast class_decl.cbody;
-		} 
+	{
+		scscope = class_decl.cscope;
+		scname  = class_decl.cname;
+		scbody	 = convertCbodyToSast class_decl.cbody;
+	} 
 
 	in
 	let get_classes = List.map convertClassToSast classes in
 	let sprogram = 
-		{classes = get_classes;
-		 functions = [];
-		 main = get_main get_classes;
-		 reserved = [];
-		}
+	{
+		classes = get_classes;
+		functions = [];
+		main = get_main get_classes;
+		reserved = [];
+	}
 	in
 	sprogram
 
  (* Translates Ast to Sast *)
 let check program = match program with
-         Program (classes) -> ignore (createClassIndexes classes); convertToSast classes
+         Program (classes) -> ignore (createClassIndices classes); convertToSast classes
 
