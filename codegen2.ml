@@ -24,6 +24,7 @@ let void_t = L.void_type context;; (* void *)
 let global_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100
 let local_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100 (*Must be cleared evertime after a function is built*)
 let struct_typ_table:(string, lltype) Hashtbl.t = Hashtbl.create 100
+let struct_field_idx_table:(string, int) Hashtbl.t = Hashtbl.create 100
 
 let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	  A.JChar -> i8_t
@@ -68,7 +69,19 @@ let translate sast =
 	let _ = List.map add_classes_to_hashTable classes in
 
 	let define_classes c = 
-		let type_list = List.map (function SVarDecl(sv) -> get_llvm_type sv.svtype) c.scbody.svariables
+		let struct_t = Hashtbl.find struct_typ_table s.scname in
+		let type_list = List.map (function SVarDecl(sv) -> get_llvm_type sv.svtype) c.scbody.svariables in
+		let name_list = List.map (function SVarDecl(sv) -> get_llvm_type sv.svname) c.scbody.svariables in
+		let type_list = i32_t :: type_list in
+		let name_list = ".key" :: name_list in
+		let type_array = (Array.of_list type_list) in
+		List.iteri (
+			fun i f ->
+	        let n = c.scname ^ "." ^ f in
+	        Hashtbl.add struct_field_idx_table n i;
+	    	) 
+	    name_list;
+		L.struct_set_body struct_t type_array true
 	in
 	let _ = List.map define_classes classes in	
 
