@@ -21,8 +21,8 @@ type sexpr =
 	| SCreateObject of string * sexpr list * data_type
 	| SArrayCreate of data_type * sexpr list * data_type
 	| SArrayAccess of sexpr * sexpr list * data_type
-	| SArrayElements
-	| SObjAccess of sexpr * sexpr * data_type *
+	| SArrayElements of sexpr list * data_type
+	| SObjAccess of sexpr * sexpr * data_type 
 
 type svdecl = {
 	svscope: scope;
