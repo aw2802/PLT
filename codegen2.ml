@@ -382,7 +382,7 @@ let translate sast =
 
 			L.build_ret fptr llbuilder 
 	in
-	let _ = List.map build_classes classes in
+	let _ = build_classes classes in
 
 	the_module;
 
