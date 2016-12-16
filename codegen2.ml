@@ -63,7 +63,7 @@ let translate sast =
 
 	let add_classes_to_hashTable c =
 		let struct_typ = L.named_struct_type context c.scname in
-		Hashtbl.add struct_typ_table c.scname struct_type
+		Hashtbl.add struct_typ_table c.scname struct_typ
 	in
 	let _ = List.map add_classes_to_hashTable classes in
 
