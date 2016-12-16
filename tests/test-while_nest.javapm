@@ -5,7 +5,7 @@ public class TestWhileNested{
     while (i < 1){
       j = 0;
       while (j < 3){
-        print("Inside");
+        println("Inside");
         j = j+1;
       }
       i = i+1;

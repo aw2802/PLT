@@ -3,11 +3,11 @@ public class TestAnd {
     int i = 1;
     int j = 3;
     if (true and false){
-	print("hi");    
+	println("hi");    
     }
     else {
-      print(i);
-      print(j);
+      println(i);
+      println(j);
     }
   } 
 }

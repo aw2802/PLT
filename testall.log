@@ -173,8 +173,9 @@ diff -b test-mult.out tests/test-mult.out > test-mult.diff
 
 ###### Testing test-not
 ./javapm tests/test-not.javapm > test-not.ll
-Fatal error: exception Failure("hd")
-###### FAILED
+lli test-not.ll > test-not.out
+diff -b test-not.out tests/test-not.out > test-not.diff
+###### SUCCESS
 
 ###### Testing test-notEqual
 ./javapm tests/test-notEqual.javapm > test-notEqual.ll

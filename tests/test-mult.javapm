@@ -1,7 +1,7 @@
 public class TestMult{
   public void main(){
     int i = 2 * 5;
-    print(i);
-    print(4 * 2);
+    println(i);
+    println(4 * 2);
   }
 }
