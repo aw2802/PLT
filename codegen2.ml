@@ -367,7 +367,7 @@ let translate sast =
 		in
 		List.iter handle_scdecl sclass_decl;
 
-		let c_index = param f 0 in
+		let c_index = param f 0 in (*breaks*)
 		let f_index = param f 1 in
 		L.set_value_name "c_index" c_index;
 		L.set_value_name "f_index" f_index;
