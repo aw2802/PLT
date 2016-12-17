@@ -132,8 +132,8 @@ let translate sast =
 
 		let variable_value = expr_gen llbuilder expr in 
 			match expr with
-			| SNoexpr -> allocatedMemory
-			| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
+			| SNoexpr -> ignore(allocatedMemory)
+			| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder)
 
 	and generate_local_vardecl datatype vname expr llbuilder =
 		let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
