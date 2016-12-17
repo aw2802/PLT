@@ -225,8 +225,8 @@ let translate sast =
 		| SNoexpr -> L.build_add (L.const_int i32_t 0) (L.const_int i32_t 0) "nop" llbuilder
 		| _ -> raise(Failure("No match expression"))
 
-	and generate_object_create id el d llbuilder =
-		let f = find_func_in_module fname in
+	and generate_object_create id el llbuilder =
+		let f = find_func_in_module id in
 		let params = List.map (expr_gen llbuilder) el in
 		let obj = L.build_call f (Array.of_list params) "tmp" llbuilder in
 		obj 
