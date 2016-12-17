@@ -133,7 +133,7 @@ primitive:
 		
 type_tag:
 	  primitive 	{ $1 }
-	| ID	{ Object($2) }
+	| ID	{ Object($1) }
 
 array_type:
 	type_tag LBRACKET brackets RBRACKET { Arraytype($1, $3) }
