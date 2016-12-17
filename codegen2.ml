@@ -222,7 +222,7 @@ let translate sast =
 			in
 			reserved_func_gen llbuilder d expr_list fname
 		| SNoexpr -> L.build_add (L.const_int i32_t 0) (L.const_int i32_t 0) "nop" llbuilder
-		| _ -> raise(Failure("expression not match"))
+		| _ -> raise(Failure("No match expression"))
 
 	and binop_gen e1 op e2 llbuilder = 
 		let value1 =  match e1 with
