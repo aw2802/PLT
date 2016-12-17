@@ -142,7 +142,7 @@ let translate sast =
 
 	and generate_local_vardecl datatype vname expr llbuilder =
 		match expr with
-			| SNoexpr -> const_null void_t
+			| SNoexpr -> const_null (get_llvm_type datatype)
 			| _ -> 	let variable_value = expr_gen llbuilder expr in 
 					Hashtbl.add local_var_table vname variable_value; variable_value
 					
