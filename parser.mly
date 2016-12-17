@@ -125,8 +125,7 @@ tuple_type :
 
 /* datatypes + formal & actual params */
 primitive:  
-	  JCHAR 					{ JChar }
-	| JINT						{ JInt }
+	 JINT						{ JInt }
 	| JFLOAT				 	{ JFloat } 
 	| JBOOLEAN 					{ JBoolean }
 	| JVOID 					{ JVoid }
