@@ -48,7 +48,7 @@ let updateEnv env envName = {
 	
 let isMain f = f.sfname = "main"
 
-let get_methods l classy = List.concat [classy.scbody.smethods;l]
+let get_methods l classy = List.concat [classy.scbody.sconstructors;(List.concat [classy.scbody.smethods;l])]
 
 let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 
@@ -160,9 +160,9 @@ let convertToSast classes =
 	let convertCbodyToSast cbody classEnv =
 	{
 		svariables = List.map (fun v -> convertVariableToSast v classEnv) cbody.variables;
-        	sconstructors = List.map (fun cst -> convertMethodToSast cst classEnv) cbody.constructors;
+        sconstructors = List.map (fun cst -> convertMethodToSast cst classEnv) cbody.constructors;
 		smethods = List.map (fun m -> convertMethodToSast m classEnv) cbody.methods;
-    	}
+    }
 
 	in
 	let checkClass class_decl classEnv = 

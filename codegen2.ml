@@ -210,10 +210,11 @@ let translate sast =
 		| SChar_Lit (c)    ->	L.const_int i8_t (Char.code c)
 		| SString_Lit (s)  ->	build_global_stringptr s "tmp" llbuilder
 		(*SNull*)
-		| SId (n, dt)		-> get_value false n llbuilder (*Dn't know if it is returning an OCaml variable with the value or if it is returning a value*)
+		| SId (n, dt)		-> get_value false n llbuilder 
 		| SBinop(e1, op, e2, dt) -> binop_gen e1 op e2 llbuilder
 		| SUnop(op, e, dt)      -> unop_gen op e llbuilder
 		| SAssign (id, e, dt)	-> assign_to_variable (get_value false id llbuilder) e llbuilder
+		| SCreateObject(id, el, d) -> generate_object_create id el d llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> (*Need to call a regular fuction too*)
 			let reserved_func_gen llbuilder d expr_list = function
 			  "print" -> print_func_gen "" expr_list llbuilder
@@ -223,6 +224,10 @@ let translate sast =
 			reserved_func_gen llbuilder d expr_list fname
 		| SNoexpr -> L.build_add (L.const_int i32_t 0) (L.const_int i32_t 0) "nop" llbuilder
 		| _ -> raise(Failure("No match expression"))
+
+	and generate_object_create id el d llbuilder =
+		let struct_type = L.pointer_type(find_llvm_struct_type id) 
+
 
 	and binop_gen e1 op e2 llbuilder = 
 		let value1 =  match e1 with
