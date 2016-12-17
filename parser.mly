@@ -130,16 +130,13 @@ primitive:
 	| JFLOAT				 	{ JFloat } 
 	| JBOOLEAN 					{ JBoolean }
 	| JVOID 					{ JVoid }
+	| ID			{ Object($2) }
 		
-type_tag:
-	  primitive 	{ $1 }
-	| ID	{ Object($2) }
-
 array_type:
-	type_tag LBRACKET brackets RBRACKET { Arraytype($1, $3) }
+	primitive LBRACKET brackets RBRACKET { Arraytype($1, $3) }
 
 datatype:
-	  type_tag   { $1 }
+	  primitive   { $1 }
 	| array_type { $1 }
 	| tuple_type { $1 }
 
@@ -213,7 +210,7 @@ expr:
 	| expr DOT expr { ObjAccess($1, $3)}
 	| NEW TUPLE LT tdatatype_args GT LPAREN actuals_opt RPAREN  { TupleCreate($4, $7) } 
 	| expr LBRACKET expr RBRACKET {TupleAccess($1, $3)}
-	| NEW type_tag brackets_args RBRACKET { ArrayCreate($2, List.rev $3) }
+	| NEW primitive brackets_args RBRACKET { ArrayCreate($2, List.rev $3) }
 	| expr brackets_args RBRACKET { ArrayAccess($1, List.rev $2) }
 
 brackets_args:
