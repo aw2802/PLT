@@ -144,7 +144,7 @@ let translate sast =
 		match expr with
 			| SNoexpr -> const_null void_t
 			| _ -> 	let variable_value = expr_gen llbuilder expr in 
-					Hashtbl.add local_var_table vname allocatedMemory; variable_value
+					Hashtbl.add local_var_table vname variable_value; variable_value
 					
 	and generate_while e s llbuilder =
 
