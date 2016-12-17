@@ -22,9 +22,10 @@ let str_t = L.pointer_type i8_t;;
 let void_t = L.void_type context;; (* void *)
 
 let global_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100
+let class_private_vars:(string, llvalue) Hashtbl.t = Hashtbl.create 100 (*Must be cleared after class build*)
 let local_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100 (*Must be cleared evertime after a function is built*)
 let struct_typ_table:(string, lltype) Hashtbl.t = Hashtbl.create 100
-let struct_field_idx_table:(string, int) Hashtbl.t = Hashtbl.create 100
+(*let struct_field_idx_table:(string, int) Hashtbl.t = Hashtbl.create 100 *)
 
 let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	  A.JChar -> i8_t
@@ -79,7 +80,7 @@ let translate sast =
 		List.iteri (
 			fun i f ->
 	        let n = c.scname ^ "." ^ f in
-	        Hashtbl.add struct_field_idx_table n i;
+	        (*Hashtbl.add struct_field_idx_table n i;*)
 	    	) 
 	    name_list;
 		L.struct_set_body struct_t type_array true
@@ -117,30 +118,28 @@ let translate sast =
 	let rec stmt_gen llbuilder = function 
 		  SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
  		| SExpr (se, _)    ->   expr_gen llbuilder se
-		| SVarDecl sv           ->      
-				let vardecl_gen datatype vname expr llbuilder =
-				let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
-					Hashtbl.add global_var_table vname allocatedMemory;
-				let variable_value = expr_gen llbuilder expr in 
-					match expr with
-					| SNoexpr -> allocatedMemory
-					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
-			in
-			vardecl_gen sv.svtype sv.svname sv.svexpr llbuilder
-		| SLocalVarDecl (dt, vname, vexpr)		->
-			let local_vardecl_gen datatype vname expr llbuilder =
-				let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
-					Hashtbl.add local_var_table vname allocatedMemory;
-				let variable_value = expr_gen llbuilder expr in 
-					match expr with
-					| SNoexpr -> allocatedMemory
-					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
-			in
-			local_vardecl_gen dt vname vexpr llbuilder
+		| SVarDecl sv           ->  generate_vardecl sv llbuilder
+		| SLocalVarDecl (dt, vname, vexpr)		-> generate_local_vardecl dt vname vexpr llbuilder
 		| SIf(e, s1, s2) -> generate_if e s1 s2 llbuilder
 		| SWhile(e, s) -> generate_while e s llbuilder
 		| SFor(e1, e2, e3, s) -> generate_for e1 e2 e3 s llbuilder
 
+	and generate_vardecl sv llbuilder =
+		let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
+		Hashtbl.add global_var_table vname allocatedMemory;
+		let variable_value = expr_gen llbuilder expr in 
+			match expr with
+			| SNoexpr -> allocatedMemory
+			| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
+
+	and generate_local_vardecl datatype vname expr llbuilder =
+		let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
+		Hashtbl.add local_var_table vname allocatedMemory;
+		let variable_value = expr_gen llbuilder expr in 
+			match expr with
+			| SNoexpr -> allocatedMemory
+			| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
+			
 	and generate_while e s llbuilder =
 
 		let start_block = L.insertion_block llbuilder in
