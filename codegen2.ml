@@ -118,13 +118,13 @@ let translate sast =
 	let rec stmt_gen llbuilder = function 
 		  SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
  		| SExpr (se, _)    ->   expr_gen llbuilder se
-		| SVarDecl sv           ->  generate_vardecl sv llbuilder
+		| SVarDecl sv           ->  generate_vardecl sv.svscope sv.svtype sv.svname sv.svexpr llbuilder
 		| SLocalVarDecl (dt, vname, vexpr)		-> generate_local_vardecl dt vname vexpr llbuilder
 		| SIf(e, s1, s2) -> generate_if e s1 s2 llbuilder
 		| SWhile(e, s) -> generate_while e s llbuilder
 		| SFor(e1, e2, e3, s) -> generate_for e1 e2 e3 s llbuilder
 
-	and generate_vardecl sv llbuilder =
+	and generate_vardecl scope datatype vname expr llbuilder =
 		let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
 		Hashtbl.add global_var_table vname allocatedMemory;
 		let variable_value = expr_gen llbuilder expr in 
