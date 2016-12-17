@@ -1,6 +1,6 @@
 
 (* Possible data types *)
-type data_type =
+type primitive =
   | JChar 
   | JVoid
   | JBoolean
@@ -11,7 +11,7 @@ type data_type =
   | Arraytype of data_type * int 
   | Tuple of data_type list
 
-type please = Datatype of data_type
+type data_type = Datatype of data_type
  
 (* Operators *)
 type op = Add | Sub | Div | Mult | Equal | Neq | Less | Leq | Greater | Geq |
