@@ -116,9 +116,9 @@ let translate sast =
 
 	let rec stmt_gen llbuilder = function 
 		  SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
-		| SExpr (se, _)	   ->	expr_gen llbuilder se
-		| SVarDecl sv		->	
-			let vardecl_gen datatype vname expr llbuilder =
+ 		| SExpr (se, _)    ->   expr_gen llbuilder se
+		| SVarDecl sv           ->      
+				let vardecl_gen datatype vname expr llbuilder =
 				let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
 					Hashtbl.add global_var_table vname allocatedMemory;
 				let variable_value = expr_gen llbuilder expr in 
@@ -205,6 +205,7 @@ let translate sast =
 		(*SNull*)
 		| SId (n, dt)		-> get_value false n llbuilder (*Dn't know if it is returning an OCaml variable with the value or if it is returning a value*)
 		| SBinop(e1, op, e2, dt) -> binop_gen e1 op e2 llbuilder
+		| SUnop(op, e, dt)      -> unop_gen op e llbuilder
 		| SAssign (id, e, dt)	-> assign_to_variable (get_value false id llbuilder) e llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> (*Need to call a regular fuction too*)
 			let reserved_func_gen llbuilder d expr_list = function
@@ -242,6 +243,15 @@ let translate sast =
 			| _ 		-> raise(Failure("Invalid operator for ints"))
 		) value1 value2 "tmp" llbuilder
 
+	and unop_gen op e llbuilder = 
+		let exp_type = Semant.typOFSexpr e in
+		let value = expr_gen llbuilder e in
+		(match (op, exp_type) with 
+			  (Not, JBoolean) -> L.build_not 
+			| (Sub, JInt) -> L.build_neg 
+			| (Sub, JFloat) -> L.build_fneg
+			| _ -> raise(Failure("Invalid unop usage"))
+		) value "tmp" llbuilder
 
 	and get_value deref vname llbuilder = 
 		if deref then
