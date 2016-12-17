@@ -130,7 +130,7 @@ primitive:
 	| JFLOAT				 	{ JFloat } 
 	| JBOOLEAN 					{ JBoolean }
 	| JVOID 					{ JVoid }
-	| ID			{ Object($2) }
+	| ID						{ Object($1) }
 		
 array_type:
 	primitive LBRACKET brackets RBRACKET { Arraytype($1, $3) }
