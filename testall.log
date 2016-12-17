@@ -149,9 +149,8 @@ diff -b test-initialize.out tests/test-initialize.out > test-initialize.diff
 
 ###### Testing test-integer
 ./javapm tests/test-integer.javapm > test-integer.ll
-lli test-integer.ll > test-integer.out
-diff -b test-integer.out tests/test-integer.out > test-integer.diff
-###### SUCCESS
+Fatal error: exception Failure("Class Name not capitailized: testInteger")
+###### FAILED
 
 ###### Testing test-leq
 ./javapm tests/test-leq.javapm > test-leq.ll
