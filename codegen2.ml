@@ -141,11 +141,13 @@ let translate sast =
 			| _ -> L.build_store variable_value allocatedMemory llbuilder; variable_value
 
 	and generate_local_vardecl datatype vname expr llbuilder =
-		match expr with
-			| SNoexpr -> const_null (get_llvm_type datatype)
-			| _ -> 	let variable_value = expr_gen llbuilder expr in 
-					Hashtbl.add local_var_table vname variable_value; variable_value
-					
+		let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
+		Hashtbl.add local_var_table vname allocatedMemory;
+		let variable_value = expr_gen llbuilder expr in 
+			match expr with
+			| SNoexpr -> allocatedMemory
+			| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
+			
 	and generate_while e s llbuilder =
 
 		let start_block = L.insertion_block llbuilder in
@@ -211,7 +213,7 @@ let translate sast =
 		| SId (n, dt)		-> get_value false n llbuilder 
 		| SBinop(e1, op, e2, dt) -> binop_gen e1 op e2 llbuilder
 		| SUnop(op, e, dt)      -> unop_gen op e llbuilder
-		| SAssign (id, e, dt)	-> assign_to_variable id e llbuilder
+		| SAssign (id, e, dt)	-> assign_to_variable (get_value false id llbuilder) e llbuilder
 		(**| SCreateObject(id, el, d) -> generate_object_create id el d llbuilder **)
 		| SFuncCall (fname, expr_list, d, _) -> (*Need to call a regular fuction too*)
 			let reserved_func_gen llbuilder d expr_list = function
@@ -264,7 +266,6 @@ let translate sast =
 		) value "tmp" llbuilder
 
 	and get_value deref vname llbuilder = 
-	(*
 		if deref then
 		let var = try Hashtbl.find global_var_table vname with 
 		| Not_found -> try Hashtbl.find local_var_table vname with 
@@ -272,19 +273,19 @@ let translate sast =
 		in
 		L.build_load var vname llbuilder
 		
-	else*)
+	else
 		let var = try Hashtbl.find global_var_table vname with 
 		| Not_found -> try Hashtbl.find local_var_table vname with 
 			| Not_found -> raise (Failure("unknown variable name " ^ vname))
 		in
 		var
 
-	and assign_to_variable vname e llbuilder =
+	and assign_to_variable vmemory e llbuilder =
 		let value = match e with
 		| SId(id, d) -> get_value true id llbuilder
 		| _ -> expr_gen llbuilder e
 		in
-		ignore(Hashtbl.replace local_var_table vname value); value
+		L.build_store value vmemory llbuilder
 
 	and print_func_gen newLine expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
