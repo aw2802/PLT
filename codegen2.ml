@@ -214,7 +214,7 @@ let translate sast =
 		| SBinop(e1, op, e2, dt) -> binop_gen e1 op e2 llbuilder
 		| SUnop(op, e, dt)      -> unop_gen op e llbuilder
 		| SAssign (id, e, dt)	-> assign_to_variable (get_value false id llbuilder) e llbuilder
-		| SCreateObject(id, el, d) -> generate_object_create id el d llbuilder
+		| SCreateObject(id, el, d) -> generate_object_create id el llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> (*Need to call a regular fuction too*)
 			let reserved_func_gen llbuilder d expr_list = function
 			  "print" -> print_func_gen "" expr_list llbuilder
