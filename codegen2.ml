@@ -33,7 +33,7 @@ let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *
 	| A.JBoolean -> i1_t
 	| A.JFloat -> f_t
 	| A.JInt -> i32_t
-	| A.Object(s) -> L.pointer_type(find_llvm_struct_type name)
+	| A.Object(s) -> L.pointer_type(find_llvm_struct_type s)
 	| _ -> raise(Failure("Invalid Data Type"))
 
 and find_llvm_struct_type name = 
