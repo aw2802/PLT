@@ -99,7 +99,7 @@ constructor:
 		{
 			fscope = Public;
 			fname = $1;
-			freturn = JVoid; 
+			freturn = Datatype(JVoid); 
 			fformals = $3;
 			fbody = List.rev $6;
 		        

@@ -8,10 +8,10 @@ type primitive =
   | JInt
   | JString
   | Object of string
-  | Arraytype of data_type * int 
-  | Tuple of data_type list
+  | Arraytype of primitive * int 
+  | Tuple of primitive list
 
-type data_type = Datatype of data_type
+type data_type = Datatype of primitive
  
 (* Operators *)
 type op = Add | Sub | Div | Mult | Equal | Neq | Less | Leq | Greater | Geq |
