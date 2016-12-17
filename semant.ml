@@ -133,7 +133,16 @@ let convertToSast classes =
 
 	in
 	let checkClass class_decl classEnv = 
-		3
+		let firstChar = String.get class_decl.cname 0
+		in
+		let lowerChar = Char.lowercase firstChar
+		in 
+		let checking =  
+			if lowerChar <> firstChar
+			 	then raise (Failure ("Class Name not capitailized: " ^ class_decl.cname))
+			else if StringMap.mem class_decl.cname classEnv.classMaps
+				then raise (Failure ("Duplicate Class Name: " ^ class_decl.cname))
+			in checking 	
 	in
 	let convertClassToSast class_decl classEnv =
 		classEnv.className = class_decl.cname;
