@@ -22,9 +22,10 @@ let str_t = L.pointer_type i8_t;;
 let void_t = L.void_type context;; (* void *)
 
 let global_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100
+let class_private_vars:(string, llvalue) Hashtbl.t = Hashtbl.create 100 (*Must be cleared after class build*)
 let local_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100 (*Must be cleared evertime after a function is built*)
 let struct_typ_table:(string, lltype) Hashtbl.t = Hashtbl.create 100
-let struct_field_idx_table:(string, int) Hashtbl.t = Hashtbl.create 100
+(*let struct_field_idx_table:(string, int) Hashtbl.t = Hashtbl.create 100 *)
 
 let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	  A.JChar -> i8_t
@@ -32,8 +33,12 @@ let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *
 	| A.JBoolean -> i1_t
 	| A.JFloat -> f_t
 	| A.JInt -> i32_t
+	| A.Object(s) -> L.pointer_type(find_llvm_struct_type s)
 	| _ -> raise(Failure("Invalid Data Type"))
-	(** | A.Object --> @TODO **) 
+
+and find_llvm_struct_type name = 
+	try Hashtbl.find struct_typ_table name
+	with | Not_found -> raise(Failure ("undeclared struct"^ name))
 
 let find_func_in_module fname = 
 	match (L.lookup_function fname the_module) with
@@ -76,12 +81,12 @@ let translate sast =
 		let type_list = i32_t :: type_list in
 		let name_list = ".key" :: name_list in
 		let type_array = (Array.of_list type_list) in
-		List.iteri (
+		(*List.iteri (
 			fun i f ->
 	        let n = c.scname ^ "." ^ f in
 	        Hashtbl.add struct_field_idx_table n i;
 	    	) 
-	    name_list;
+	    name_list; *)
 		L.struct_set_body struct_t type_array true
 	in
 	let _ = List.map define_classes classes in	
@@ -117,30 +122,32 @@ let translate sast =
 	let rec stmt_gen llbuilder = function 
 		  SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
  		| SExpr (se, _)    ->   expr_gen llbuilder se
-		| SVarDecl sv           ->      
-				let vardecl_gen datatype vname expr llbuilder =
-				let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
-					Hashtbl.add global_var_table vname allocatedMemory;
-				let variable_value = expr_gen llbuilder expr in 
-					match expr with
-					| SNoexpr -> allocatedMemory
-					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
-			in
-			vardecl_gen sv.svtype sv.svname sv.svexpr llbuilder
-		| SLocalVarDecl (dt, vname, vexpr)		->
-			let local_vardecl_gen datatype vname expr llbuilder =
-				let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
-					Hashtbl.add local_var_table vname allocatedMemory;
-				let variable_value = expr_gen llbuilder expr in 
-					match expr with
-					| SNoexpr -> allocatedMemory
-					| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
-			in
-			local_vardecl_gen dt vname vexpr llbuilder
+		| SVarDecl sv           ->  generate_vardecl sv.svscope sv.svtype sv.svname sv.svexpr llbuilder
+		| SLocalVarDecl (dt, vname, vexpr)		-> generate_local_vardecl dt vname vexpr llbuilder
 		| SIf(e, s1, s2) -> generate_if e s1 s2 llbuilder
 		| SWhile(e, s) -> generate_while e s llbuilder
 		| SFor(e1, e2, e3, s) -> generate_for e1 e2 e3 s llbuilder
 
+	and generate_vardecl scope datatype vname expr llbuilder =
+		let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
+		Hashtbl.add 
+			(match scope with
+			| A.Public -> global_var_table 
+			| A.Private -> class_private_vars) vname allocatedMemory;
+
+		let variable_value = expr_gen llbuilder expr in 
+			match expr with
+			| SNoexpr -> allocatedMemory
+			| _ -> L.build_store variable_value allocatedMemory llbuilder; variable_value
+
+	and generate_local_vardecl datatype vname expr llbuilder =
+		let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
+		Hashtbl.add local_var_table vname allocatedMemory;
+		let variable_value = expr_gen llbuilder expr in 
+			match expr with
+			| SNoexpr -> allocatedMemory
+			| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
+			
 	and generate_while e s llbuilder =
 
 		let start_block = L.insertion_block llbuilder in
@@ -203,10 +210,11 @@ let translate sast =
 		| SChar_Lit (c)    ->	L.const_int i8_t (Char.code c)
 		| SString_Lit (s)  ->	build_global_stringptr s "tmp" llbuilder
 		(*SNull*)
-		| SId (n, dt)		-> get_value false n llbuilder (*Dn't know if it is returning an OCaml variable with the value or if it is returning a value*)
+		| SId (n, dt)		-> get_value false n llbuilder 
 		| SBinop(e1, op, e2, dt) -> binop_gen e1 op e2 llbuilder
 		| SUnop(op, e, dt)      -> unop_gen op e llbuilder
 		| SAssign (id, e, dt)	-> assign_to_variable (get_value false id llbuilder) e llbuilder
+		(**| SCreateObject(id, el, d) -> generate_object_create id el d llbuilder **)
 		| SFuncCall (fname, expr_list, d, _) -> (*Need to call a regular fuction too*)
 			let reserved_func_gen llbuilder d expr_list = function
 			  "print" -> print_func_gen "" expr_list llbuilder
@@ -215,7 +223,11 @@ let translate sast =
 			in
 			reserved_func_gen llbuilder d expr_list fname
 		| SNoexpr -> L.build_add (L.const_int i32_t 0) (L.const_int i32_t 0) "nop" llbuilder
-		| _ -> raise(Failure("expression not match"))
+		| _ -> raise(Failure("No match expression"))
+
+	(**and generate_object_create id el d llbuilder =
+		let struct_type = L.pointer_type(find_llvm_struct_type id) 
+**)
 
 	and binop_gen e1 op e2 llbuilder = 
 		let value1 =  match e1 with

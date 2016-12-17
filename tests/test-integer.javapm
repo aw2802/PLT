@@ -1,4 +1,4 @@
-public class testInteger{
+public class TestInteger{
   public void main(){
     int i;
     i = 6/3;

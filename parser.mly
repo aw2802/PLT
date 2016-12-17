@@ -130,16 +130,16 @@ primitive:
 	| JFLOAT				 	{ JFloat } 
 	| JBOOLEAN 					{ JBoolean }
 	| JVOID 					{ JVoid }
-		
-type_tag:
-	  primitive 	{ $1 }
-	| CLASS ID	{ Object($2) }
+	
+po:
+		primitive   { $1 }
+	| ID 			{Object($1)}
 
 array_type:
-	type_tag LBRACKET brackets RBRACKET { Arraytype($1, $3) }
+	primitive LBRACKET brackets RBRACKET { Arraytype($1, $3) }
 
 datatype:
-	  type_tag   { $1 }
+		po {$1}
 	| array_type { $1 }
 	| tuple_type { $1 }
 
@@ -213,7 +213,7 @@ expr:
 	| expr DOT expr { ObjAccess($1, $3)}
 	| NEW TUPLE LT tdatatype_args GT LPAREN actuals_opt RPAREN  { TupleCreate($4, $7) } 
 	| expr LBRACKET expr RBRACKET {TupleAccess($1, $3)}
-	| NEW type_tag brackets_args RBRACKET { ArrayCreate($2, List.rev $3) }
+	| NEW primitive brackets_args RBRACKET { ArrayCreate($2, List.rev $3) }
 	| expr brackets_args RBRACKET { ArrayAccess($1, List.rev $2) }
 
 brackets_args:
@@ -225,11 +225,11 @@ expr_opt:
 	| expr { $1 }
 
 literals:
-	  INT_LITERAL      		{ Int_Lit($1) }
-	| FLOAT_LITERAL    		{ Float_Lit($1) }
+	  INT_LITERAL      	{ Int_Lit($1) }
+	| FLOAT_LITERAL    	{ Float_Lit($1) }
 	| TRUE			   	{ Bool_Lit(true) }
 	| FALSE			   	{ Bool_Lit(false) }
-	| STRING_LITERAL   		{ String_Lit($1) }  
-	| CHAR_LITERAL			{ Char_Lit($1) }
+	| STRING_LITERAL   	{ String_Lit($1) }  
+	| CHAR_LITERAL		{ Char_Lit($1) }
 	| ID 			   	{ Id($1) }	
 	| NULL				{ Null }

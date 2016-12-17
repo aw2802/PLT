@@ -149,8 +149,9 @@ diff -b test-initialize.out tests/test-initialize.out > test-initialize.diff
 
 ###### Testing test-integer
 ./javapm tests/test-integer.javapm > test-integer.ll
-Fatal error: exception Failure("Class Name not capitailized: testInteger")
-###### FAILED
+lli test-integer.ll > test-integer.out
+diff -b test-integer.out tests/test-integer.out > test-integer.diff
+###### SUCCESS
 
 ###### Testing test-leq
 ./javapm tests/test-leq.javapm > test-leq.ll
@@ -168,6 +169,12 @@ diff -b test-lt.out tests/test-lt.out > test-lt.diff
 ./javapm tests/test-mult.javapm > test-mult.ll
 lli test-mult.ll > test-mult.out
 diff -b test-mult.out tests/test-mult.out > test-mult.diff
+###### SUCCESS
+
+###### Testing test-mult_classes
+./javapm tests/test-mult_classes.javapm > test-mult_classes.ll
+lli test-mult_classes.ll > test-mult_classes.out
+diff -b test-mult_classes.out tests/test-mult_classes.out > test-mult_classes.diff
 ###### SUCCESS
 
 ###### Testing test-negate
@@ -190,7 +197,7 @@ diff -b test-notEqual.out tests/test-notEqual.out > test-notEqual.diff
 
 ###### Testing test-object
 ./javapm tests/test-object.javapm > test-object.ll
-Fatal error: exception Parsing.Parse_error
+Fatal error: exception Failure("expression not match")
 ###### FAILED
 
 ###### Testing test-or
