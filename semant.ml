@@ -11,6 +11,7 @@ let createClassIndices cdecls=
 	List.iteri classHandler cdecls
 
 type methodSignature = {
+	fscope: scope;
 	fname : string;
 	fformalTypes: data_type list; 
 }
@@ -24,6 +25,7 @@ type classMap = {
 type classEnv = {
 	className: string;
 	classMaps: classMap StringMap.t;
+	classMap: classMap;
 }
 
 type env = {
@@ -70,7 +72,7 @@ let typOFSexpr = function
 
 let convertToSast classes =
 	
-		let convertFormalToSast formal =
+		let convertFormalToSast formal env =
 		{
 			sformal_type = formal.fvtype;
 		 	sformal_name = formal.fvname;
@@ -104,32 +106,55 @@ let convertToSast classes =
 		 	svexpr 	= convertExprToSast vdecl.vexpr;
 		}
 		in
-		let rec convertStmtToSast stmt = match stmt with
-			  Block(sl)			-> SBlock(List.map convertStmtToSast sl)
+		let rec convertStmtToSast stmt env = match stmt with
+			  Block(sl)			-> SBlock(List.map (fun s -> convertStmtToSast s env) sl)
 			| Expr(expr)			-> SExpr(convertExprToSast expr, JInt)
 			| VarDecl(vdecl)		-> SVarDecl(convertVdeclToSast vdecl)
 			| LocalVarDecl(dt, id, expr)	-> SLocalVarDecl(dt, id, convertExprToSast expr)
 			| Return(expr)  		-> SReturn(convertExprToSast expr, JInt)
-			| If(expr, stmt1, stmt2)	-> SIf(convertExprToSast expr, convertStmtToSast stmt1, convertStmtToSast stmt2)
-			| For(expr1, expr2, expr3, stmt)-> SFor(convertExprToSast expr1, convertExprToSast expr2, convertExprToSast expr3, convertStmtToSast stmt)
-			| While(expr, stmt)		-> SWhile(convertExprToSast expr, convertStmtToSast stmt)
+			| If(expr, stmt1, stmt2)	-> SIf(convertExprToSast expr, convertStmtToSast stmt1 env, convertStmtToSast stmt2 env)
+			| For(expr1, expr2, expr3, stmt)-> SFor(convertExprToSast expr1, convertExprToSast expr2, convertExprToSast expr3, convertStmtToSast stmt env)
+			| While(expr, stmt)		-> SWhile(convertExprToSast expr, convertStmtToSast stmt env)
 
 	in
-	let convertMethodToSast func_decl = 
-	{
-		sfscope = func_decl.fscope;
-		sfname = func_decl.fname;
-		sfformals = List.map convertFormalToSast func_decl.fformals; 
-		sfreturn = func_decl.freturn;
-		sfbody = List.map convertStmtToSast func_decl.fbody;
-	}
+	let checkMethod func_decl env =
+		{
+			fscope = Public;
+			fname = "";
+			fformalTypes = [];			
+		}
 	in
-	let convertCbodyToSast cbody classMap =
+	let convertMethodToSast func_decl classEnv =
+		let env = {
+			envClassName = classEnv.className;
+			envClassMaps = classEnv.classMaps;
+			envClassMap  = classEnv.classMap;
+			envLocals    = StringMap.empty;
+			envParams    = StringMap.empty;
+			envReturnType= func_decl.freturn;
+		} in 
+		let methodSignature = checkMethod func_decl env
+		in
+		let result =
+		{
+			sfscope = func_decl.fscope;
+			sfname = func_decl.fname;
+			sfformals = List.map (fun f -> convertFormalToSast f env) func_decl.fformals; 
+			sfreturn = func_decl.freturn;
+			sfbody = List.map (fun s -> convertStmtToSast s env) func_decl.fbody;
+		} in
+		classEnv.classMap.methodMap = StringMap.add func_decl.fname methodSignature classEnv.classMap.methodMap;
+		result
+	in
+	let convertVariableToSast vdecl classEnv = 
+		convertVdeclToSast vdecl
+	in
+	let convertCbodyToSast cbody classEnv =
 	{
-		svariables = List.map convertVdeclToSast cbody.variables;
-        sconstructors = List.map convertMethodToSast cbody.constructors;
-		smethods = List.map convertMethodToSast cbody.methods;
-    }
+		svariables = List.map (fun v -> convertVariableToSast v classEnv) cbody.variables;
+        	sconstructors = List.map (fun cst -> convertMethodToSast cst classEnv) cbody.constructors;
+		smethods = List.map (fun m -> convertMethodToSast m classEnv) cbody.methods;
+    	}
 
 	in
 	let checkClass class_decl classEnv = 
@@ -143,19 +168,25 @@ let convertToSast classes =
 			constructorMap = StringMap.empty;
 			methodMap = StringMap.empty;
 		} in
+		classEnv.classMap = classMap;
 		let result =
 		{
 			scscope = class_decl.cscope;
 			scname  = class_decl.cname;
-			scbody	 = convertCbodyToSast class_decl.cbody classMap;
+			scbody  = convertCbodyToSast class_decl.cbody classEnv;
 		} in
-		classEnv.classMaps = StringMap.add classEnv.className classMap classEnv.classMaps;
+		classEnv.classMaps = StringMap.add classEnv.className classEnv.classMap classEnv.classMaps;
 		result
 
 	in
 	let classEnv = {
 		className = "";
 		classMaps = StringMap.empty;
+		classMap  = { 
+			variableMap = StringMap.empty;
+			constructorMap = StringMap.empty;
+			methodMap = StringMap.empty;
+		};
 	}
 	in
 	let get_classes =
