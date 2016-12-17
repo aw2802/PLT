@@ -130,7 +130,7 @@ primitive:
 	| JFLOAT				 	{ JFloat } 
 	| JBOOLEAN 					{ JBoolean }
 	| JVOID 					{ JVoid }
-	| ID						{ Object }
+	| ID						{ Object($1) }
 		
 type_tag:
 	  primitive 	{ $1 }
