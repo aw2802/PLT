@@ -9,7 +9,7 @@ type data_type =
   | JString
   | Object of string
   | Arraytype of data_type * int 
-  | Tuple of data_type list
+  | Tuple of data_type list3
  
 (* Operators *)
 type op = Add | Sub | Div | Mult | Equal | Neq | Less | Leq | Greater | Geq |

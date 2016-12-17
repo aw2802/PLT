@@ -125,7 +125,8 @@ tuple_type :
 
 /* datatypes + formal & actual params */
 primitive:  
-	 JINT						{ JInt }
+	  JCHAR 					{ JChar }
+	| JINT						{ JInt }
 	| JFLOAT				 	{ JFloat } 
 	| JBOOLEAN 					{ JBoolean }
 	| JVOID 					{ JVoid }
@@ -221,11 +222,11 @@ expr_opt:
 	| expr { $1 }
 
 literals:
-	  INT_LITERAL      		{ Int_Lit($1) }
-	| FLOAT_LITERAL    		{ Float_Lit($1) }
+	  INT_LITERAL      	{ Int_Lit($1) }
+	| FLOAT_LITERAL    	{ Float_Lit($1) }
 	| TRUE			   	{ Bool_Lit(true) }
 	| FALSE			   	{ Bool_Lit(false) }
-	| STRING_LITERAL   		{ String_Lit($1) }  
-	| CHAR_LITERAL			{ Char_Lit($1) }
+	| STRING_LITERAL   	{ String_Lit($1) }  
+	| CHAR_LITERAL		{ Char_Lit($1) }
 	| ID 			   	{ Id($1) }	
 	| NULL				{ Null }
