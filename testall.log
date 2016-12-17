@@ -197,7 +197,7 @@ diff -b test-notEqual.out tests/test-notEqual.out > test-notEqual.diff
 
 ###### Testing test-object
 ./javapm tests/test-object.javapm > test-object.ll
-Fatal error: exception Failure("Invalid Data Type")
+Fatal error: exception Failure("expression not match")
 ###### FAILED
 
 ###### Testing test-or
