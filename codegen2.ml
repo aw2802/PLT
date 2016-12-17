@@ -211,7 +211,7 @@ let translate sast =
 		| SId (n, dt)		-> get_value false n llbuilder 
 		| SBinop(e1, op, e2, dt) -> binop_gen e1 op e2 llbuilder
 		| SUnop(op, e, dt)      -> unop_gen op e llbuilder
-		| SAssign (id, e, dt)	-> assign_to_variable (get_value false id llbuilder) e llbuilder
+		| SAssign (id, e, dt)	-> assign_to_variable id e llbuilder
 		(**| SCreateObject(id, el, d) -> generate_object_create id el d llbuilder **)
 		| SFuncCall (fname, expr_list, d, _) -> (*Need to call a regular fuction too*)
 			let reserved_func_gen llbuilder d expr_list = function
@@ -279,12 +279,12 @@ let translate sast =
 		in
 		var
 
-	and assign_to_variable vmemory e llbuilder =
+	and assign_to_variable vname e llbuilder =
 		let value = match e with
 		| SId(id, d) -> get_value true id llbuilder
 		| _ -> expr_gen llbuilder e
 		in
-		L.build_store value vmemory llbuilder
+		Hashtbl.add local_var_table vname value
 
 	and print_func_gen newLine expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
