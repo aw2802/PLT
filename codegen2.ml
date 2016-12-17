@@ -126,7 +126,9 @@ let translate sast =
 
 	and generate_vardecl scope datatype vname expr llbuilder =
 		let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
-		Hashtbl.add global_var_table vname allocatedMemory;
+			match scope with
+			| A.Public -> Hashtbl.add global_var_table vname allocatedMemory;
+			| A.Private -> Hashtbl.add class_private_vars vname allocatedMemory;
 		let variable_value = expr_gen llbuilder expr in 
 			match expr with
 			| SNoexpr -> allocatedMemory
