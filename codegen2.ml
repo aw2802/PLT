@@ -128,8 +128,8 @@ let translate sast =
 		let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
 			match scope with
 			| A.Public -> Hashtbl.add global_var_table vname allocatedMemory
-			| A.Private -> Hashtbl.add class_private_vars vname allocatedMemory;
-
+			| A.Private -> Hashtbl.add class_private_vars vname allocatedMemory
+		in
 		let variable_value = expr_gen llbuilder expr in 
 			match expr with
 			| SNoexpr -> allocatedMemory
