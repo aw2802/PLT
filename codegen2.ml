@@ -77,12 +77,12 @@ let translate sast =
 		let type_list = i32_t :: type_list in
 		let name_list = ".key" :: name_list in
 		let type_array = (Array.of_list type_list) in
-		List.iteri (
+		(*List.iteri (
 			fun i f ->
 	        let n = c.scname ^ "." ^ f in
-	        (*Hashtbl.add struct_field_idx_table n i;*)
+	        Hashtbl.add struct_field_idx_table n i;
 	    	) 
-	    name_list;
+	    name_list; *)
 		L.struct_set_body struct_t type_array true
 	in
 	let _ = List.map define_classes classes in	
