@@ -284,7 +284,7 @@ let translate sast =
 		| SId(id, d) -> get_value true id llbuilder
 		| _ -> expr_gen llbuilder e
 		in
-		Hashtbl.add local_var_table vname value
+		ignore(Hashtbl.add local_var_table vname value); value
 
 	and print_func_gen newLine expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
