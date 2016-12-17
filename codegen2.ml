@@ -141,13 +141,11 @@ let translate sast =
 			| _ -> L.build_store variable_value allocatedMemory llbuilder; variable_value
 
 	and generate_local_vardecl datatype vname expr llbuilder =
-		let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
-		Hashtbl.add local_var_table vname allocatedMemory;
-		let variable_value = expr_gen llbuilder expr in 
-			match expr with
-			| SNoexpr -> allocatedMemory
-			| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
-			
+		match expr with
+			| SNoexpr -> const_null void_t
+			| _ -> 	let variable_value = expr_gen llbuilder expr in 
+					Hashtbl.add local_var_table vname allocatedMemory; variable_value
+					
 	and generate_while e s llbuilder =
 
 		let start_block = L.insertion_block llbuilder in
