@@ -117,8 +117,8 @@ fdecl:
 			fbody = List.rev $8 } }
 
 tdatatype_args:
-                datatype                        {[$1]}
-        |       tdatatype_args COMMA datatype   {$3 :: $1}
+                datatype                        {[Datatype($1)]}
+        |       tdatatype_args COMMA datatype   {Datatype($3) :: $1}
 
 tuple_type :
         TUPLE LT tdatatype_args GT { Tuple($3) }
