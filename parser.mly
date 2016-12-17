@@ -138,6 +138,7 @@ datatype:
 	  primitive   { $1 }
 	| array_type { $1 }
 	| tuple_type { $1 }
+	| ID 			{Object($1)}
 
 brackets:
 	  /* nothing */	{ 1 }
