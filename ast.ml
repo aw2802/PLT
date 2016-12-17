@@ -10,6 +10,8 @@ type data_type =
   | Object of string
   | Arraytype of data_type * int 
   | Tuple of data_type list
+
+type please = Datatype of data_type
  
 (* Operators *)
 type op = Add | Sub | Div | Mult | Equal | Neq | Less | Leq | Greater | Geq |

@@ -130,7 +130,6 @@ primitive:
 	| JFLOAT				 	{ JFloat } 
 	| JBOOLEAN 					{ JBoolean }
 	| JVOID 					{ JVoid }
-	| ID						{ Object($1) }
 		
 type_tag:
 	  primitive 	{ $1 }
@@ -140,7 +139,7 @@ array_type:
 	type_tag LBRACKET brackets RBRACKET { Arraytype($1, $3) }
 
 datatype:
-	  type_tag   { $1 }
+	  type_tag   { Datatype($1) }
 	| array_type { $1 }
 	| tuple_type { $1 }
 
