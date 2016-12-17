@@ -12,9 +12,9 @@ let createClassIndices cdecls=
 	List.iteri classHandler cdecls
 
 type methodSignature = {
-	fscope: scope;
-	fname : string;
-	fformalTypes: data_type list; 
+	mscope: scope;
+	mname : string;
+	mformalTypes: data_type list; 
 }
 
 type classMap = {
@@ -119,11 +119,19 @@ let convertToSast classes =
 
 	in
 	let checkMethod func_decl env =
-		{
-			fscope = Public;
-			fname = "";
-			fformalTypes = [];			
-		}
+		if StringMap.mem func_decl.fname env.classMap.methodMap
+			then raise (Failure("Duplicate Method Name: " ^ func_decl.fname));
+(*		let rec check func_decl.fformals.fvname = match func_decl.fformals.fvname with
+			(h::t) -> let x = (List.mem h t) in
+				  if x 
+					then raise (Failure("Duplicate Parameter Names: "^ h))
+		in check
+ *)
+		let signature = {
+			mscope = func_decl.fscope;
+			mname = func_decl.fname;
+			mformalTypes = List.map (fun fl -> fl.fvtype) func_decl.fformals;			
+		} in signature 
 	in
 	let convertMethodToSast func_decl classEnv =
 		let env = {
@@ -134,7 +142,7 @@ let convertToSast classes =
 			envParams    = StringMap.empty;
 			envReturnType= func_decl.freturn;
 		} in 
-		let methodSignature = checkMethod func_decl env
+		let methodSignature = checkMethod func_decl classEnv
 		in
 		let result =
 		{
@@ -175,7 +183,7 @@ let convertToSast classes =
 		let lowerChar = Char.lowercase firstChar
 		in 
 		let checking =  
-			if lowerChar <> firstChar
+			if lowerChar = firstChar
 			 	then raise (Failure ("Class Name not capitailized: " ^ class_decl.cname))
 			else if StringMap.mem class_decl.cname classEnv.classMaps
 				then raise (Failure ("Duplicate Class Name: " ^ class_decl.cname))

@@ -3,10 +3,17 @@ public class TestNot{
     int i = 1;
     int j = 3;
     if (i != 3){
-      print(0);
+      println(0);
     }
     else{
-    	print(1);
+    	println(1);
+    }
+
+    if(true) {
+	println("True");
+    } 
+    else {
+	println("False");
     }
   }
 }

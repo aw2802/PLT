@@ -149,9 +149,8 @@ diff -b test-initialize.out tests/test-initialize.out > test-initialize.diff
 
 ###### Testing test-integer
 ./javapm tests/test-integer.javapm > test-integer.ll
-lli test-integer.ll > test-integer.out
-diff -b test-integer.out tests/test-integer.out > test-integer.diff
-###### SUCCESS
+Fatal error: exception Failure("Class Name not capitailized: testInteger")
+###### FAILED
 
 ###### Testing test-leq
 ./javapm tests/test-leq.javapm > test-leq.ll
@@ -169,6 +168,12 @@ diff -b test-lt.out tests/test-lt.out > test-lt.diff
 ./javapm tests/test-mult.javapm > test-mult.ll
 lli test-mult.ll > test-mult.out
 diff -b test-mult.out tests/test-mult.out > test-mult.diff
+###### SUCCESS
+
+###### Testing test-negate
+./javapm tests/test-negate.javapm > test-negate.ll
+lli test-negate.ll > test-negate.out
+diff -b test-negate.out tests/test-negate.out > test-negate.diff
 ###### SUCCESS
 
 ###### Testing test-not
@@ -223,3 +228,127 @@ diff -b test-while_for_nested.out tests/test-while_for_nested.out > test-while_f
 lli test-while_nest.ll > test-while_nest.out
 diff -b test-while_nest.out tests/test-while_nest.out > test-while_nest.diff
 ###### SUCCESS
+
+###### Testing fail-assign1
+< tests/fail-assign1.javapm 2> fail-assign1.err >> testall.log
+###### FAILED
+
+###### Testing fail-assign2
+< tests/fail-assign2.javapm 2> fail-assign2.err >> testall.log
+###### FAILED
+
+###### Testing fail-assign3
+< tests/fail-assign3.javapm 2> fail-assign3.err >> testall.log
+###### FAILED
+
+###### Testing fail-dead1
+< tests/fail-dead1.javapm 2> fail-dead1.err >> testall.log
+###### FAILED
+
+###### Testing fail-dead2
+< tests/fail-dead2.javapm 2> fail-dead2.err >> testall.log
+###### FAILED
+
+###### Testing fail-expr1
+< tests/fail-expr1.javapm 2> fail-expr1.err >> testall.log
+###### FAILED
+
+###### Testing fail-expr2
+< tests/fail-expr2.javapm 2> fail-expr2.err >> testall.log
+###### FAILED
+
+###### Testing fail-for1
+< tests/fail-for1.javapm 2> fail-for1.err >> testall.log
+###### FAILED
+
+###### Testing fail-for2
+< tests/fail-for2.javapm 2> fail-for2.err >> testall.log
+###### FAILED
+
+###### Testing fail-for3
+< tests/fail-for3.javapm 2> fail-for3.err >> testall.log
+###### FAILED
+
+###### Testing fail-for4
+< tests/fail-for4.javapm 2> fail-for4.err >> testall.log
+###### FAILED
+
+###### Testing fail-for5
+< tests/fail-for5.javapm 2> fail-for5.err >> testall.log
+###### FAILED
+
+###### Testing fail-func1
+< tests/fail-func1.javapm 2> fail-func1.err >> testall.log
+###### FAILED
+
+###### Testing fail-func2
+< tests/fail-func2.javapm 2> fail-func2.err >> testall.log
+###### FAILED
+
+###### Testing fail-func3
+< tests/fail-func3.javapm 2> fail-func3.err >> testall.log
+###### FAILED
+
+###### Testing fail-func4
+< tests/fail-func4.javapm 2> fail-func4.err >> testall.log
+###### FAILED
+
+###### Testing fail-func5
+< tests/fail-func5.javapm 2> fail-func5.err >> testall.log
+###### FAILED
+
+###### Testing fail-func6
+< tests/fail-func6.javapm 2> fail-func6.err >> testall.log
+###### FAILED
+
+###### Testing fail-func7
+< tests/fail-func7.javapm 2> fail-func7.err >> testall.log
+###### FAILED
+
+###### Testing fail-func8
+< tests/fail-func8.javapm 2> fail-func8.err >> testall.log
+###### FAILED
+
+###### Testing fail-func9
+< tests/fail-func9.javapm 2> fail-func9.err >> testall.log
+###### FAILED
+
+###### Testing fail-global1
+< tests/fail-global1.javapm 2> fail-global1.err >> testall.log
+###### FAILED
+
+###### Testing fail-global2
+< tests/fail-global2.javapm 2> fail-global2.err >> testall.log
+###### FAILED
+
+###### Testing fail-if1
+< tests/fail-if1.javapm 2> fail-if1.err >> testall.log
+###### FAILED
+
+###### Testing fail-if2
+< tests/fail-if2.javapm 2> fail-if2.err >> testall.log
+###### FAILED
+
+###### Testing fail-if3
+< tests/fail-if3.javapm 2> fail-if3.err >> testall.log
+###### FAILED
+
+###### Testing fail-nomain
+< tests/fail-nomain.javapm 2> fail-nomain.err >> testall.log
+###### FAILED
+
+###### Testing fail-return1
+< tests/fail-return1.javapm 2> fail-return1.err >> testall.log
+###### FAILED
+
+###### Testing fail-return2
+< tests/fail-return2.javapm 2> fail-return2.err >> testall.log
+###### FAILED
+
+###### Testing fail-while1
+< tests/fail-while1.javapm 2> fail-while1.err >> testall.log
+###### FAILED
+
+###### Testing fail-while2
+< tests/fail-while2.javapm 2> fail-while2.err >> testall.log
+###### FAILED
