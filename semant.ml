@@ -1,5 +1,6 @@
 open Ast
 open Sast
+open Utils
 
 module StringMap = Map.Make(String)
 
@@ -146,8 +147,19 @@ let convertToSast classes =
 		classEnv.classMap.methodMap = StringMap.add func_decl.fname methodSignature classEnv.classMap.methodMap;
 		result
 	in
-	let convertVariableToSast vdecl classEnv = 
-		convertVdeclToSast vdecl
+	let checkVariable vdecl classEnv = 
+		let check = 
+			if StringMap.mem vdecl.vname classEnv.classMap.variableMap
+				then raise (Failure("Variable name already used"))
+			else if vdecl.vexpr <> Ast.Noexpr && getType vdecl.vexpr classEnv <> vdecl.vtype
+				then raise (Failure(str_of_expr vdecl.vexpr ^ " is of type " ^ str_of_type (getType vdecl.vexpr classEnv) ^ " but type " ^ str_of_type vdecl.vtype ^ " is expected."))
+		in check
+	in
+	let convertVariableToSast vdecl classEnv =
+		checkVariable vdecl classEnv; 
+		let result = convertVdeclToSast vdecl
+		in
+		classEnv.classMap.variableMap = StringMap.add vdecl.vname vdecl classEnv.classMap.variableMap; result
 	in
 	let convertCbodyToSast cbody classEnv =
 	{
