@@ -197,7 +197,9 @@ diff -b test-notEqual.out tests/test-notEqual.out > test-notEqual.diff
 
 ###### Testing test-object
 ./javapm tests/test-object.javapm > test-object.ll
-Fatal error: exception Failure("expression not match")
+lli test-object.ll > test-object.out
+diff -b test-object.out tests/test-object.out > test-object.diff
+FAILED test-object.out differs from tests/test-object.out
 ###### FAILED
 
 ###### Testing test-or

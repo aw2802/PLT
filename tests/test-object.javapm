@@ -5,6 +5,6 @@ public class Car{
 public class TestObject{
   public void main(){
    	Car myCar;
-    	print("created!\n");
+    	print("Created!");
   }
 }
