@@ -33,8 +33,12 @@ let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *
 	| A.JBoolean -> i1_t
 	| A.JFloat -> f_t
 	| A.JInt -> i32_t
+	| A.Object(s) -> L.pointer_type(find_llvm_struct_type name)
 	| _ -> raise(Failure("Invalid Data Type"))
-	(** | A.Object --> @TODO **) 
+
+and find_llvm_struct_type name = 
+	try Hashtbl.find struct_typ_table name
+	with | Not_found -> raise(Failure ("undeclared struct"^ name))
 
 let find_func_in_module fname = 
 	match (L.lookup_function fname the_module) with
