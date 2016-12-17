@@ -1,6 +1,6 @@
 
 (* Possible data types *)
-type primitive =
+type data_type =
   | JChar 
   | JVoid
   | JBoolean
@@ -8,10 +8,8 @@ type primitive =
   | JInt
   | JString
   | Object of string
-  | Arraytype of primitive * int 
-  | Tuple of primitive list
-
-type data_type = Datatype of primitive
+  | Arraytype of data_type * int 
+  | Tuple of data_type list
  
 (* Operators *)
 type op = Add | Sub | Div | Mult | Equal | Neq | Less | Leq | Greater | Geq |

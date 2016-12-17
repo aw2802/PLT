@@ -99,7 +99,7 @@ constructor:
 		{
 			fscope = Public;
 			fname = $1;
-			freturn = Datatype(JVoid); 
+			freturn = JVoid; 
 			fformals = $3;
 			fbody = List.rev $6;
 		        
@@ -117,8 +117,8 @@ fdecl:
 			fbody = List.rev $8 } }
 
 tdatatype_args:
-                datatype                        {[Datatype($1)]}
-        |       tdatatype_args COMMA datatype   {Datatype($3) :: $1}
+                datatype                        {[$1]}
+        |       tdatatype_args COMMA datatype   {$3 :: $1}
 
 tuple_type :
         TUPLE LT tdatatype_args GT { Tuple($3) }
@@ -133,13 +133,13 @@ primitive:
 		
 type_tag:
 	  primitive 	{ $1 }
-	| CLASS ID	{ Object($2) }
+	| ID	{ Object($2) }
 
 array_type:
 	type_tag LBRACKET brackets RBRACKET { Arraytype($1, $3) }
 
 datatype:
-	  type_tag   { Datatype($1) }
+	  type_tag   { $1 }
 	| array_type { $1 }
 	| tuple_type { $1 }
 
