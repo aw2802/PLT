@@ -139,9 +139,10 @@ array_type:
 	po LBRACKET brackets RBRACKET { Arraytype($1, $3) }
 
 datatype:
-		po {$1}
+		primitive { $1 }
 	| array_type { $1 }
 	| tuple_type { $1 }
+	| ID 		{Object($1)}
 
 brackets:
 	  /* nothing */	{ 1 }
