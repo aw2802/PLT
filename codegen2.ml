@@ -208,7 +208,7 @@ let translate sast =
 		| SChar_Lit (c)    ->	L.const_int i8_t (Char.code c)
 		| SString_Lit (s)  ->	build_global_stringptr s "tmp" llbuilder
 		(*SNull*)
-		| SId (n, dt)		-> get_value false n llbuilder 
+		| SId (n, dt)		-> get_value true n llbuilder 
 		| SBinop(e1, op, e2, dt) -> binop_gen e1 op e2 llbuilder
 		| SUnop(op, e, dt)      -> unop_gen op e llbuilder
 		| SAssign (id, e, dt)	-> assign_to_variable (get_value false id llbuilder) e llbuilder
