@@ -1,0 +1,12 @@
+public class Car {
+
+
+}
+
+public class TestMultClasses {
+
+	public void main() {
+
+		println("Success");
+	}
+}
