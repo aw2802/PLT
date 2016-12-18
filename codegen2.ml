@@ -251,9 +251,9 @@ let translate sast =
 
 	and generate_tuple_access deref e1 e2 llbuilder =
 		let vname = "dummy" in
-		let index = expr_gen e2 llbuilder in
+		let index = expr_gen llbuilder e2 in
 		let tuple = match e1 with
-			| SId(id, d) -> get_value true n llbuilder 
+			| SId(id, d) -> get_value true id llbuilder 
 			| _ -> raise(Failure("Not an id"))
 		in
 		let tuple_value = L.build_struct_gep tuple [| index |] vname llbuilder in
