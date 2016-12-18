@@ -347,8 +347,8 @@ let translate sast =
 
 		let _  = stmt_gen llbuilder (SBlock (sfunc_decl.sfbody)) in 
 		if sfunc_decl.sfreturn = JVoid
-		then ignore (L.build_ret_void llbuilder)
-		else ignore (L.build_ret (L.const_int (get_llvm_type sfunc_decl.sfreturn) 0) llbuilder)
+		then ignore (L.build_ret_void llbuilder);
+		()
 	in
 	let _ = List.map build_function functions in
 
