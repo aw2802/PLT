@@ -32,9 +32,9 @@ diff -b test-arithmetic.out tests/test-arithmetic.out > test-arithmetic.diff
 
 ###### Testing test-array
 ./javapm tests/test-array.javapm > test-array.ll
-Stored value type does not match pointer operand type!
-  store i32 1, i32** %tmp4
- i32*LLVM ERROR: Broken module found, compilation aborted!
+lli test-array.ll > test-array.out
+diff -b test-array.out tests/test-array.out > test-array.diff
+FAILED test-array.out differs from tests/test-array.out
 ###### FAILED
 
 ###### Testing test-array_create
@@ -60,6 +60,17 @@ lli test-bool.ll > test-bool.out
 diff -b test-bool.out tests/test-bool.out > test-bool.diff
 ###### SUCCESS
 
+###### Testing test-check-variable
+./javapm tests/test-check-variable.javapm > test-check-variable.ll
+lli test-check-variable.ll > test-check-variable.out
+diff -b test-check-variable.out tests/test-check-variable.out > test-check-variable.diff
+###### SUCCESS
+
+###### Testing test-class1
+./javapm tests/test-class1.javapm > test-class1.ll
+Fatal error: exception Failure("Class Name not capitailized: testLowercase")
+###### FAILED
+
 ###### Testing test-comments
 ./javapm tests/test-comments.javapm > test-comments.ll
 lli test-comments.ll > test-comments.out
@@ -82,6 +93,13 @@ diff -b test-div.out tests/test-div.out > test-div.diff
 lli test-equal.ll > test-equal.out
 diff -b test-equal.out tests/test-equal.out > test-equal.diff
 ###### SUCCESS
+
+###### Testing test-failassign
+./javapm tests/test-failassign.javapm > test-failassign.ll
+Stored value type does not match pointer operand type!
+  store i1 true, i32* %x
+ i32LLVM ERROR: Broken module found, compilation aborted!
+###### FAILED
 
 ###### Testing test-fibonacci
 ./javapm tests/test-fibonacci.javapm > test-fibonacci.ll
@@ -211,7 +229,7 @@ diff -b test-notEqual.out tests/test-notEqual.out > test-notEqual.diff
 
 ###### Testing test-object
 ./javapm tests/test-object.javapm > test-object.ll
-Fatal error: exception Failure("hd")
+Fatal error: exception Failure("Function: Car not found in module.")
 ###### FAILED
 
 ###### Testing test-or
@@ -266,6 +284,22 @@ FAILED fail-assign2.err differs from tests/fail-assign2.err
 ./javapm tests/fail-assign3.javapm 2> fail-assign3.err >> testall.log
 diff -b fail-assign3.err tests/fail-assign3.err > fail-assign3.diff
 FAILED fail-assign3.err differs from tests/fail-assign3.err
+###### FAILED
+
+###### Testing fail-check-constructor1
+./javapm tests/fail-check-constructor1.javapm 2> fail-check-constructor1.err >> testall.log
+diff -b fail-check-constructor1.err tests/fail-check-constructor1.err > fail-check-constructor1.diff
+###### SUCCESS
+
+###### Testing fail-check-constructor2
+./javapm tests/fail-check-constructor2.javapm 2> fail-check-constructor2.err >> testall.log
+diff -b fail-check-constructor2.err tests/fail-check-constructor2.err > fail-check-constructor2.diff
+###### SUCCESS
+
+###### Testing fail-class1
+./javapm tests/fail-class1.javapm 2> fail-class1.err >> testall.log
+diff -b fail-class1.err tests/fail-class1.err > fail-class1.diff
+FAILED fail-class1.err differs from tests/fail-class1.err
 ###### FAILED
 
 ###### Testing fail-dead1

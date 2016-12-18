@@ -128,11 +128,26 @@ let convertToSast classes =
 		in List.iter (fun e -> result := !result || e) (List.map (fun n -> List.length (List.filter (fun s -> s = n) names) > 1) names);!result
 	in
 	let checkMethod func_decl env =
-		let signature = {
+		let check =
+			if StringMap.mem func_decl.fname env.envClassMap.methodMap
+				then raise(Failure("Duplicate Method Name"))
+		in 
+		let nameList = List.map (fun fn -> fn.fvname) func_decl.fformals
+		in
+		let rec checking l = match l with 
+			[] -> false
+			|(h::t) -> let x = (List.filter (fun x -> x = h) t) in
+				   if ( x== []) then
+					checking t
+				    else raise(Failure("Duplicate Parameter Name"))
+		in
+		let paraCheck = checking nameList
+		in paraCheck;	
+		let signature=	{
 			mscope = func_decl.fscope;
 			mname = func_decl.fname;
-			mformalTypes = List.map (fun fl -> fl.fvtype) func_decl.fformals;			
-		} in signature 
+			mformalTypes = List.map (fun fl -> fl.fvtype) func_decl.fformals;
+		} in signature
 	in
 	let convertMethodToSast func_decl classEnv =
 		let env = {
@@ -143,7 +158,7 @@ let convertToSast classes =
 			envParams    = StringMap.empty;
 			envReturnType= func_decl.freturn;
 		} in 
-		let methodSignature = checkMethod func_decl classEnv
+		let methodSignature = checkMethod func_decl env
 		in
 		let result =
 		{
@@ -158,16 +173,12 @@ let convertToSast classes =
 	in
 
 	let checkAssign expr1 expr2 env =
-		let sexpr1 = convertExprToSast expr1
+		let type1 = getType expr1 env
 		in 
-		let sexpr2 = convertExprToSast expr2
-		in 
-		let type1 = typOFSexpr sexpr1
-		in 
-		let type2 = typOFSexpr sexpr2
+		let type2 = getType expr2 env
 		in
-		let checking2 = 
-			if type1 = type2
+		let checking2 =
+			if type1 <> type2
 				then raise (Failure("Assignment types are mismatched"))
 		
 		in checking2
@@ -263,7 +274,7 @@ let convertToSast classes =
 			methodMap = StringMap.empty;
 		} in
 		classEnv.classMap = classMap;
-		let result =
+ 		let result = 
 		{
 			scscope = class_decl.cscope;
 			scname  = class_decl.cname;
