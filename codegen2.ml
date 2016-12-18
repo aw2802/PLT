@@ -31,16 +31,16 @@ let rec get_ptr_type datatype = match datatype with
 		A.Arraytype(t, 0) -> get_llvm_type t
 	|	A.Arraytype(t, 1) -> L.pointer_type (get_llvm_type t)
 	|	A.Arraytype(t, i) -> L.pointer_type (get_ptr_type (A.Arraytype(t, (i-1))))
-	| 	_ -> raise(Exceptions.InvalidStructType "Array Pointer Type")
+	| 	_ -> raise(Failure("InvalidStructType Array Pointer Type"))
 
-let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
+and get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	  A.JChar -> i8_t
 	| A.JVoid -> void_t
 	| A.JBoolean -> i1_t
 	| A.JFloat -> f_t
 	| A.JInt -> i32_t
 	| A.Object(s) -> L.pointer_type(find_llvm_struct_type s)
-	| A.Arraytype(data_type, i) ->  get_ptr_type (A.Arraytype(t, (i)))
+	| A.Arraytype(data_type, i) ->  get_ptr_type (A.Arraytype(data_type, (i)))
 	| _ -> raise(Failure("Invalid Data Type"))
 
 and find_llvm_struct_type name = 
@@ -235,7 +235,7 @@ let translate sast =
 		| _ -> raise(Failure("No match for expression"))
 
 	and generate_array_access deref e el llbuilder =
-		match expr_list with
+		match el with
 		| [h] -> let index = expr_gen llbuilder h in
 				let index = L.build_add index (const_int i32_t 1) "tmp" llbuilder in
     			let arr = expr_gen llbuilder e in
