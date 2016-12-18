@@ -215,15 +215,17 @@ let translate sast =
 		| SUnop(op, e, dt)      -> unop_gen op e llbuilder
 		| SAssign (id, e, dt)	-> assign_to_variable (get_value false id llbuilder) e llbuilder
 		| SCreateObject(id, el, d) -> generate_object_create id el llbuilder
-		| SFuncCall (fname, expr_list, d, _) -> (*Need to call a regular fuction too*)
-			let reserved_func_gen llbuilder d expr_list = function
-			  "print" -> print_func_gen "" expr_list llbuilder
-			  | "println" -> print_func_gen "\n" expr_list llbuilder
-			  | _ as call_name -> raise(Failure("function call not found: "^ call_name))
-			in
-			reserved_func_gen llbuilder d expr_list fname
+		| SFuncCall (fname, expr_list, d, _) -> generate_function_call id el d llbuilder
 		| SNoexpr -> L.build_add (L.const_int i32_t 0) (L.const_int i32_t 0) "nop" llbuilder
 		| _ -> raise(Failure("No match expression"))
+
+	and generate_function_call fname expr_list d llbuilder =
+		let f = find_func_in_module fname in
+		match fname with
+			| "print" -> print_func_gen "" expr_list llbuilder
+			| "println" -> print_func_gen "\n" expr_list llbuilder
+			| _ -> 	let params = List.map (expr_gen llbuilder) el in
+					L.build_call f (Array.of_list params) "tmp" llbuilder
 
 	and generate_object_create id el llbuilder =
 		let f = find_func_in_module id in
