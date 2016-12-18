@@ -239,8 +239,9 @@ diff -b test-subtract.out tests/test-subtract.out > test-subtract.diff
 
 ###### Testing test-tuple_access
 ./javapm tests/test-tuple_access.javapm > test-tuple_access.ll
-Fatal error: exception Failure("undeclared structstring")
-###### FAILED
+lli test-tuple_access.ll > test-tuple_access.out
+diff -b test-tuple_access.out tests/test-tuple_access.out > test-tuple_access.diff
+###### SUCCESS
 
 ###### Testing test-tuple_creation
 ./javapm tests/test-tuple_creation.javapm > test-tuple_creation.ll
