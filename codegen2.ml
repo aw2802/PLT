@@ -247,21 +247,28 @@ let translate sast =
 		let struct_type = L.packed_struct_type context type_array in
 		let vname = "dummy" in
 		let allocatedMemory = L.build_alloca struct_type vname llbuilder in
+		List.iteri (
+			fun i f ->
+	        let tuple_value = L.build_struct_gep allocatedMemory i "temp" llbuilder in
+	        	ignore(L.build_store (expr_gen llbuilder f) tuple_value llbuilder);
+	    	) 
+	    expr_list; 
 		L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder
 
 	and generate_tuple_access deref e1 e2 llbuilder =
 		let vname = "dummy" in
-		let index = expr_gen e2 llbuilder in
+		let index =  match e2 with
+				| SInt_Lit(i) -> i
+				| _ -> raise(Failure("Not an int"))
+			in
 		let tuple = match e1 with
-			| SId(id, d) -> get_value true n llbuilder 
+			| SId(id, d) -> get_value true id llbuilder 
 			| _ -> raise(Failure("Not an id"))
 		in
-		let val = L.build_struct_gep tuple index vname llbuilder in
+		let tuple_value = L.build_struct_gep tuple index vname llbuilder in
 		if deref 
-			then L.build_load val vname llbuilder
-			else vname
-		in
-		vname
+			then L.build_load tuple_value vname llbuilder
+			else tuple_value
 
 	and generate_array_access deref e el llbuilder =
 		match el with
@@ -345,11 +352,13 @@ let translate sast =
 		let value1 =  match e1 with
 			| SId(id, d) -> get_value true id llbuilder
 			| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
+			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
 			| _ -> expr_gen llbuilder e1
 		in
 		let value2 = match e2 with
 			| SId(id, d) -> get_value true id llbuilder
 			| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
+			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
 			| _ -> expr_gen llbuilder e2	
 		in
 
@@ -398,6 +407,7 @@ let translate sast =
 		let vmemory = match e1 with
 			| SId(s, d) -> get_value false s llbuilder
 			| SArrayAccess(e, el, d) -> generate_array_access false e el llbuilder
+			| STupleAccess(e1, e2, d) -> generate_tuple_access false e1 e2 llbuilder 
 		in
 		let value = match e2 with
 		| SId(id, d) -> get_value true id llbuilder
@@ -409,6 +419,7 @@ let translate sast =
 		let printf = find_func_in_module "printf" in
 		let map_expr_to_printfexpr expr = match expr with
 			| SId(id, d) -> get_value true id llbuilder
+			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
 			| _ -> expr_gen llbuilder expr
 		in
 		let params = List.map map_expr_to_printfexpr expr_list in
