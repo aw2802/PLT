@@ -237,6 +237,11 @@ lli test-subtract.ll > test-subtract.out
 diff -b test-subtract.out tests/test-subtract.out > test-subtract.diff
 ###### SUCCESS
 
+###### Testing test-tuple_access
+./javapm tests/test-tuple_access.javapm > test-tuple_access.ll
+Fatal error: exception Match_failure("semant.ml", 58, 17)
+###### FAILED
+
 ###### Testing test-tuple_creation
 ./javapm tests/test-tuple_creation.javapm > test-tuple_creation.ll
 lli test-tuple_creation.ll > test-tuple_creation.out
