@@ -225,7 +225,7 @@ let translate sast =
 			| "println" -> print_func_gen "\n" expr_list llbuilder
 			| _ -> 	let f = find_func_in_module fname in
 					let params = List.map (expr_gen llbuilder) expr_list in
-					L.build_call f (Array.of_list params) "tmp" llbuilder
+					L.build_call f (Array.of_list params) (fname^"_result") llbuilder
 
 	and generate_object_create id el llbuilder =
 		let f = find_func_in_module id in
@@ -341,8 +341,8 @@ let translate sast =
 
 		let _  = stmt_gen llbuilder (SBlock (sfunc_decl.sfbody)) in 
 		if sfunc_decl.sfreturn = JVoid
-		then ignore (L.build_ret_void llbuilder);
-		()
+		then ignore (L.build_ret_void llbuilder)
+		else L.build_ret (L.const_int (get_llvm_type sfunc_decl.sfreturn) 0))
 	in
 	let _ = List.map build_function functions in
 
