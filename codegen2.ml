@@ -127,6 +127,12 @@ let translate sast =
 		| SIf(e, s1, s2) -> generate_if e s1 s2 llbuilder
 		| SWhile(e, s) -> generate_while e s llbuilder
 		| SFor(e1, e2, e3, s) -> generate_for e1 e2 e3 s llbuilder
+		| SReturn(e, d)		-> generate_return e d llbuilder
+
+	and generate_return e d llbuilder =
+		match e with
+		| SNoexpr -> L.build_ret_void llbuilder
+		| _ -> L.build_ret (expr_gen e llbuilder) llbuilder
 
 	and generate_vardecl scope datatype vname expr llbuilder =
 		let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
