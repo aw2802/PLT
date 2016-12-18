@@ -2,218 +2,259 @@
 
 ###### Testing test-add
 ./javapm tests/test-add.javapm > test-add.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-add.ll > test-add.out
+diff -b test-add.out tests/test-add.out > test-add.diff
+###### SUCCESS
 
 ###### Testing test-addAssign
 ./javapm tests/test-addAssign.javapm > test-addAssign.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-addAssign.ll > test-addAssign.out
+diff -b test-addAssign.out tests/test-addAssign.out > test-addAssign.diff
+###### SUCCESS
 
 ###### Testing test-and
 ./javapm tests/test-and.javapm > test-and.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-and.ll > test-and.out
+diff -b test-and.out tests/test-and.out > test-and.diff
+###### SUCCESS
 
 ###### Testing test-andOp
 ./javapm tests/test-andOp.javapm > test-andOp.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-andOp.ll > test-andOp.out
+diff -b test-andOp.out tests/test-andOp.out > test-andOp.diff
+###### SUCCESS
 
 ###### Testing test-arithmetic
 ./javapm tests/test-arithmetic.javapm > test-arithmetic.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-arithmetic.ll > test-arithmetic.out
+diff -b test-arithmetic.out tests/test-arithmetic.out > test-arithmetic.diff
+###### SUCCESS
 
 ###### Testing test-array
 ./javapm tests/test-array.javapm > test-array.ll
-testall.sh: 1: eval: ./javapm: not found
+lli test-array.ll > test-array.out
+diff -b test-array.out tests/test-array.out > test-array.diff
+FAILED test-array.out differs from tests/test-array.out
 ###### FAILED
 
 ###### Testing test-array_create
 ./javapm tests/test-array_create.javapm > test-array_create.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-array_create.ll > test-array_create.out
+diff -b test-array_create.out tests/test-array_create.out > test-array_create.diff
+###### SUCCESS
 
 ###### Testing test-array_object
 ./javapm tests/test-array_object.javapm > test-array_object.ll
-testall.sh: 1: eval: ./javapm: not found
+Fatal error: exception Parsing.Parse_error
 ###### FAILED
 
 ###### Testing test-assign
 ./javapm tests/test-assign.javapm > test-assign.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-assign.ll > test-assign.out
+diff -b test-assign.out tests/test-assign.out > test-assign.diff
+###### SUCCESS
 
 ###### Testing test-bool
 ./javapm tests/test-bool.javapm > test-bool.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-bool.ll > test-bool.out
+diff -b test-bool.out tests/test-bool.out > test-bool.diff
+###### SUCCESS
 
 ###### Testing test-check-variable
 ./javapm tests/test-check-variable.javapm > test-check-variable.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-check-variable.ll > test-check-variable.out
+diff -b test-check-variable.out tests/test-check-variable.out > test-check-variable.diff
+###### SUCCESS
 
 ###### Testing test-comments
 ./javapm tests/test-comments.javapm > test-comments.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-comments.ll > test-comments.out
+diff -b test-comments.out tests/test-comments.out > test-comments.diff
+###### SUCCESS
 
 ###### Testing test-constructors
 ./javapm tests/test-constructors.javapm > test-constructors.ll
-testall.sh: 1: eval: ./javapm: not found
+Fatal error: exception Parsing.Parse_error
 ###### FAILED
 
 ###### Testing test-div
 ./javapm tests/test-div.javapm > test-div.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-div.ll > test-div.out
+diff -b test-div.out tests/test-div.out > test-div.diff
+###### SUCCESS
 
 ###### Testing test-equal
 ./javapm tests/test-equal.javapm > test-equal.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-equal.ll > test-equal.out
+diff -b test-equal.out tests/test-equal.out > test-equal.diff
+###### SUCCESS
 
 ###### Testing test-fibonacci
 ./javapm tests/test-fibonacci.javapm > test-fibonacci.ll
-testall.sh: 1: eval: ./javapm: not found
+Fatal error: exception Parsing.Parse_error
 ###### FAILED
 
 ###### Testing test-float
 ./javapm tests/test-float.javapm > test-float.ll
-testall.sh: 1: eval: ./javapm: not found
+lli test-float.ll > test-float.out
+lli: test-float.ll:27:16: error: constexpr requires integer operands
+  store double sub (double 2.250000e+00, double 2.500000e-01), double* %i
+               ^
 ###### FAILED
 
 ###### Testing test-for
 ./javapm tests/test-for.javapm > test-for.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-for.ll > test-for.out
+diff -b test-for.out tests/test-for.out > test-for.diff
+###### SUCCESS
 
 ###### Testing test-for_nest
 ./javapm tests/test-for_nest.javapm > test-for_nest.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-for_nest.ll > test-for_nest.out
+diff -b test-for_nest.out tests/test-for_nest.out > test-for_nest.diff
+###### SUCCESS
 
 ###### Testing test-func_in_object
 ./javapm tests/test-func_in_object.javapm > test-func_in_object.ll
-testall.sh: 1: eval: ./javapm: not found
+Fatal error: exception Parsing.Parse_error
 ###### FAILED
 
 ###### Testing test-gcd
 ./javapm tests/test-gcd.javapm > test-gcd.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-gcd.ll > test-gcd.out
+diff -b test-gcd.out tests/test-gcd.out > test-gcd.diff
+###### SUCCESS
 
 ###### Testing test-geq
 ./javapm tests/test-geq.javapm > test-geq.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-geq.ll > test-geq.out
+diff -b test-geq.out tests/test-geq.out > test-geq.diff
+###### SUCCESS
 
 ###### Testing test-gt
 ./javapm tests/test-gt.javapm > test-gt.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-gt.ll > test-gt.out
+diff -b test-gt.out tests/test-gt.out > test-gt.diff
+###### SUCCESS
 
 ###### Testing test-hello
 ./javapm tests/test-hello.javapm > test-hello.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-hello.ll > test-hello.out
+diff -b test-hello.out tests/test-hello.out > test-hello.diff
+###### SUCCESS
 
 ###### Testing test-if
 ./javapm tests/test-if.javapm > test-if.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-if.ll > test-if.out
+diff -b test-if.out tests/test-if.out > test-if.diff
+###### SUCCESS
 
 ###### Testing test-if_nest
 ./javapm tests/test-if_nest.javapm > test-if_nest.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-if_nest.ll > test-if_nest.out
+diff -b test-if_nest.out tests/test-if_nest.out > test-if_nest.diff
+###### SUCCESS
 
 ###### Testing test-initialize
 ./javapm tests/test-initialize.javapm > test-initialize.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-initialize.ll > test-initialize.out
+diff -b test-initialize.out tests/test-initialize.out > test-initialize.diff
+###### SUCCESS
 
 ###### Testing test-integer
 ./javapm tests/test-integer.javapm > test-integer.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-integer.ll > test-integer.out
+diff -b test-integer.out tests/test-integer.out > test-integer.diff
+###### SUCCESS
 
 ###### Testing test-leq
 ./javapm tests/test-leq.javapm > test-leq.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-leq.ll > test-leq.out
+diff -b test-leq.out tests/test-leq.out > test-leq.diff
+###### SUCCESS
 
 ###### Testing test-lt
 ./javapm tests/test-lt.javapm > test-lt.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-lt.ll > test-lt.out
+diff -b test-lt.out tests/test-lt.out > test-lt.diff
+###### SUCCESS
 
 ###### Testing test-mult
 ./javapm tests/test-mult.javapm > test-mult.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-mult.ll > test-mult.out
+diff -b test-mult.out tests/test-mult.out > test-mult.diff
+###### SUCCESS
 
 ###### Testing test-mult_classes
 ./javapm tests/test-mult_classes.javapm > test-mult_classes.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-mult_classes.ll > test-mult_classes.out
+diff -b test-mult_classes.out tests/test-mult_classes.out > test-mult_classes.diff
+###### SUCCESS
 
 ###### Testing test-mult_functions
 ./javapm tests/test-mult_functions.javapm > test-mult_functions.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-mult_functions.ll > test-mult_functions.out
+diff -b test-mult_functions.out tests/test-mult_functions.out > test-mult_functions.diff
+###### SUCCESS
 
 ###### Testing test-negate
 ./javapm tests/test-negate.javapm > test-negate.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-negate.ll > test-negate.out
+diff -b test-negate.out tests/test-negate.out > test-negate.diff
+###### SUCCESS
 
 ###### Testing test-not
 ./javapm tests/test-not.javapm > test-not.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-not.ll > test-not.out
+diff -b test-not.out tests/test-not.out > test-not.diff
+###### SUCCESS
 
 ###### Testing test-notEqual
 ./javapm tests/test-notEqual.javapm > test-notEqual.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-notEqual.ll > test-notEqual.out
+diff -b test-notEqual.out tests/test-notEqual.out > test-notEqual.diff
+###### SUCCESS
 
 ###### Testing test-object
 ./javapm tests/test-object.javapm > test-object.ll
-testall.sh: 1: eval: ./javapm: not found
+Fatal error: exception Failure("Function: Car not found in module.")
 ###### FAILED
 
 ###### Testing test-or
 ./javapm tests/test-or.javapm > test-or.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-or.ll > test-or.out
+diff -b test-or.out tests/test-or.out > test-or.diff
+###### SUCCESS
 
 ###### Testing test-printAdd
 ./javapm tests/test-printAdd.javapm > test-printAdd.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-printAdd.ll > test-printAdd.out
+diff -b test-printAdd.out tests/test-printAdd.out > test-printAdd.diff
+###### SUCCESS
 
 ###### Testing test-subtract
 ./javapm tests/test-subtract.javapm > test-subtract.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-subtract.ll > test-subtract.out
+diff -b test-subtract.out tests/test-subtract.out > test-subtract.diff
+###### SUCCESS
 
 ###### Testing test-while
 ./javapm tests/test-while.javapm > test-while.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-while.ll > test-while.out
+diff -b test-while.out tests/test-while.out > test-while.diff
+###### SUCCESS
 
 ###### Testing test-while_for_nested
 ./javapm tests/test-while_for_nested.javapm > test-while_for_nested.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-while_for_nested.ll > test-while_for_nested.out
+diff -b test-while_for_nested.out tests/test-while_for_nested.out > test-while_for_nested.diff
+###### SUCCESS
 
 ###### Testing test-while_nest
 ./javapm tests/test-while_nest.javapm > test-while_nest.ll
-testall.sh: 1: eval: ./javapm: not found
-###### FAILED
+lli test-while_nest.ll > test-while_nest.out
+diff -b test-while_nest.out tests/test-while_nest.out > test-while_nest.diff
+###### SUCCESS
 
 ###### Testing fail-assign1
 ./javapm tests/fail-assign1.javapm 2> fail-assign1.err >> testall.log
@@ -236,14 +277,12 @@ FAILED fail-assign3.err differs from tests/fail-assign3.err
 ###### Testing fail-check-constructor1
 ./javapm tests/fail-check-constructor1.javapm 2> fail-check-constructor1.err >> testall.log
 diff -b fail-check-constructor1.err tests/fail-check-constructor1.err > fail-check-constructor1.diff
-FAILED fail-check-constructor1.err differs from tests/fail-check-constructor1.err
-###### FAILED
+###### SUCCESS
 
 ###### Testing fail-check-constructor2
 ./javapm tests/fail-check-constructor2.javapm 2> fail-check-constructor2.err >> testall.log
 diff -b fail-check-constructor2.err tests/fail-check-constructor2.err > fail-check-constructor2.diff
-FAILED fail-check-constructor2.err differs from tests/fail-check-constructor2.err
-###### FAILED
+###### SUCCESS
 
 ###### Testing fail-dead1
 ./javapm tests/fail-dead1.javapm 2> fail-dead1.err >> testall.log
