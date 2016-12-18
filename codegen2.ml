@@ -360,7 +360,7 @@ let translate sast =
 	and assign_to_variable e1 e2 llbuilder =
 		let vmemory = match e1 with
 			| SId(s, d) -> get_value false s llbuilder
-			| SArrayAccess(e, el, d) -> generate_array_access false e el llbuilder
+			| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 		in
 		let value = match e2 with
 		| SId(id, d) -> get_value true id llbuilder
