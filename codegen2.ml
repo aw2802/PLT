@@ -335,7 +335,7 @@ let translate sast =
 			| And		-> L.build_and
 			| Or 		-> L.build_or 
 			| _ 		-> raise(Failure("Invalid operator for ints"))
-		) value1 value2 "tmp" llbuilder
+		) value1 value2 "binop" llbuilder
 
 	and unop_gen op e llbuilder = 
 		let exp_type = Semant.typOFSexpr e in
