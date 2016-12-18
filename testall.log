@@ -66,6 +66,11 @@ lli test-check-variable.ll > test-check-variable.out
 diff -b test-check-variable.out tests/test-check-variable.out > test-check-variable.diff
 ###### SUCCESS
 
+###### Testing test-class1
+./javapm tests/test-class1.javapm > test-class1.ll
+Fatal error: exception Failure("Class Name not capitailized: testLowercase")
+###### FAILED
+
 ###### Testing test-comments
 ./javapm tests/test-comments.javapm > test-comments.ll
 lli test-comments.ll > test-comments.out
@@ -88,6 +93,13 @@ diff -b test-div.out tests/test-div.out > test-div.diff
 lli test-equal.ll > test-equal.out
 diff -b test-equal.out tests/test-equal.out > test-equal.diff
 ###### SUCCESS
+
+###### Testing test-failassign
+./javapm tests/test-failassign.javapm > test-failassign.ll
+Stored value type does not match pointer operand type!
+  store i1 true, i32* %x
+ i32LLVM ERROR: Broken module found, compilation aborted!
+###### FAILED
 
 ###### Testing test-fibonacci
 ./javapm tests/test-fibonacci.javapm > test-fibonacci.ll
