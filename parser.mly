@@ -212,7 +212,7 @@ expr:
 	| NEW ID LPAREN actuals_opt RPAREN { CreateObject($2, $4)} 	  
 	| expr DOT expr { ObjAccess($1, $3)}
 	| NEW TUPLE LT tdatatype_args GT LPAREN actuals_opt RPAREN  { TupleCreate($4, $7) } 
-	| expr LBRACKET expr RBRACKET {TupleAccess($1, $3)}
+	| expr LT LT expr GT GT {TupleAccess($1, $3)}
 	| NEW po brackets_args RBRACKET { ArrayCreate($2, List.rev $3) }
 	| expr brackets_args RBRACKET { ArrayAccess($1, List.rev $2) }
 

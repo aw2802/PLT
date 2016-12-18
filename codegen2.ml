@@ -237,7 +237,7 @@ let translate sast =
 		| SArrayCreate (datatype, el, d)	-> generate_array datatype el llbuilder
 		| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 		| STupleCreate(dt_list, el, d) -> generate_create_tuples dt_list el llbuilder
-		(*| STupleAccess(e1, e2, d) -> generate_tuple_access e1 e2 llbuilder *)
+		| STupleAccess(e1, e2, d) -> generate_tuple_access false e1 e2 llbuilder 
 		| _ -> raise(Failure("No match for expression"))
 
 	and generate_create_tuples dt_list expr_list llbuilder =
@@ -249,12 +249,20 @@ let translate sast =
 		let allocatedMemory = L.build_alloca struct_type vname llbuilder in
 		L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder
 
-(*
-	and generate_tuple_access e1 e2 llbuilder =
+	and generate_tuple_access deref e1 e2 llbuilder =
+		let vname = "dummy" in
+		let index = expr_gen e2 llbuilder in
 		let tuple = match e1 with
-		| SId(id, d) -> get_value true n llbuilder 
-		| _ -> raise(Failure("Not an id"))
-*)
+			| SId(id, d) -> get_value true n llbuilder 
+			| _ -> raise(Failure("Not an id"))
+		in
+		let val = L.build_struct_gep tuple index vname llbuilder in
+		if deref 
+			then L.build_load val vname llbuilder
+			else vname
+		in
+		vname
+
 	and generate_array_access deref e el llbuilder =
 		match el with
 		| [h] -> let index = match h with
