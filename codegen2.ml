@@ -123,7 +123,6 @@ let translate sast =
 	in
 	let _ = List.map define_functions functions in
 
-
 	(*Stmt and expr handling*)
 
 	let rec stmt_gen llbuilder = function 
@@ -237,11 +236,10 @@ let translate sast =
 		| _ -> raise(Failure("No match for expression"))
 
 	and generate_create_tuples dt_list expr_list llbuilder =
-		let struct_typ = L.struct_type context in
 		let type_list = List.map (function dt -> get_llvm_type dt) dt_list in
 		(*let type_list = i32_t :: type_list in *)
 		let type_array = (Array.of_list type_list) in
-		ignore(L.struct_set_body struct_t type_array true); struct_typ
+		L.packed_struct_type context type_array
 (*
 	and generate_tuple_access e1 e2 llbuilder =
 		let tuple = match e1 with
