@@ -1,0 +1,4 @@
+public class Dummy {
+	public void hello(int a, float a) {
+	}
+}

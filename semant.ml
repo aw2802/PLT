@@ -127,23 +127,22 @@ let convertToSast classes =
 		in let names = List.map (fun f -> f.fvname) l
 		in List.iter (fun e -> result := !result || e) (List.map (fun n -> List.length (List.filter (fun s -> s = n) names) > 1) names);!result
 	in
-	let checkMethod func_decl env =
-		let check =
-			if StringMap.mem func_decl.fname env.envClassMap.methodMap
-				then raise(Failure("Duplicate Method Name"))
-		in 
-		let nameList = List.map (fun fn -> fn.fvname) func_decl.fformals
+(*<<<<<<< HEAD
+*)	let checkMethod func_decl classEnv =
+		let formalTypes = getListOfFormalTypes func_decl
 		in
-		let rec checking l = match l with 
-			[] -> false
-			|(h::t) -> let x = (List.filter (fun x -> x = h) t) in
-				   if ( x== []) then
-					checking t
-				    else raise(Failure("Duplicate Parameter Name"))
+		let checkSignature _ v =
+			v.mformalTypes=formalTypes
 		in
-		let paraCheck = checking nameList
-		in paraCheck;	
-		let signature=	{
+		let compareName k _ =
+			k = func_decl.fname
+		in
+		let mp = StringMap.filter compareName classEnv.classMap.methodMap
+		in
+		StringMap.iter (fun k v -> if checkSignature k v then raise(Failure("Duplicate Method Declaration"))) mp;	
+		if hasDuplicateFormalNames func_decl.fformals
+			then raise(Failure("Formal names must be unique"));
+		let signature = {
 			mscope = func_decl.fscope;
 			mname = func_decl.fname;
 			mformalTypes = List.map (fun fl -> fl.fvtype) func_decl.fformals;
@@ -155,10 +154,10 @@ let convertToSast classes =
 			envClassMaps = classEnv.classMaps;
 			envClassMap  = classEnv.classMap;
 			envLocals    = StringMap.empty;
-			envParams    = StringMap.empty;
+			envParams    = StringMap.empty; (* @TODO fill with params *)
 			envReturnType= func_decl.freturn;
 		} in 
-		let methodSignature = checkMethod func_decl env
+		let methodSignature = checkMethod func_decl classEnv
 		in
 		let result =
 		{
@@ -168,20 +167,9 @@ let convertToSast classes =
 			sfreturn = func_decl.freturn;
 			sfbody = List.map (fun s -> convertStmtToSast s env) func_decl.fbody;
 		} in
-		classEnv.classMap.methodMap = StringMap.add func_decl.fname methodSignature classEnv.classMap.methodMap;
+		classEnv.classMap.methodMap <- StringMap.add func_decl.fname methodSignature classEnv.classMap.methodMap;
 		result
-	in
 
-	let checkAssign expr1 expr2 env =
-		let type1 = getType expr1 env
-		in 
-		let type2 = getType expr2 env
-		in
-		let checking2 =
-			if type1 <> type2
-				then raise (Failure("Assignment types are mismatched"))
-		
-		in checking2
 	in
 	(* Semantic checking for class constructor *)
 	let rec strOfFormals fl = match fl with
@@ -234,7 +222,7 @@ let convertToSast classes =
 			if StringMap.mem vdecl.vname classEnv.classMap.variableMap
 				then raise (Failure("Variable name already used"))
 			else if vdecl.vexpr <> Ast.Noexpr && getType vdecl.vexpr classEnv <> vdecl.vtype
-				then raise (Failure(str_of_expr vdecl.vexpr ^ " is of type " ^ str_of_type (getType vdecl.vexpr classEnv) ^ " but type " ^ str_of_type vdecl.vtype ^ " is expected."))
+				then raise (Failure(str_of_expr vdecl.vexpr ^ " is of type " ^ str_of_type (getType vdecl.vexpr classEnv) ^ " but type " ^ str_of_type vdecl.vtype ^ " is expected"))
 		in check
 	in
 
@@ -260,21 +248,21 @@ let convertToSast classes =
 		in 
 		let checking =  
 			if lowerChar = firstChar
-			 	then raise (Failure ("Class Name not capitailized: " ^ class_decl.cname))
+			 	then raise (Failure ("Class name not capitalized: " ^ class_decl.cname))
 			else if StringMap.mem class_decl.cname classEnv.classMaps
 				then raise (Failure ("Duplicate Class Name: " ^ class_decl.cname))
 			in checking 	
 	in
 	let convertClassToSast class_decl classEnv =
-		classEnv.className = class_decl.cname;
+		classEnv.className <- class_decl.cname;
 		checkClass class_decl classEnv;
 		let classMap = {
 			variableMap = StringMap.empty;
 			constructorMap = StringMap.empty;
 			methodMap = StringMap.empty;
 		} in
-		classEnv.classMap = classMap;
- 		let result = 
+		classEnv.classMap <- classMap;
+		let result =
 		{
 			scscope = class_decl.cscope;
 			scname  = class_decl.cname;
