@@ -233,7 +233,7 @@ let translate sast =
 		(*| [h;s] -> generate_one_d_array datatype (expr_gen llbuilder h) (expr_gen llbuilder s) llbuilder *)
 	
 	and generate_one_d_array datatype size llbuilder =
-		let t = get_llvm_type t in
+		let t = get_llvm_type datatype in
 
 		let size_t = L.build_intcast (L.size_of t) i32_t "tmp" llbuilder in
 		let size = L.build_mul size_t size "tmp" llbuilder in
