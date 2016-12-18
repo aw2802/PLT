@@ -44,7 +44,7 @@ and get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	| A.Tuple(dt_list) -> L.pointer_type(find_llvm_tuple_type dt_list)
 	| _ -> raise(Failure("Invalid Data Type"))
 
-and find_llvm_tuple_type data_type_list =
+and find_llvm_tuple_type dt_list =
 	let type_list = List.map (function dt -> get_llvm_type dt) dt_list in
 	let type_array = (Array.of_list type_list) in
 	L.packed_struct_type context type_array
