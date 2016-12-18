@@ -236,9 +236,15 @@ let translate sast =
 
 	and generate_array_access deref e el llbuilder =
 		match el with
-		| [h] -> let index = expr_gen llbuilder h in
+		| [h] -> let index = match h with
+					| SId(id, d) -> get_value true id llbuilder 
+					| _ -> expr_gen llbuilder h 
+				in
 				let index = L.build_add index (const_int i32_t 1) "1tmp" llbuilder in
-    			let arr = expr_gen llbuilder e in
+    			let arr = match e with
+    				| SId(n, dt) -> get_value true n llbuilder 
+    				| _ -> raise(Failure("Can't access array!"))
+    			in
     			let _val = L.build_gep arr [| index |] "2tmp" llbuilder in
     			if deref
     				then build_load _val "3tmp" llbuilder 
@@ -309,10 +315,12 @@ let translate sast =
 	and binop_gen e1 op e2 llbuilder = 
 		let value1 =  match e1 with
 			| SId(id, d) -> get_value true id llbuilder
+			| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 			| _ -> expr_gen llbuilder e1
 		in
 		let value2 = match e2 with
 			| SId(id, d) -> get_value true id llbuilder
+			| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 			| _ -> expr_gen llbuilder e2	
 		in
 
@@ -330,7 +338,7 @@ let translate sast =
 			| And		-> L.build_and
 			| Or 		-> L.build_or 
 			| _ 		-> raise(Failure("Invalid operator for ints"))
-		) value1 value2 "tmp" llbuilder
+		) value1 value2 "binop" llbuilder
 
 	and unop_gen op e llbuilder = 
 		let exp_type = Semant.typOFSexpr e in

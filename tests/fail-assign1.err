@@ -1,1 +1,1 @@
-Fatal error: exception Failure("illegal assignment int = boolean in i = false")
+Fatal error: exception Failure("Assignment types are mismatched")
