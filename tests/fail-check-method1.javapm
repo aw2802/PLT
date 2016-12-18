@@ -1,0 +1,7 @@
+public class Dummy {
+	public void hello() {
+	}
+	
+	public void hello() {
+	}
+}

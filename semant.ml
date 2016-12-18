@@ -127,25 +127,26 @@ let convertToSast classes =
 		in let names = List.map (fun f -> f.fvname) l
 		in List.iter (fun e -> result := !result || e) (List.map (fun n -> List.length (List.filter (fun s -> s = n) names) > 1) names);!result
 	in
-	let checkMethod func_decl classEnv =
-(*		let formalTypes = getListOfFormalTypes func_decl
+(*<<<<<<< HEAD
+*)	let checkMethod func_decl classEnv =
+		let formalTypes = getListOfFormalTypes func_decl
 		in
 		let checkSignature _ v =
-			if v.mformalTypes=formalTypes 
-				then true
-			else false
+			v.mformalTypes=formalTypes
 		in
 		let compareName k _ =
 			k = func_decl.fname
 		in
 		let mp = StringMap.filter compareName classEnv.classMap.methodMap
 		in
-		StringMap.iter checkSignature mp;	
-*)		let signature = {
+		StringMap.iter (fun k v -> if checkSignature k v then raise(Failure("Duplicate Method Declaration"))) mp;	
+		if hasDuplicateFormalNames func_decl.fformals
+			then raise(Failure("Formal names must be unique"));
+		let signature = {
 			mscope = func_decl.fscope;
 			mname = func_decl.fname;
-			mformalTypes = List.map (fun fl -> fl.fvtype) func_decl.fformals;			
-		} in signature 
+			mformalTypes = List.map (fun fl -> fl.fvtype) func_decl.fformals;
+		} in signature
 	in
 	let convertMethodToSast func_decl classEnv =
 		let env = {
@@ -168,22 +169,7 @@ let convertToSast classes =
 		} in
 		classEnv.classMap.methodMap <- StringMap.add func_decl.fname methodSignature classEnv.classMap.methodMap;
 		result
-	in
 
-	let checkAssign expr1 expr2 env =
-		let sexpr1 = convertExprToSast expr1
-		in 
-		let sexpr2 = convertExprToSast expr2
-		in 
-		let type1 = typOFSexpr sexpr1
-		in 
-		let type2 = typOFSexpr sexpr2
-		in
-		let checking2 = 
-			if type1 = type2
-				then raise (Failure("Assignment types are mismatched"))
-		
-		in checking2
 	in
 	(* Semantic checking for class constructor *)
 	let rec strOfFormals fl = match fl with
