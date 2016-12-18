@@ -57,7 +57,15 @@ diff -b test-assign.out tests/test-assign.out > test-assign.diff
 ./javapm tests/test-bool.javapm > test-bool.ll
 lli test-bool.ll > test-bool.out
 diff -b test-bool.out tests/test-bool.out > test-bool.diff
-###### SUCCESS
+FAILED test-bool.out differs from tests/test-bool.out
+###### FAILED
+
+###### Testing test-char_decl
+./javapm tests/test-char_decl.javapm > test-char_decl.ll
+lli test-char_decl.ll > test-char_decl.out
+diff -b test-char_decl.out tests/test-char_decl.out > test-char_decl.diff
+FAILED test-char_decl.out differs from tests/test-char_decl.out
+###### FAILED
 
 ###### Testing test-check-variable
 ./javapm tests/test-check-variable.javapm > test-check-variable.ll

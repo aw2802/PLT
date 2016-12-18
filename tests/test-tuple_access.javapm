@@ -1,9 +1,13 @@
 public class TestTupleAccess {
 	public void main() {
-		Tuple<int> myTuple = new Tuple<int>(5);
+		int x = 5;
+		Tuple<int, int> myTuple = new Tuple<int, int>(x, 10);
+		
 		println(myTuple<<0>>);
 		myTuple<<0>> = 1;
+		
 		println(myTuple<<0>>);
+		println(myTuple<<1>>);
 	}
 
 
