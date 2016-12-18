@@ -262,7 +262,7 @@ let translate sast =
 		let tuple_value = L.build_struct_gep tuple index vname llbuilder in
 		if deref 
 			then L.build_load tuple_value vname llbuilder
-			else vname
+			else tuple_value
 
 	and generate_array_access deref e el llbuilder =
 		match el with
