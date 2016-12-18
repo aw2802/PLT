@@ -49,7 +49,7 @@ let updateEnv env envName = {
 	
 let isMain f = f.sfname = "main"
 
-let get_methods l classy = List.concat [classy.scbody.sconstructors;(List.concat [classy.scbody.smethods;l])]
+let get_methods l classy = List.concat [(List.concat [classy.scbody.smethods;l])]
 
 let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 
@@ -118,15 +118,16 @@ let convertToSast classes =
 			| While(expr, stmt)		-> SWhile(convertExprToSast expr, convertStmtToSast stmt env)
 
 	in
+	
+	(* Semantic Checking for class methods *)
+	let getListOfFormalTypes c = List.map (fun f -> f.fvtype) c.fformals 
+	in
+	let uniqueFormalNames l = 
+		let result = ref false
+		in let names = List.map (fun f -> f.fvname) l
+		in List.iter (fun e -> result := !result || e) (List.map (fun n -> List.length (List.filter (fun s -> s = n) l) > 1) l);!result
+	in
 	let checkMethod func_decl env =
-		if StringMap.mem func_decl.fname env.classMap.methodMap
-			then raise (Failure("Duplicate Method Name: " ^ func_decl.fname));
-(*		let rec check func_decl.fformals.fvname = match func_decl.fformals.fvname with
-			(h::t) -> let x = (List.mem h t) in
-				  if x 
-					then raise (Failure("Duplicate Parameter Names: "^ h))
-		in check
- *)
 		let signature = {
 			mscope = func_decl.fscope;
 			mname = func_decl.fname;
@@ -155,6 +156,52 @@ let convertToSast classes =
 		classEnv.classMap.methodMap = StringMap.add func_decl.fname methodSignature classEnv.classMap.methodMap;
 		result
 	in
+	(* Semantic checking for class constructor *)
+	let rec strOfFormals fl = match fl with
+		|  [] -> ""
+		| h::t -> str_of_type h ^ (strOfFormals t)
+	in
+	let checkConstructor constructor classEnv = 
+		let formalTypes = getListOfFormalTypes constructor
+		in
+		let checking =
+			
+			if(StringMap.mem (strOfFormals formalTypes) classEnv.classMap.constructorMap)
+				then raise (Failure("Duplicate Constructor Definition"))
+			else if (List.length formalTypes <> 0) && uniqueFormalNames constructor.fformals = false
+				then raise(Failure("Formal names must be unique"))  
+		in checking;
+ 	        {
+                	mscope = constructor.fscope;
+                        mname  = constructor.fname;
+                        mformalTypes = formalTypes;
+                }
+
+	in
+	let convertConstructorToSast constructor classEnv =
+		let env = {
+			envClassName = classEnv.className;
+			envClassMaps = classEnv.classMaps;
+			envClassMap  = classEnv.classMap;
+			envLocals    = StringMap.empty;
+			envParams    = StringMap.empty;
+			envReturnType= constructor.freturn;
+		} in 
+		let constructorSignature = checkConstructor constructor classEnv
+		in
+		let result =
+		{
+			sfscope = constructor.fscope;
+			sfname = constructor.fname;
+			sfformals = List.map (fun f -> convertFormalToSast f env) constructor.fformals; 
+			sfreturn = constructor.freturn;
+			sfbody = List.map (fun s -> convertStmtToSast s env) constructor.fbody;
+		} in
+		classEnv.classMap.constructorMap = StringMap.add (strOfFormals constructorSignature.mformalTypes) constructorSignature classEnv.classMap.constructorMap;
+		result
+
+	in
+	(* Sematic checking for class variable *)
 	let checkVariable vdecl classEnv = 
 		let check = 
 			if StringMap.mem vdecl.vname classEnv.classMap.variableMap
@@ -163,16 +210,18 @@ let convertToSast classes =
 				then raise (Failure(str_of_expr vdecl.vexpr ^ " is of type " ^ str_of_type (getType vdecl.vexpr classEnv) ^ " but type " ^ str_of_type vdecl.vtype ^ " is expected."))
 		in check
 	in
+
 	let convertVariableToSast vdecl classEnv =
 		checkVariable vdecl classEnv; 
 		let result = convertVdeclToSast vdecl
 		in
 		classEnv.classMap.variableMap = StringMap.add vdecl.vname vdecl classEnv.classMap.variableMap; result
+
 	in
 	let convertCbodyToSast cbody classEnv =
 	{
 		svariables = List.map (fun v -> convertVariableToSast v classEnv) cbody.variables;
-        sconstructors = List.map (fun cst -> convertMethodToSast cst classEnv) cbody.constructors;
+        sconstructors = List.map (fun cst -> convertConstructorToSast cst classEnv) cbody.constructors;
 		smethods = List.map (fun m -> convertMethodToSast m classEnv) cbody.methods;
     }
 

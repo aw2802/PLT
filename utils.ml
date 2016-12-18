@@ -16,13 +16,15 @@ let rec getType expr classEnv = match expr with
 (*	| FuncCall(s, el)	-> getFuncReturnType s env
 *)
 
-let addComma l = 
-	let s = ref ""
-	in
-	let _ = List.iter (fun d -> s := !s ^ d ^ ",") l
-	in
-	String.sub !s 0 ((String.length !s) -1)
-	
+let addComma l =
+	if l = [] then ""
+	else begin
+		let s = ref ""
+		in
+		let _ = List.iter (fun d -> s := !s ^ d ^ ",") l
+		in
+		String.sub !s 0 ((String.length !s) -2)
+	end
 
 (* Print data types *)
 
