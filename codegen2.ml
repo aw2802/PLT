@@ -251,8 +251,7 @@ let translate sast =
 
 	and generate_tuple_access deref e1 e2 llbuilder =
 		let vname = "dummy" in
-		let index = expr_gen llbuilder e2 in
-			let index = match (Semant.typOFSexpr index) with
+		let index =  match (Semant.typOFSexpr e2) with
 				| SInt_Lit(i) -> i
 				| _ -> raise(Failure("Not an int"))
 			in
