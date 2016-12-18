@@ -63,7 +63,7 @@ let typOFSexpr = function
 	| 	SChar_Lit(c) 			-> JChar
 	| 	SId(_, d) 			-> d
 	| 	SBinop(_, _, _, d) 		-> d
-	|   	SAssign(_, _, d) 		-> d
+	|   SAssign(_, _, d) 		-> d
 	| 	SArrayCreate(_, _, d)	-> d
 	| 	SArrayAccess(_, _, d) 	-> d
 	| 	SFuncCall(_, _, d,_)	-> d
