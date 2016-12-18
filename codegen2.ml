@@ -161,7 +161,6 @@ let translate sast =
 			| _ -> ignore (L.build_store variable_value allocatedMemory llbuilder); variable_value
 			
 	and generate_while e s llbuilder =
-
 		let start_block = L.insertion_block llbuilder in
 		let parent_function = L.block_parent start_block in
 
@@ -239,7 +238,11 @@ let translate sast =
 		let type_list = List.map (function dt -> get_llvm_type dt) dt_list in
 		(*let type_list = i32_t :: type_list in *)
 		let type_array = (Array.of_list type_list) in
-		L.packed_struct_type context type_array
+		let struct_type = L.packed_struct_type context type_array in
+		let vname =  in
+		let allocatedMemory = L.build_alloca struct_type vname llbuilder in
+		L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder
+
 (*
 	and generate_tuple_access e1 e2 llbuilder =
 		let tuple = match e1 with
