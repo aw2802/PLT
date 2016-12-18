@@ -41,7 +41,13 @@ and get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	| A.JInt -> i32_t
 	| A.Object(s) -> L.pointer_type(find_llvm_struct_type s)
 	| A.Arraytype(data_type, i) ->  get_ptr_type (A.Arraytype(data_type, (i)))
+	| A.Tuple(dt_list) -> L.pointer_type(find_llvm_tuple_type dt_list)
 	| _ -> raise(Failure("Invalid Data Type"))
+
+and find_llvm_tuple_type data_type_list =
+	let type_list = List.map (function dt -> get_llvm_type dt) dt_list in
+	let type_array = (Array.of_list type_list) in
+	L.packed_struct_type context type_array
 
 and find_llvm_struct_type name = 
 	try Hashtbl.find struct_typ_table name
@@ -235,7 +241,6 @@ let translate sast =
 		| _ -> raise(Failure("No match for expression"))
 
 	and generate_create_tuples dt_list expr_list llbuilder =
-		let struct_typ = L.struct_type context in
 		let type_list = List.map (function dt -> get_llvm_type dt) dt_list in
 		(*let type_list = i32_t :: type_list in *)
 		let type_array = (Array.of_list type_list) in
