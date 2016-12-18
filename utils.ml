@@ -66,7 +66,7 @@ let rec str_of_expr expr = match expr with
 	| Null			-> "null"
 	| Id(s)			-> s
 	| Binop(e1, op, e2)	-> "" ^ str_of_expr e1 ^ " " ^ str_of_op op ^ " " ^ str_of_expr e2
-	| Assign(s, e2)		-> "" ^ s ^ " = " ^ str_of_expr e2
+	| Assign(e1, e2)		-> "" ^ str_of_expr e1 ^ " = " ^ str_of_expr e2
 	| Noexpr		-> ""
 	| FuncCall(s, el)	-> "" ^ s ^ "(" ^ addComma (List.map str_of_expr el) ^ ")"
 	| Unop(op, e)		-> "" ^ str_of_op op ^ " " ^ str_of_expr e
@@ -105,7 +105,7 @@ let rec str_of_sexpr expr = match expr with
 	| SNull			-> "null"
 	| SId(s,_)		-> s
 	| SBinop(e1, op, e2, _)	-> "" ^ str_of_sexpr e1 ^ " " ^ str_of_op op ^ " " ^ str_of_sexpr e2
-	| SAssign(s, e2, _)	-> "" ^ s ^ " = " ^ str_of_sexpr e2
+	| SAssign(e1, e2, _)	-> "" ^ str_of_sexpr e1 ^ " = " ^ str_of_sexpr e2
 	| SNoexpr		-> ""
 	| SFuncCall(s, el, _, _)->  "" ^ s ^ "(" ^ addComma (List.map str_of_sexpr el) ^ ")"
 	| SUnop(op, e, _)	-> "" ^ str_of_op op ^ " " ^ str_of_sexpr e

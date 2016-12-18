@@ -34,7 +34,7 @@ type expr =
   | Noexpr
   | Binop of expr * op * expr 
   | Unop of op * expr
-  | Assign of string * expr
+  | Assign of expr * expr
   | FuncCall of string * expr list  
   | Null
   | CreateObject of string * expr list

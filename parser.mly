@@ -206,7 +206,7 @@ expr:
 	| expr OR expr { Binop($1, Or, $3) }
 	| NOT expr { Unop(Not, $2) }
 	| MINUS expr { Unop(Sub, $2) }
-	| ID ASSIGN expr { Assign($1, $3) }
+	| expr ASSIGN expr { Assign($1, $3) }
 	| LPAREN expr RPAREN { $2 }
 	| ID LPAREN actuals_opt RPAREN { FuncCall($1, $3) }	
 	| NEW ID LPAREN actuals_opt RPAREN { CreateObject($2, $4)} 	  

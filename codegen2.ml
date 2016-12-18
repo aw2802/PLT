@@ -27,13 +27,20 @@ let local_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100 (*Must be c
 let struct_typ_table:(string, lltype) Hashtbl.t = Hashtbl.create 100
 (*let struct_field_idx_table:(string, int) Hashtbl.t = Hashtbl.create 100 *)
 
-let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
+let rec get_ptr_type datatype = match datatype with
+		A.Arraytype(t, 0) -> get_llvm_type t
+	|	A.Arraytype(t, 1) -> L.pointer_type (get_llvm_type t)
+	|	A.Arraytype(t, i) -> L.pointer_type (get_ptr_type (A.Arraytype(t, (i-1))))
+	| 	_ -> raise(Failure("InvalidStructType Array Pointer Type"))
+
+and get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	  A.JChar -> i8_t
 	| A.JVoid -> void_t
 	| A.JBoolean -> i1_t
 	| A.JFloat -> f_t
 	| A.JInt -> i32_t
 	| A.Object(s) -> L.pointer_type(find_llvm_struct_type s)
+	| A.Arraytype(data_type, i) ->  get_ptr_type (A.Arraytype(data_type, (i)))
 	| _ -> raise(Failure("Invalid Data Type"))
 
 and find_llvm_struct_type name = 
@@ -219,12 +226,24 @@ let translate sast =
 		| SId (n, dt)		-> get_value false n llbuilder 
 		| SBinop(e1, op, e2, dt) -> binop_gen e1 op e2 llbuilder
 		| SUnop(op, e, dt)      -> unop_gen op e llbuilder
-		| SAssign (id, e, dt)	-> assign_to_variable (get_value false id llbuilder) e llbuilder
+		| SAssign (e1, e2, dt)	-> assign_to_variable e1 e2 llbuilder
 		| SCreateObject(id, el, d) -> generate_object_create id el llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> generate_function_call fname expr_list d llbuilder
 		| SNoexpr -> L.build_add (L.const_int i32_t 0) (L.const_int i32_t 0) "nop" llbuilder
 		| SArrayCreate (datatype, el, d)	-> generate_array datatype el llbuilder
+		| SArrayAccess(e, el, d) -> generate_array_access false e el llbuilder
 		| _ -> raise(Failure("No match for expression"))
+
+	and generate_array_access deref e el llbuilder =
+		match el with
+		| [h] -> let index = expr_gen llbuilder h in
+				let index = L.build_add index (const_int i32_t 1) "tmp" llbuilder in
+    			let arr = expr_gen llbuilder e in
+    			let _val = L.build_gep arr [| index |] "tmp" llbuilder in
+    			if deref
+    				then build_load _val "tmp" llbuilder 
+    				else _val
+		| _ ->  raise(Failure("Two dimentional array not supported"))
 
 	and generate_array datatype expr_list llbuilder =
 		match expr_list with
@@ -338,9 +357,14 @@ let translate sast =
 		in
 		var
 
-	and assign_to_variable vmemory e llbuilder =
+	and assign_to_variable e1 e2 llbuilder =
+		let vmemory = match e1 with
+			| SId(s, d) -> get_value false s llbuilder
+			| SArrayAccess(e, el, d) -> generate_array_access false e el llbuilder
+		in
 		let value = match e with
 		| SId(id, d) -> get_value true id llbuilder
+		| SArrayAccess(e, el, d) -> generate_array_access false e el llbuilder
 		| _ -> expr_gen llbuilder e
 		in
 		L.build_store value vmemory llbuilder
