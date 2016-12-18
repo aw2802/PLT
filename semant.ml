@@ -155,6 +155,22 @@ let convertToSast classes =
 		classEnv.classMap.methodMap = StringMap.add func_decl.fname methodSignature classEnv.classMap.methodMap;
 		result
 	in
+
+	let checkAssign expr1 expr2 env =
+		let sexpr1 = convertExprToSast expr1
+		in 
+		let sexpr2 = convertExprToSast expr2
+		in 
+		let type1 = typOFSexpr sexpr1
+		in 
+		let type2 = typOFSexpr sexpr2
+		in
+		let checking2 = 
+			if type1 = type2
+				then raise (Failure("Assignment types are mismatched"))
+		
+		in checking2
+	in
 	let checkVariable vdecl classEnv = 
 		let check = 
 			if StringMap.mem vdecl.vname classEnv.classMap.variableMap
