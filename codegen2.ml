@@ -236,7 +236,10 @@ let translate sast =
 
 	and generate_array_access deref e el llbuilder =
 		match el with
-		| [h] -> let index = expr_gen llbuilder h in
+		| [h] -> let index = match h with
+					| SId(id, d) -> get_value true id llbuilder 
+					| _ -> expr_gen llbuilder h 
+				in
 				let index = L.build_add index (const_int i32_t 1) "1tmp" llbuilder in
     			let arr = match e with
     				| SId(n, dt) -> get_value true n llbuilder 
