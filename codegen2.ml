@@ -25,7 +25,7 @@ let global_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100
 let class_private_vars:(string, llvalue) Hashtbl.t = Hashtbl.create 100 (*Must be cleared after class build*)
 let local_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100 (*Must be cleared evertime after a function is built*)
 let struct_typ_table:(string, lltype) Hashtbl.t = Hashtbl.create 100
-(*let struct_field_idx_table:(string, int) Hashtbl.t = Hashtbl.create 100 *)
+let struct_field_idx_table:(string, int) Hashtbl.t = Hashtbl.create 100 
 
 let rec get_ptr_type datatype = match datatype with
 		A.Arraytype(t, 0) -> get_llvm_type t
@@ -88,12 +88,12 @@ let translate sast =
 		let type_list = i32_t :: type_list in
 		let name_list = ".key" :: name_list in
 		let type_array = (Array.of_list type_list) in
-		(*List.iteri (
+		List.iteri (
 			fun i f ->
 	        let n = c.scname ^ "." ^ f in
 	        Hashtbl.add struct_field_idx_table n i;
 	    	) 
-	    name_list; *)
+	    name_list; 
 		L.struct_set_body struct_t type_array true
 	in
 	let _ = List.map define_classes classes in	
@@ -232,8 +232,23 @@ let translate sast =
 		| SNoexpr -> L.build_add (L.const_int i32_t 0) (L.const_int i32_t 0) "nop" llbuilder
 		| SArrayCreate (datatype, el, d)	-> generate_array datatype el llbuilder
 		| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
+		| STupleCreate(dt_list, el, d) -> generate_create_tuples dt_list el llbuilder
+		(*| STupleAccess(e1, e2, d) -> generate_tuple_access e1 e2 llbuilder *)
 		| _ -> raise(Failure("No match for expression"))
 
+	and generate_create_tuples dt_list expr_list llbuilder =
+		let struct_typ = L.named_struct_type context c.scname in
+		let type_list = List.map (function dt -> get_llvm_type dt) dt_list in
+		(*let type_list = i32_t :: type_list in *)
+		let type_array = (Array.of_list type_list) in
+		L.struct_set_body struct_t type_array true in
+		struct_typ
+(*
+	and generate_tuple_access e1 e2 llbuilder =
+		let tuple = match e1 with
+		| SId(id, d) -> get_value true n llbuilder 
+		| _ -> raise(Failure("Not an id"))
+*)
 	and generate_array_access deref e el llbuilder =
 		match el with
 		| [h] -> let index = match h with
