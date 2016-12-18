@@ -226,12 +226,12 @@ let translate sast =
 		| SId (n, dt)		-> get_value false n llbuilder 
 		| SBinop(e1, op, e2, dt) -> binop_gen e1 op e2 llbuilder
 		| SUnop(op, e, dt)      -> unop_gen op e llbuilder
-		| SAssign (id, e, dt)	-> assign_to_variable (get_value false id llbuilder) e llbuilder
+		| SAssign (e1, e2, dt)	-> assign_to_variable e1 e2 llbuilder
 		| SCreateObject(id, el, d) -> generate_object_create id el llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> generate_function_call fname expr_list d llbuilder
 		| SNoexpr -> L.build_add (L.const_int i32_t 0) (L.const_int i32_t 0) "nop" llbuilder
 		| SArrayCreate (datatype, el, d)	-> generate_array datatype el llbuilder
-		| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
+		| SArrayAccess(e, el, d) -> generate_array_access false e el llbuilder
 		| _ -> raise(Failure("No match for expression"))
 
 	and generate_array_access deref e el llbuilder =
@@ -357,9 +357,14 @@ let translate sast =
 		in
 		var
 
-	and assign_to_variable vmemory e llbuilder =
+	and assign_to_variable e1 e2 llbuilder =
+		let vmemory = match e1 with
+			| SId(s, d) -> get_value false s llbuilder
+			| SArrayAccess(e, el, d) -> generate_array_access false e el llbuilder
+		in
 		let value = match e with
 		| SId(id, d) -> get_value true id llbuilder
+		| SArrayAccess(e, el, d) -> generate_array_access false e el llbuilder
 		| _ -> expr_gen llbuilder e
 		in
 		L.build_store value vmemory llbuilder

@@ -91,7 +91,7 @@ let convertToSast classes =
 			| Binop(expr1, op, expr2)	-> SBinop(convertExprToSast expr1, op, convertExprToSast expr2, JInt) (** @TODO Not sure about the data_type value. Same below **) 	
 			| ArrayCreate(d, el)  -> SArrayCreate(d, (List.map convertExprToSast el), JInt) (* @TODO *)
 			| ArrayAccess(e, el)  -> SArrayAccess(convertExprToSast e, (List.map convertExprToSast el), JInt) (* @TODO *)
-			| Assign(id, e)		-> SAssign(id, convertExprToSast e, JInt)
+			| Assign(e1, e2)		-> SAssign(convertExprToSast e1, convertExprToSast e2, JInt)
 			| FuncCall(s, el)		-> SFuncCall(s, (List.map convertExprToSast el), JInt, 1)
 			| Unop(op, expr)		-> SUnop(op, convertExprToSast expr, JInt)
 			| CreateObject(s,el)	-> SCreateObject(s, (List.map convertExprToSast el), Object(s))
