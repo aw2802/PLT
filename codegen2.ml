@@ -237,11 +237,11 @@ let translate sast =
 	and generate_array_access deref e el llbuilder =
 		match el with
 		| [h] -> let index = expr_gen llbuilder h in
-				let index = L.build_add index (const_int i32_t 1) "tmp" llbuilder in
+				let index = L.build_add index (const_int i32_t 1) "1tmp" llbuilder in
     			let arr = expr_gen llbuilder e in
-    			let _val = L.build_gep arr [| index |] "tmp" llbuilder in
+    			let _val = L.build_gep arr [| index |] "2tmp" llbuilder in
     			if deref
-    				then build_load _val "tmp" llbuilder 
+    				then build_load _val "3tmp" llbuilder 
     				else _val
 		| _ ->  raise(Failure("Two dimentional array not supported"))
 
@@ -254,14 +254,14 @@ let translate sast =
 	and generate_one_d_array datatype size llbuilder =
 		let t = get_llvm_type datatype in
 
-		let size_t = L.build_intcast (L.size_of t) i32_t "tmp" llbuilder in
-		let size = L.build_mul size_t size "tmp" llbuilder in
+		let size_t = L.build_intcast (L.size_of t) i32_t "4tmp" llbuilder in
+		let size = L.build_mul size_t size "5tmp" llbuilder in
 		let size_real = L.build_add size (L.const_int i32_t 1) "arr_size" llbuilder in
 		
-	    let arr = L.build_array_malloc t size_real "tmp" llbuilder in
-		let arr = L.build_pointercast arr (pointer_type t) "tmp" llbuilder in
+	    let arr = L.build_array_malloc t size_real "6tmp" llbuilder in
+		let arr = L.build_pointercast arr (pointer_type t) "7tmp" llbuilder in
 
-		let arr_len_ptr = L.build_pointercast arr (pointer_type i32_t) "tmp" llbuilder in
+		let arr_len_ptr = L.build_pointercast arr (pointer_type i32_t) "8tmp" llbuilder in
 
 		ignore(L.build_store size_real arr_len_ptr llbuilder); 
 		initialise_array arr_len_ptr size_real (const_int i32_t 0) 0 llbuilder;
