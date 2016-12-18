@@ -1,8 +1,6 @@
 public class TestArray {
   public void main() {
     int[] b = new int[10];
-    int i;
-    print(b[0]);
-  
-}
+    println("Created Array!");
+  }
 }

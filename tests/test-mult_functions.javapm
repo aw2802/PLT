@@ -1,0 +1,12 @@
+public class TwoFunctions {
+	public void main() {
+		println("Hi");
+		int printMe = sayBye();
+		println(printMe);
+	}
+	
+	public int sayBye() {
+		println("Bye");
+		return 1;
+	}
+}

@@ -206,14 +206,14 @@ expr:
 	| expr OR expr { Binop($1, Or, $3) }
 	| NOT expr { Unop(Not, $2) }
 	| MINUS expr { Unop(Sub, $2) }
-	| ID ASSIGN expr { Assign($1, $3) }
+	| expr ASSIGN expr { Assign($1, $3) }
 	| LPAREN expr RPAREN { $2 }
 	| ID LPAREN actuals_opt RPAREN { FuncCall($1, $3) }	
 	| NEW ID LPAREN actuals_opt RPAREN { CreateObject($2, $4)} 	  
 	| expr DOT expr { ObjAccess($1, $3)}
 	| NEW TUPLE LT tdatatype_args GT LPAREN actuals_opt RPAREN  { TupleCreate($4, $7) } 
 	| expr LBRACKET expr RBRACKET {TupleAccess($1, $3)}
-	| NEW primitive brackets_args RBRACKET { ArrayCreate($2, List.rev $3) }
+	| NEW po brackets_args RBRACKET { ArrayCreate($2, List.rev $3) }
 	| expr brackets_args RBRACKET { ArrayAccess($1, List.rev $2) }
 
 brackets_args:

@@ -27,13 +27,20 @@ let local_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100 (*Must be c
 let struct_typ_table:(string, lltype) Hashtbl.t = Hashtbl.create 100
 (*let struct_field_idx_table:(string, int) Hashtbl.t = Hashtbl.create 100 *)
 
-let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
+let rec get_ptr_type datatype = match datatype with
+		A.Arraytype(t, 0) -> get_llvm_type t
+	|	A.Arraytype(t, 1) -> L.pointer_type (get_llvm_type t)
+	|	A.Arraytype(t, i) -> L.pointer_type (get_ptr_type (A.Arraytype(t, (i-1))))
+	| 	_ -> raise(Failure("InvalidStructType Array Pointer Type"))
+
+and get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	  A.JChar -> i8_t
 	| A.JVoid -> void_t
 	| A.JBoolean -> i1_t
 	| A.JFloat -> f_t
 	| A.JInt -> i32_t
 	| A.Object(s) -> L.pointer_type(find_llvm_struct_type s)
+	| A.Arraytype(data_type, i) ->  get_ptr_type (A.Arraytype(data_type, (i)))
 	| _ -> raise(Failure("Invalid Data Type"))
 
 and find_llvm_struct_type name = 
@@ -127,6 +134,12 @@ let translate sast =
 		| SIf(e, s1, s2) -> generate_if e s1 s2 llbuilder
 		| SWhile(e, s) -> generate_while e s llbuilder
 		| SFor(e1, e2, e3, s) -> generate_for e1 e2 e3 s llbuilder
+		| SReturn(e, d)		-> generate_return e d llbuilder
+
+	and generate_return e d llbuilder =
+		match e with
+		| SNoexpr -> L.build_ret_void llbuilder
+		| _ -> L.build_ret (expr_gen llbuilder e) llbuilder
 
 	and generate_vardecl scope datatype vname expr llbuilder =
 		let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
@@ -213,21 +226,85 @@ let translate sast =
 		| SId (n, dt)		-> get_value false n llbuilder 
 		| SBinop(e1, op, e2, dt) -> binop_gen e1 op e2 llbuilder
 		| SUnop(op, e, dt)      -> unop_gen op e llbuilder
-		| SAssign (id, e, dt)	-> assign_to_variable (get_value false id llbuilder) e llbuilder
-		(**| SCreateObject(id, el, d) -> generate_object_create id el d llbuilder **)
-		| SFuncCall (fname, expr_list, d, _) -> (*Need to call a regular fuction too*)
-			let reserved_func_gen llbuilder d expr_list = function
-			  "print" -> print_func_gen "" expr_list llbuilder
-			  | "println" -> print_func_gen "\n" expr_list llbuilder
-			  | _ as call_name -> raise(Failure("function call not found: "^ call_name))
-			in
-			reserved_func_gen llbuilder d expr_list fname
+		| SAssign (e1, e2, dt)	-> assign_to_variable e1 e2 llbuilder
+		| SCreateObject(id, el, d) -> generate_object_create id el llbuilder
+		| SFuncCall (fname, expr_list, d, _) -> generate_function_call fname expr_list d llbuilder
 		| SNoexpr -> L.build_add (L.const_int i32_t 0) (L.const_int i32_t 0) "nop" llbuilder
-		| _ -> raise(Failure("No match expression"))
+		| SArrayCreate (datatype, el, d)	-> generate_array datatype el llbuilder
+		| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
+		| _ -> raise(Failure("No match for expression"))
 
-	(**and generate_object_create id el d llbuilder =
-		let struct_type = L.pointer_type(find_llvm_struct_type id) 
-**)
+	and generate_array_access deref e el llbuilder =
+		match el with
+		| [h] -> let index = expr_gen llbuilder h in
+				let index = L.build_add index (const_int i32_t 1) "1tmp" llbuilder in
+    			let arr = expr_gen llbuilder e in
+    			let _val = L.build_gep arr [| index |] "2tmp" llbuilder in
+    			if deref
+    				then build_load _val "3tmp" llbuilder 
+    				else _val
+		| _ ->  raise(Failure("Two dimentional array not supported"))
+
+	and generate_array datatype expr_list llbuilder =
+		match expr_list with
+		| [h] -> generate_one_d_array datatype (expr_gen llbuilder h) llbuilder
+		| _ ->  raise(Failure("Two dimentional array not supported"))
+		(*| [h;s] -> generate_one_d_array datatype (expr_gen llbuilder h) (expr_gen llbuilder s) llbuilder *)
+	
+	and generate_one_d_array datatype size llbuilder =
+		let t = get_llvm_type datatype in
+
+		let size_t = L.build_intcast (L.size_of t) i32_t "4tmp" llbuilder in
+		let size = L.build_mul size_t size "5tmp" llbuilder in
+		let size_real = L.build_add size (L.const_int i32_t 1) "arr_size" llbuilder in
+		
+	    let arr = L.build_array_malloc t size_real "6tmp" llbuilder in
+		let arr = L.build_pointercast arr (pointer_type t) "7tmp" llbuilder in
+
+		let arr_len_ptr = L.build_pointercast arr (pointer_type i32_t) "8tmp" llbuilder in
+
+		ignore(L.build_store size_real arr_len_ptr llbuilder); 
+		initialise_array arr_len_ptr size_real (const_int i32_t 0) 0 llbuilder;
+		arr
+
+	and initialise_array arr arr_len init_val start_pos llbuilder =
+		let new_block label =
+			let f = L.block_parent (L.insertion_block llbuilder) in
+			L.append_block (context) label f
+		in
+  		let bbcurr = L.insertion_block llbuilder in
+  		let bbcond = new_block "array.cond" in
+  		let bbbody = new_block "array.init" in
+  		let bbdone = new_block "array.done" in
+  		ignore (L.build_br bbcond llbuilder);
+  		L.position_at_end bbcond llbuilder;
+
+	  	(* Counter into the length of the array *)
+	  	let counter = L.build_phi [const_int i32_t start_pos, bbcurr] "counter" llbuilder in
+	  	add_incoming ((build_add counter (const_int i32_t 1) "tmp" llbuilder), bbbody) counter;
+	  	let cmp = build_icmp Icmp.Slt counter arr_len "tmp" llbuilder in
+	  	ignore (build_cond_br cmp bbbody bbdone llbuilder);
+	  	position_at_end bbbody llbuilder;
+
+	  	(* Assign array position to init_val *)
+	  	let arr_ptr = build_gep arr [| counter |] "tmp" llbuilder in
+	  	ignore (build_store init_val arr_ptr llbuilder);
+	  	ignore (build_br bbcond llbuilder);
+	  	position_at_end bbdone llbuilder
+
+	and generate_function_call fname expr_list d llbuilder =
+		match fname with
+			| "print" -> print_func_gen "" expr_list llbuilder
+			| "println" -> print_func_gen "\n" expr_list llbuilder
+			| _ -> 	let f = find_func_in_module fname in
+					let params = List.map (expr_gen llbuilder) expr_list in
+					L.build_call f (Array.of_list params) (fname^"_result") llbuilder
+
+	and generate_object_create id el llbuilder =
+		let f = find_func_in_module id in
+		let params = List.map (expr_gen llbuilder) el in
+		let obj = L.build_call f (Array.of_list params) "tmp" llbuilder in
+		obj 
 
 	and binop_gen e1 op e2 llbuilder = 
 		let value1 =  match e1 with
@@ -280,10 +357,14 @@ let translate sast =
 		in
 		var
 
-	and assign_to_variable vmemory e llbuilder =
-		let value = match e with
+	and assign_to_variable e1 e2 llbuilder =
+		let vmemory = match e1 with
+			| SId(s, d) -> get_value false s llbuilder
+			| SArrayAccess(e, el, d) -> generate_array_access false e el llbuilder
+		in
+		let value = match e2 with
 		| SId(id, d) -> get_value true id llbuilder
-		| _ -> expr_gen llbuilder e
+		| _ -> expr_gen llbuilder e2
 		in
 		L.build_store value vmemory llbuilder
 

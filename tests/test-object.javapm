@@ -1,10 +1,12 @@
 public class Car{
-  
+  Car(int x) {
+//	return;
+  }
 }
 
 public class TestObject{
   public void main(){
-   	Car myCar;
-    	print("created!\n");
+   	Car myCar = new Car(5);
+    	print("Created!");
   }
 }
