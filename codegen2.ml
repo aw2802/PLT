@@ -235,7 +235,7 @@ let translate sast =
 		| _ -> raise(Failure("No match for expression"))
 
 	and generate_array_access deref e el llbuilder =
-		match expr_list with
+		match el with
 		| [h] -> let index = expr_gen llbuilder h in
 				let index = L.build_add index (const_int i32_t 1) "tmp" llbuilder in
     			let arr = expr_gen llbuilder e in
