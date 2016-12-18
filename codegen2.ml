@@ -362,7 +362,7 @@ let translate sast =
 			| SId(s, d) -> get_value false s llbuilder
 			| SArrayAccess(e, el, d) -> generate_array_access false e el llbuilder
 		in
-		let vmemory = = match vmemory with
+		let vmemory =  match vmemory with
 			| SId(s, d) -> get_value false s llbuilder
 			| _ -> vmemory
 		in

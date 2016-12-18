@@ -32,9 +32,9 @@ diff -b test-arithmetic.out tests/test-arithmetic.out > test-arithmetic.diff
 
 ###### Testing test-array
 ./javapm tests/test-array.javapm > test-array.ll
-lli test-array.ll > test-array.out
-diff -b test-array.out tests/test-array.out > test-array.diff
-FAILED test-array.out differs from tests/test-array.out
+Stored value type does not match pointer operand type!
+  store i32 1, i32** %tmp4
+ i32*LLVM ERROR: Broken module found, compilation aborted!
 ###### FAILED
 
 ###### Testing test-array_create
