@@ -346,11 +346,13 @@ let translate sast =
 		let value1 =  match e1 with
 			| SId(id, d) -> get_value true id llbuilder
 			| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
+			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
 			| _ -> expr_gen llbuilder e1
 		in
 		let value2 = match e2 with
 			| SId(id, d) -> get_value true id llbuilder
 			| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
+			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
 			| _ -> expr_gen llbuilder e2	
 		in
 
@@ -399,6 +401,7 @@ let translate sast =
 		let vmemory = match e1 with
 			| SId(s, d) -> get_value false s llbuilder
 			| SArrayAccess(e, el, d) -> generate_array_access false e el llbuilder
+			| STupleAccess(e1, e2, d) -> generate_tuple_access false e1 e2 llbuilder 
 		in
 		let value = match e2 with
 		| SId(id, d) -> get_value true id llbuilder
@@ -410,6 +413,7 @@ let translate sast =
 		let printf = find_func_in_module "printf" in
 		let map_expr_to_printfexpr expr = match expr with
 			| SId(id, d) -> get_value true id llbuilder
+			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
 			| _ -> expr_gen llbuilder expr
 		in
 		let params = List.map map_expr_to_printfexpr expr_list in
