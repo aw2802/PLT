@@ -127,8 +127,21 @@ let convertToSast classes =
 		in let names = List.map (fun f -> f.fvname) l
 		in List.iter (fun e -> result := !result || e) (List.map (fun n -> List.length (List.filter (fun s -> s = n) names) > 1) names);!result
 	in
-	let checkMethod func_decl env =
-		let signature = {
+	let checkMethod func_decl classEnv =
+(*		let formalTypes = getListOfFormalTypes func_decl
+		in
+		let checkSignature _ v =
+			if v.mformalTypes=formalTypes 
+				then true
+			else false
+		in
+		let compareName k _ =
+			k = func_decl.fname
+		in
+		let mp = StringMap.filter compareName classEnv.classMap.methodMap
+		in
+		StringMap.iter checkSignature mp;	
+*)		let signature = {
 			mscope = func_decl.fscope;
 			mname = func_decl.fname;
 			mformalTypes = List.map (fun fl -> fl.fvtype) func_decl.fformals;			
@@ -140,7 +153,7 @@ let convertToSast classes =
 			envClassMaps = classEnv.classMaps;
 			envClassMap  = classEnv.classMap;
 			envLocals    = StringMap.empty;
-			envParams    = StringMap.empty;
+			envParams    = StringMap.empty; (* @TODO fill with params *)
 			envReturnType= func_decl.freturn;
 		} in 
 		let methodSignature = checkMethod func_decl classEnv
@@ -153,7 +166,7 @@ let convertToSast classes =
 			sfreturn = func_decl.freturn;
 			sfbody = List.map (fun s -> convertStmtToSast s env) func_decl.fbody;
 		} in
-		classEnv.classMap.methodMap = StringMap.add func_decl.fname methodSignature classEnv.classMap.methodMap;
+		classEnv.classMap.methodMap <- StringMap.add func_decl.fname methodSignature classEnv.classMap.methodMap;
 		result
 	in
 
@@ -223,7 +236,7 @@ let convertToSast classes =
 			if StringMap.mem vdecl.vname classEnv.classMap.variableMap
 				then raise (Failure("Variable name already used"))
 			else if vdecl.vexpr <> Ast.Noexpr && getType vdecl.vexpr classEnv <> vdecl.vtype
-				then raise (Failure(str_of_expr vdecl.vexpr ^ " is of type " ^ str_of_type (getType vdecl.vexpr classEnv) ^ " but type " ^ str_of_type vdecl.vtype ^ " is expected."))
+				then raise (Failure(str_of_expr vdecl.vexpr ^ " is of type " ^ str_of_type (getType vdecl.vexpr classEnv) ^ " but type " ^ str_of_type vdecl.vtype ^ " is expected"))
 		in check
 	in
 
@@ -249,20 +262,20 @@ let convertToSast classes =
 		in 
 		let checking =  
 			if lowerChar = firstChar
-			 	then raise (Failure ("Class Name not capitailized: " ^ class_decl.cname))
+			 	then raise (Failure ("Class name not capitalized: " ^ class_decl.cname))
 			else if StringMap.mem class_decl.cname classEnv.classMaps
 				then raise (Failure ("Duplicate Class Name: " ^ class_decl.cname))
 			in checking 	
 	in
 	let convertClassToSast class_decl classEnv =
-		classEnv.className = class_decl.cname;
+		classEnv.className <- class_decl.cname;
 		checkClass class_decl classEnv;
 		let classMap = {
 			variableMap = StringMap.empty;
 			constructorMap = StringMap.empty;
 			methodMap = StringMap.empty;
 		} in
-		classEnv.classMap = classMap;
+		classEnv.classMap <- classMap;
 		let result =
 		{
 			scscope = class_decl.cscope;
