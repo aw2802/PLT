@@ -132,7 +132,7 @@ let translate sast =
 	and generate_return e d llbuilder =
 		match e with
 		| SNoexpr -> L.build_ret_void llbuilder
-		| _ -> L.build_ret (expr_gen e llbuilder) llbuilder
+		| _ -> L.build_ret (expr_gen llbuilder e) llbuilder
 
 	and generate_vardecl scope datatype vname expr llbuilder =
 		let allocatedMemory = L.build_alloca (get_llvm_type datatype) vname llbuilder in
