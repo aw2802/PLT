@@ -247,6 +247,12 @@ let translate sast =
 		let struct_type = L.packed_struct_type context type_array in
 		let vname = "dummy" in
 		let allocatedMemory = L.build_alloca struct_type vname llbuilder in
+		List.iteri (
+			fun i f ->
+	        let tuple_value = L.build_struct_gep allocatedMemory i ("temp"^i) llbuilder in
+	        	L.build_store (expr_gen llbuilder f) tuple_value llbuilder;
+	    	) 
+	    expr_list; 
 		L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder
 
 	and generate_tuple_access deref e1 e2 llbuilder =
