@@ -215,7 +215,7 @@ let translate sast =
 		| SUnop(op, e, dt)      -> unop_gen op e llbuilder
 		| SAssign (id, e, dt)	-> assign_to_variable (get_value false id llbuilder) e llbuilder
 		| SCreateObject(id, el, d) -> generate_object_create id el llbuilder
-		| SFuncCall (fname, expr_list, d, _) -> generate_function_call id el d llbuilder
+		| SFuncCall (fname, expr_list, d, _) -> generate_function_call fname expr_list d llbuilder
 		| SNoexpr -> L.build_add (L.const_int i32_t 0) (L.const_int i32_t 0) "nop" llbuilder
 		| _ -> raise(Failure("No match expression"))
 
@@ -224,7 +224,7 @@ let translate sast =
 		match fname with
 			| "print" -> print_func_gen "" expr_list llbuilder
 			| "println" -> print_func_gen "\n" expr_list llbuilder
-			| _ -> 	let params = List.map (expr_gen llbuilder) el in
+			| _ -> 	let params = List.map (expr_gen llbuilder) expr_list in
 					L.build_call f (Array.of_list params) "tmp" llbuilder
 
 	and generate_object_create id el llbuilder =
