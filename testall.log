@@ -34,8 +34,7 @@ diff -b test-arithmetic.out tests/test-arithmetic.out > test-arithmetic.diff
 ./javapm tests/test-array.javapm > test-array.ll
 lli test-array.ll > test-array.out
 diff -b test-array.out tests/test-array.out > test-array.diff
-FAILED test-array.out differs from tests/test-array.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-array_create
 ./javapm tests/test-array_create.javapm > test-array_create.ll
