@@ -44,7 +44,7 @@ and get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	| A.Tuple(dt_list) -> L.pointer_type(find_llvm_tuple_type dt_list)
 	| _ -> raise(Failure("Invalid Data Type"))
 
-and find_llvm_tuple_type data_type_list =
+and find_llvm_tuple_type dt_list =
 	let type_list = List.map (function dt -> get_llvm_type dt) dt_list in
 	let type_array = (Array.of_list type_list) in
 	L.packed_struct_type context type_array
@@ -237,7 +237,7 @@ let translate sast =
 		| SArrayCreate (datatype, el, d)	-> generate_array datatype el llbuilder
 		| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 		| STupleCreate(dt_list, el, d) -> generate_create_tuples dt_list el llbuilder
-		(*| STupleAccess(e1, e2, d) -> generate_tuple_access e1 e2 llbuilder *)
+		| STupleAccess(e1, e2, d) -> generate_tuple_access false e1 e2 llbuilder 
 		| _ -> raise(Failure("No match for expression"))
 
 	and generate_create_tuples dt_list expr_list llbuilder =
@@ -249,12 +249,18 @@ let translate sast =
 		let allocatedMemory = L.build_alloca struct_type vname llbuilder in
 		L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder
 
-(*
-	and generate_tuple_access e1 e2 llbuilder =
+	and generate_tuple_access deref e1 e2 llbuilder =
+		let vname = "dummy" in
+		let index = expr_gen llbuilder e2 in
 		let tuple = match e1 with
-		| SId(id, d) -> get_value true n llbuilder 
-		| _ -> raise(Failure("Not an id"))
-*)
+			| SId(id, d) -> get_value true id llbuilder 
+			| _ -> raise(Failure("Not an id"))
+		in
+		let tuple_value = L.build_struct_gep tuple [| index |] vname llbuilder in
+		if deref 
+			then L.build_load tuple_value vname llbuilder
+			else vname
+
 	and generate_array_access deref e el llbuilder =
 		match el with
 		| [h] -> let index = match h with
