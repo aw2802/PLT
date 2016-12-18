@@ -238,7 +238,7 @@ let translate sast =
 		match el with
 		| [h] -> let index = expr_gen llbuilder h in
 				let index = L.build_add index (const_int i32_t 1) "1tmp" llbuilder in
-    			let arr = expr_gen llbuilder e in
+    			let arr =  e in
     			let _val = L.build_gep arr [| index |] "2tmp" llbuilder in
     			if deref
     				then build_load _val "3tmp" llbuilder 
