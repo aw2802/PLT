@@ -239,7 +239,7 @@ diff -b test-subtract.out tests/test-subtract.out > test-subtract.diff
 
 ###### Testing test-tuple_access
 ./javapm tests/test-tuple_access.javapm > test-tuple_access.ll
-Fatal error: exception Match_failure("semant.ml", 58, 17)
+Fatal error: exception Failure("undeclared structstring")
 ###### FAILED
 
 ###### Testing test-tuple_creation
