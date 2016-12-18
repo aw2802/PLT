@@ -362,7 +362,7 @@ let translate sast =
 			| SId(s, d) -> get_value false s llbuilder
 			| SArrayAccess(e, el, d) -> generate_array_access false e el llbuilder
 		in
-		let value = match e with
+		let value = match e2 with
 		| SId(id, d) -> get_value true id llbuilder
 		| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 		| _ -> expr_gen llbuilder e
