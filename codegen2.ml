@@ -231,7 +231,7 @@ let translate sast =
 		| SFuncCall (fname, expr_list, d, _) -> generate_function_call fname expr_list d llbuilder
 		| SNoexpr -> L.build_add (L.const_int i32_t 0) (L.const_int i32_t 0) "nop" llbuilder
 		| SArrayCreate (datatype, el, d)	-> generate_array datatype el llbuilder
-		| SArrayAccess(e, el, d) -> generate_array_access false e el llbuilder
+		| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 		| _ -> raise(Failure("No match for expression"))
 
 	and generate_array_access deref e el llbuilder =
@@ -365,7 +365,7 @@ let translate sast =
 		let value = match e2 with
 		| SId(id, d) -> get_value true id llbuilder
 		| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
-		| _ -> expr_gen llbuilder e
+		| _ -> expr_gen llbuilder e2
 		in
 		L.build_store value vmemory llbuilder
 
