@@ -364,7 +364,7 @@ let translate sast =
 		in
 		let value = match e with
 		| SId(id, d) -> get_value true id llbuilder
-		| SArrayAccess(e, el, d) -> generate_array_access false e el llbuilder
+		| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 		| _ -> expr_gen llbuilder e
 		in
 		L.build_store value vmemory llbuilder
