@@ -27,6 +27,12 @@ let local_var_table:(string, llvalue) Hashtbl.t = Hashtbl.create 100 (*Must be c
 let struct_typ_table:(string, lltype) Hashtbl.t = Hashtbl.create 100
 (*let struct_field_idx_table:(string, int) Hashtbl.t = Hashtbl.create 100 *)
 
+let rec get_ptr_type datatype = match datatype with
+		A.Arraytype(t, 0) -> get_llvm_type t
+	|	A.Arraytype(t, 1) -> L.pointer_type (get_llvm_type t)
+	|	A.Arraytype(t, i) -> L.pointer_type (get_ptr_type (A.Arraytype(t, (i-1))))
+	| 	_ -> raise(Exceptions.InvalidStructType "Array Pointer Type")
+
 let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	  A.JChar -> i8_t
 	| A.JVoid -> void_t
@@ -34,6 +40,7 @@ let rec get_llvm_type datatype = match datatype with (* LLVM type for AST type *
 	| A.JFloat -> f_t
 	| A.JInt -> i32_t
 	| A.Object(s) -> L.pointer_type(find_llvm_struct_type s)
+	| A.Arraytype(data_type, i) ->  get_ptr_type (A.Arraytype(t, (i)))
 	| _ -> raise(Failure("Invalid Data Type"))
 
 and find_llvm_struct_type name = 
