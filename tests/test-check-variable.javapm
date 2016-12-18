@@ -1,0 +1,8 @@
+public class DummyClass {
+
+	public int x = 3;
+	public void main() {
+		print(3);
+	}
+
+}
