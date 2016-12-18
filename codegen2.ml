@@ -223,7 +223,55 @@ let translate sast =
 		| SCreateObject(id, el, d) -> generate_object_create id el llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> generate_function_call fname expr_list d llbuilder
 		| SNoexpr -> L.build_add (L.const_int i32_t 0) (L.const_int i32_t 0) "nop" llbuilder
-		| _ -> raise(Failure("No match expression"))
+		| SArrayCreate (datatype, el, d)	-> generate_array datatype el llbuilder
+		| _ -> raise(Failure("No match for expression"))
+
+	and generate_array datatype expr_list llbuilder =
+		match expr_list with
+		| [h] -> generate_one_d_array datatype (expr_gen llbuilder h) llbuilder
+		| _ ->  raise(Failure("Two dimentional array not supported"))
+		(*| [h;s] -> generate_one_d_array datatype (expr_gen llbuilder h) (expr_gen llbuilder s) llbuilder *)
+	
+	and generate_one_d_array datatype size llbuilder =
+		let t = get_llvm_type t in
+
+		let size_t = L.build_intcast (L.size_of t) i32_t "tmp" llbuilder in
+		let size = L.build_mul size_t size "tmp" llbuilder in
+		let size_real = L.build_add size (L.const_int i32_t 1) "arr_size" llbuilder in
+		
+	    let arr = L.build_array_malloc t size_real "tmp" llbuilder in
+		let arr = L.build_pointercast arr (pointer_type t) "tmp" llbuilder in
+
+		let arr_len_ptr = L.build_pointercast arr (pointer_type i32_t) "tmp" llbuilder in
+
+		ignore(L.build_store size_real arr_len_ptr llbuilder); 
+		initialise_array arr_len_ptr size_real (const_int i32_t 0) 0 llbuilder;
+		arr
+
+	and initialise_array arr arr_len init_val start_pos llbuilder =
+		let new_block label =
+			let f = L.block_parent (L.insertion_block llbuilder) in
+			L.append_block (context) label f
+		in
+  		let bbcurr = L.insertion_block llbuilder in
+  		let bbcond = new_block "array.cond" in
+  		let bbbody = new_block "array.init" in
+  		let bbdone = new_block "array.done" in
+  		ignore (L.build_br bbcond llbuilder);
+  		L.position_at_end bbcond llbuilder;
+
+	  	(* Counter into the length of the array *)
+	  	let counter = L.build_phi [const_int i32_t start_pos, bbcurr] "counter" llbuilder in
+	  	add_incoming ((build_add counter (const_int i32_t 1) "tmp" llbuilder), bbbody) counter;
+	  	let cmp = build_icmp Icmp.Slt counter arr_len "tmp" llbuilder in
+	  	ignore (build_cond_br cmp bbbody bbdone llbuilder);
+	  	position_at_end bbbody llbuilder;
+
+	  	(* Assign array position to init_val *)
+	  	let arr_ptr = build_gep arr [| counter |] "tmp" llbuilder in
+	  	ignore (build_store init_val arr_ptr llbuilder);
+	  	ignore (build_br bbcond llbuilder);
+	  	position_at_end bbdone llbuilder
 
 	and generate_function_call fname expr_list d llbuilder =
 		match fname with
