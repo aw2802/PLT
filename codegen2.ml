@@ -231,7 +231,19 @@ let translate sast =
 		| SFuncCall (fname, expr_list, d, _) -> generate_function_call fname expr_list d llbuilder
 		| SNoexpr -> L.build_add (L.const_int i32_t 0) (L.const_int i32_t 0) "nop" llbuilder
 		| SArrayCreate (datatype, el, d)	-> generate_array datatype el llbuilder
+		| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 		| _ -> raise(Failure("No match for expression"))
+
+	and generate_array_access deref e el llbuilder =
+		match expr_list with
+		| [h] -> let index = expr_gen llbuilder h in
+				let index = L.build_add index (const_int i32_t 1) "tmp" llbuilder in
+    			let arr = expr_gen llbuilder e in
+    			let _val = L.build_gep arr [| index |] "tmp" llbuilder in
+    			if deref
+    				then build_load _val "tmp" llbuilder 
+    				else _val
+		| _ ->  raise(Failure("Two dimentional array not supported"))
 
 	and generate_array datatype expr_list llbuilder =
 		match expr_list with
