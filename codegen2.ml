@@ -256,9 +256,9 @@ let translate sast =
 			| SId(id, d) -> get_value true n llbuilder 
 			| _ -> raise(Failure("Not an id"))
 		in
-		let val = L.build_struct_gep tuple index vname llbuilder in
+		let _val = L.build_struct_gep tuple index vname llbuilder in
 		if deref 
-			then L.build_load val vname llbuilder
+			then L.build_load _val vname llbuilder
 			else vname
 		in
 		vname
