@@ -241,8 +241,7 @@ let translate sast =
 		let type_list = List.map (function dt -> get_llvm_type dt) dt_list in
 		(*let type_list = i32_t :: type_list in *)
 		let type_array = (Array.of_list type_list) in
-		L.struct_set_body struct_t type_array true in
-		struct_typ
+		ignore(L.struct_set_body struct_t type_array true); struct_typ
 (*
 	and generate_tuple_access e1 e2 llbuilder =
 		let tuple = match e1 with
