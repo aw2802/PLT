@@ -237,7 +237,7 @@ let translate sast =
 		| _ -> raise(Failure("No match for expression"))
 
 	and generate_create_tuples dt_list expr_list llbuilder =
-		let struct_typ = L.named_struct_type context c.scname in
+		let struct_typ = L.struct_type context in
 		let type_list = List.map (function dt -> get_llvm_type dt) dt_list in
 		(*let type_list = i32_t :: type_list in *)
 		let type_array = (Array.of_list type_list) in
