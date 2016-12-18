@@ -18,15 +18,15 @@ type methodSignature = {
 }
 
 type classMap = {
-        variableMap: Ast.vdecl StringMap.t;
-        constructorMap: methodSignature StringMap.t;
-        methodMap:  methodSignature StringMap.t;
+        mutable variableMap: Ast.vdecl StringMap.t;
+        mutable constructorMap: methodSignature StringMap.t;
+        mutable methodMap:  methodSignature StringMap.t;
 }
 
 type classEnv = {
-	className: string;
-	classMaps: classMap StringMap.t;
-	classMap: classMap;
+	mutable className: string;
+	mutable classMaps: classMap StringMap.t;
+	mutable classMap: classMap;
 }
 
 type env = {
@@ -122,10 +122,10 @@ let convertToSast classes =
 	(* Semantic Checking for class methods *)
 	let getListOfFormalTypes c = List.map (fun f -> f.fvtype) c.fformals 
 	in
-	let uniqueFormalNames l = 
+	let hasDuplicateFormalNames l = 
 		let result = ref false
 		in let names = List.map (fun f -> f.fvname) l
-		in List.iter (fun e -> result := !result || e) (List.map (fun n -> List.length (List.filter (fun s -> s = n) l) > 1) l);!result
+		in List.iter (fun e -> result := !result || e) (List.map (fun n -> List.length (List.filter (fun s -> s = n) names) > 1) names);!result
 	in
 	let checkMethod func_decl env =
 		let signature = {
@@ -168,7 +168,7 @@ let convertToSast classes =
 			
 			if(StringMap.mem (strOfFormals formalTypes) classEnv.classMap.constructorMap)
 				then raise (Failure("Duplicate Constructor Definition"))
-			else if (List.length formalTypes <> 0) && uniqueFormalNames constructor.fformals = false
+			else if ((List.length formalTypes <> 0) && (hasDuplicateFormalNames constructor.fformals = true))
 				then raise(Failure("Formal names must be unique"))  
 		in checking;
  	        {
@@ -197,7 +197,7 @@ let convertToSast classes =
 			sfreturn = constructor.freturn;
 			sfbody = List.map (fun s -> convertStmtToSast s env) constructor.fbody;
 		} in
-		classEnv.classMap.constructorMap = StringMap.add (strOfFormals constructorSignature.mformalTypes) constructorSignature classEnv.classMap.constructorMap;
+		classEnv.classMap.constructorMap <- StringMap.add (strOfFormals constructorSignature.mformalTypes) constructorSignature classEnv.classMap.constructorMap;
 		result
 
 	in
@@ -215,7 +215,7 @@ let convertToSast classes =
 		checkVariable vdecl classEnv; 
 		let result = convertVdeclToSast vdecl
 		in
-		classEnv.classMap.variableMap = StringMap.add vdecl.vname vdecl classEnv.classMap.variableMap; result
+		classEnv.classMap.variableMap <- StringMap.add vdecl.vname vdecl classEnv.classMap.variableMap; result
 
 	in
 	let convertCbodyToSast cbody classEnv =
@@ -253,7 +253,7 @@ let convertToSast classes =
 			scname  = class_decl.cname;
 			scbody  = convertCbodyToSast class_decl.cbody classEnv;
 		} in
-		classEnv.classMaps = StringMap.add classEnv.className classEnv.classMap classEnv.classMaps;
+		classEnv.classMaps <- StringMap.add classEnv.className classEnv.classMap classEnv.classMaps;
 		result
 
 	in

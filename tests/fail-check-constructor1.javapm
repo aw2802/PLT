@@ -1,0 +1,9 @@
+public class Dummy {
+	Dummy(int a) {
+	}
+	Dummy(int x) {
+	}
+	public void main() {
+		print(3);
+	}
+}
