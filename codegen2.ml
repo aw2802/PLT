@@ -312,10 +312,12 @@ let translate sast =
 	and binop_gen e1 op e2 llbuilder = 
 		let value1 =  match e1 with
 			| SId(id, d) -> get_value true id llbuilder
+			| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 			| _ -> expr_gen llbuilder e1
 		in
 		let value2 = match e2 with
 			| SId(id, d) -> get_value true id llbuilder
+			| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 			| _ -> expr_gen llbuilder e2	
 		in
 
