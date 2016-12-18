@@ -245,7 +245,7 @@ let translate sast =
 		(*let type_list = i32_t :: type_list in *)
 		let type_array = (Array.of_list type_list) in
 		let struct_type = L.packed_struct_type context type_array in
-		let vname =  in
+		let vname = "dummy" in
 		let allocatedMemory = L.build_alloca struct_type vname llbuilder in
 		L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder
 
