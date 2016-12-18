@@ -70,6 +70,7 @@ let typOFSexpr = function
 	|  	SUnop(_, _, d) 			-> d 
 	| 	SCreateObject(_,_,d)	-> d
 	| 	SObjAccess(_,_,d) -> d
+	|	STupleAccess(_,_, d) 	-> d
 
 let convertToSast classes =
 	
