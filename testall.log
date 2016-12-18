@@ -179,7 +179,7 @@ diff -b test-mult_classes.out tests/test-mult_classes.out > test-mult_classes.di
 
 ###### Testing test-mult_functions
 ./javapm tests/test-mult_functions.javapm > test-mult_functions.ll
-Basic Block in function 'sayBye' does not have terminator!
+Terminator found in the middle of a basic block!
 label %entry
 LLVM ERROR: Broken module found, compilation aborted!
 ###### FAILED
