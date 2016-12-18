@@ -32,7 +32,9 @@ diff -b test-arithmetic.out tests/test-arithmetic.out > test-arithmetic.diff
 
 ###### Testing test-array
 ./javapm tests/test-array.javapm > test-array.ll
-Fatal error: exception Parsing.Parse_error
+Stored value type does not match pointer operand type!
+  store i32 1, i32** %tmp4
+ i32*LLVM ERROR: Broken module found, compilation aborted!
 ###### FAILED
 
 ###### Testing test-array_create
@@ -249,187 +251,187 @@ diff -b test-while_nest.out tests/test-while_nest.out > test-while_nest.diff
 ###### SUCCESS
 
 ###### Testing fail-assign1
-./javapm < tests/fail-assign1.javapm 2> fail-assign1.err >> testall.log
+./javapm tests/fail-assign1.javapm 2> fail-assign1.err >> testall.log
 diff -b fail-assign1.err tests/fail-assign1.err > fail-assign1.diff
 FAILED fail-assign1.err differs from tests/fail-assign1.err
 ###### FAILED
 
 ###### Testing fail-assign2
-./javapm < tests/fail-assign2.javapm 2> fail-assign2.err >> testall.log
+./javapm tests/fail-assign2.javapm 2> fail-assign2.err >> testall.log
 diff -b fail-assign2.err tests/fail-assign2.err > fail-assign2.diff
 FAILED fail-assign2.err differs from tests/fail-assign2.err
 ###### FAILED
 
 ###### Testing fail-assign3
-./javapm < tests/fail-assign3.javapm 2> fail-assign3.err >> testall.log
+./javapm tests/fail-assign3.javapm 2> fail-assign3.err >> testall.log
 diff -b fail-assign3.err tests/fail-assign3.err > fail-assign3.diff
 FAILED fail-assign3.err differs from tests/fail-assign3.err
 ###### FAILED
 
 ###### Testing fail-dead1
-./javapm < tests/fail-dead1.javapm 2> fail-dead1.err >> testall.log
+./javapm tests/fail-dead1.javapm 2> fail-dead1.err >> testall.log
 diff -b fail-dead1.err tests/fail-dead1.err > fail-dead1.diff
 FAILED fail-dead1.err differs from tests/fail-dead1.err
 ###### FAILED
 
 ###### Testing fail-dead2
-./javapm < tests/fail-dead2.javapm 2> fail-dead2.err >> testall.log
+./javapm tests/fail-dead2.javapm 2> fail-dead2.err >> testall.log
 diff -b fail-dead2.err tests/fail-dead2.err > fail-dead2.diff
 FAILED fail-dead2.err differs from tests/fail-dead2.err
 ###### FAILED
 
 ###### Testing fail-expr1
-./javapm < tests/fail-expr1.javapm 2> fail-expr1.err >> testall.log
+./javapm tests/fail-expr1.javapm 2> fail-expr1.err >> testall.log
 diff -b fail-expr1.err tests/fail-expr1.err > fail-expr1.diff
 FAILED fail-expr1.err differs from tests/fail-expr1.err
 ###### FAILED
 
 ###### Testing fail-expr2
-./javapm < tests/fail-expr2.javapm 2> fail-expr2.err >> testall.log
+./javapm tests/fail-expr2.javapm 2> fail-expr2.err >> testall.log
 diff -b fail-expr2.err tests/fail-expr2.err > fail-expr2.diff
 FAILED fail-expr2.err differs from tests/fail-expr2.err
 ###### FAILED
 
 ###### Testing fail-for1
-./javapm < tests/fail-for1.javapm 2> fail-for1.err >> testall.log
+./javapm tests/fail-for1.javapm 2> fail-for1.err >> testall.log
 diff -b fail-for1.err tests/fail-for1.err > fail-for1.diff
 FAILED fail-for1.err differs from tests/fail-for1.err
 ###### FAILED
 
 ###### Testing fail-for2
-./javapm < tests/fail-for2.javapm 2> fail-for2.err >> testall.log
+./javapm tests/fail-for2.javapm 2> fail-for2.err >> testall.log
 diff -b fail-for2.err tests/fail-for2.err > fail-for2.diff
 FAILED fail-for2.err differs from tests/fail-for2.err
 ###### FAILED
 
 ###### Testing fail-for3
-./javapm < tests/fail-for3.javapm 2> fail-for3.err >> testall.log
+./javapm tests/fail-for3.javapm 2> fail-for3.err >> testall.log
 diff -b fail-for3.err tests/fail-for3.err > fail-for3.diff
 FAILED fail-for3.err differs from tests/fail-for3.err
 ###### FAILED
 
 ###### Testing fail-for4
-./javapm < tests/fail-for4.javapm 2> fail-for4.err >> testall.log
+./javapm tests/fail-for4.javapm 2> fail-for4.err >> testall.log
 diff -b fail-for4.err tests/fail-for4.err > fail-for4.diff
 FAILED fail-for4.err differs from tests/fail-for4.err
 ###### FAILED
 
 ###### Testing fail-for5
-./javapm < tests/fail-for5.javapm 2> fail-for5.err >> testall.log
+./javapm tests/fail-for5.javapm 2> fail-for5.err >> testall.log
 diff -b fail-for5.err tests/fail-for5.err > fail-for5.diff
 FAILED fail-for5.err differs from tests/fail-for5.err
 ###### FAILED
 
 ###### Testing fail-func1
-./javapm < tests/fail-func1.javapm 2> fail-func1.err >> testall.log
+./javapm tests/fail-func1.javapm 2> fail-func1.err >> testall.log
 diff -b fail-func1.err tests/fail-func1.err > fail-func1.diff
 FAILED fail-func1.err differs from tests/fail-func1.err
 ###### FAILED
 
 ###### Testing fail-func2
-./javapm < tests/fail-func2.javapm 2> fail-func2.err >> testall.log
+./javapm tests/fail-func2.javapm 2> fail-func2.err >> testall.log
 diff -b fail-func2.err tests/fail-func2.err > fail-func2.diff
 FAILED fail-func2.err differs from tests/fail-func2.err
 ###### FAILED
 
 ###### Testing fail-func3
-./javapm < tests/fail-func3.javapm 2> fail-func3.err >> testall.log
+./javapm tests/fail-func3.javapm 2> fail-func3.err >> testall.log
 diff -b fail-func3.err tests/fail-func3.err > fail-func3.diff
 FAILED fail-func3.err differs from tests/fail-func3.err
 ###### FAILED
 
 ###### Testing fail-func4
-./javapm < tests/fail-func4.javapm 2> fail-func4.err >> testall.log
+./javapm tests/fail-func4.javapm 2> fail-func4.err >> testall.log
 diff -b fail-func4.err tests/fail-func4.err > fail-func4.diff
 FAILED fail-func4.err differs from tests/fail-func4.err
 ###### FAILED
 
 ###### Testing fail-func5
-./javapm < tests/fail-func5.javapm 2> fail-func5.err >> testall.log
+./javapm tests/fail-func5.javapm 2> fail-func5.err >> testall.log
 diff -b fail-func5.err tests/fail-func5.err > fail-func5.diff
 FAILED fail-func5.err differs from tests/fail-func5.err
 ###### FAILED
 
 ###### Testing fail-func6
-./javapm < tests/fail-func6.javapm 2> fail-func6.err >> testall.log
+./javapm tests/fail-func6.javapm 2> fail-func6.err >> testall.log
 diff -b fail-func6.err tests/fail-func6.err > fail-func6.diff
 FAILED fail-func6.err differs from tests/fail-func6.err
 ###### FAILED
 
 ###### Testing fail-func7
-./javapm < tests/fail-func7.javapm 2> fail-func7.err >> testall.log
+./javapm tests/fail-func7.javapm 2> fail-func7.err >> testall.log
 diff -b fail-func7.err tests/fail-func7.err > fail-func7.diff
 FAILED fail-func7.err differs from tests/fail-func7.err
 ###### FAILED
 
 ###### Testing fail-func8
-./javapm < tests/fail-func8.javapm 2> fail-func8.err >> testall.log
+./javapm tests/fail-func8.javapm 2> fail-func8.err >> testall.log
 diff -b fail-func8.err tests/fail-func8.err > fail-func8.diff
 FAILED fail-func8.err differs from tests/fail-func8.err
 ###### FAILED
 
 ###### Testing fail-func9
-./javapm < tests/fail-func9.javapm 2> fail-func9.err >> testall.log
+./javapm tests/fail-func9.javapm 2> fail-func9.err >> testall.log
 diff -b fail-func9.err tests/fail-func9.err > fail-func9.diff
 FAILED fail-func9.err differs from tests/fail-func9.err
 ###### FAILED
 
 ###### Testing fail-global1
-./javapm < tests/fail-global1.javapm 2> fail-global1.err >> testall.log
+./javapm tests/fail-global1.javapm 2> fail-global1.err >> testall.log
 diff -b fail-global1.err tests/fail-global1.err > fail-global1.diff
 FAILED fail-global1.err differs from tests/fail-global1.err
 ###### FAILED
 
 ###### Testing fail-global2
-./javapm < tests/fail-global2.javapm 2> fail-global2.err >> testall.log
+./javapm tests/fail-global2.javapm 2> fail-global2.err >> testall.log
 diff -b fail-global2.err tests/fail-global2.err > fail-global2.diff
 FAILED fail-global2.err differs from tests/fail-global2.err
 ###### FAILED
 
 ###### Testing fail-if1
-./javapm < tests/fail-if1.javapm 2> fail-if1.err >> testall.log
+./javapm tests/fail-if1.javapm 2> fail-if1.err >> testall.log
 diff -b fail-if1.err tests/fail-if1.err > fail-if1.diff
 FAILED fail-if1.err differs from tests/fail-if1.err
 ###### FAILED
 
 ###### Testing fail-if2
-./javapm < tests/fail-if2.javapm 2> fail-if2.err >> testall.log
+./javapm tests/fail-if2.javapm 2> fail-if2.err >> testall.log
 diff -b fail-if2.err tests/fail-if2.err > fail-if2.diff
 FAILED fail-if2.err differs from tests/fail-if2.err
 ###### FAILED
 
 ###### Testing fail-if3
-./javapm < tests/fail-if3.javapm 2> fail-if3.err >> testall.log
+./javapm tests/fail-if3.javapm 2> fail-if3.err >> testall.log
 diff -b fail-if3.err tests/fail-if3.err > fail-if3.diff
 FAILED fail-if3.err differs from tests/fail-if3.err
 ###### FAILED
 
 ###### Testing fail-nomain
-./javapm < tests/fail-nomain.javapm 2> fail-nomain.err >> testall.log
+./javapm tests/fail-nomain.javapm 2> fail-nomain.err >> testall.log
 diff -b fail-nomain.err tests/fail-nomain.err > fail-nomain.diff
 FAILED fail-nomain.err differs from tests/fail-nomain.err
 ###### FAILED
 
 ###### Testing fail-return1
-./javapm < tests/fail-return1.javapm 2> fail-return1.err >> testall.log
+./javapm tests/fail-return1.javapm 2> fail-return1.err >> testall.log
 diff -b fail-return1.err tests/fail-return1.err > fail-return1.diff
 FAILED fail-return1.err differs from tests/fail-return1.err
 ###### FAILED
 
 ###### Testing fail-return2
-./javapm < tests/fail-return2.javapm 2> fail-return2.err >> testall.log
+./javapm tests/fail-return2.javapm 2> fail-return2.err >> testall.log
 diff -b fail-return2.err tests/fail-return2.err > fail-return2.diff
 FAILED fail-return2.err differs from tests/fail-return2.err
 ###### FAILED
 
 ###### Testing fail-while1
-./javapm < tests/fail-while1.javapm 2> fail-while1.err >> testall.log
+./javapm tests/fail-while1.javapm 2> fail-while1.err >> testall.log
 diff -b fail-while1.err tests/fail-while1.err > fail-while1.diff
 FAILED fail-while1.err differs from tests/fail-while1.err
 ###### FAILED
 
 ###### Testing fail-while2
-./javapm < tests/fail-while2.javapm 2> fail-while2.err >> testall.log
+./javapm tests/fail-while2.javapm 2> fail-while2.err >> testall.log
 diff -b fail-while2.err tests/fail-while2.err > fail-while2.diff
 FAILED fail-while2.err differs from tests/fail-while2.err
 ###### FAILED
