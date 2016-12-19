@@ -493,16 +493,16 @@ let translate sast =
 		let rt = L.pointer_type i64_t in
 		let void_pt = L.pointer_type i64_t in
 		let void_ppt = L.pointer_type void_pt in
-		print_string ("in here\n");
+
 		let f = find_func_in_module "lookup" in
 		let llbuilder = L.builder_at_end context (entry_block f) in
 
 		let len = List.length sclass_decl in
 		
 		let total_len = ref 0 in
-		print_string ("total_len\n"); 
+
 		let scdecl_llvm_arr = L.build_array_alloca void_ppt (const_int i32_t len) "tmp" llbuilder in
-		print_string ("in here\n"); 
+		
 		let handle_scdecl scdecl = 
 			let index = try Hashtbl.find Semant.classIndices scdecl.scname with 
 			| Not_found -> raise (Failure("can't find classname" ^ scdecl.scname)) in
@@ -539,7 +539,7 @@ let translate sast =
 
 			L.build_ret fptr llbuilder 
 	in
-	let _ = build_classes classes in
+	let _ = print_string ("in here\n"); build_classes classes in
 
 	the_module;
 
