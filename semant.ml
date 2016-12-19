@@ -11,8 +11,6 @@ let createClassIndices cdecls=
 	Hashtbl.add classIndices cdecl.cname index in (*scope handling is missing*)
 	List.iteri classHandler cdecls
 
-
-	
 let isMain f = f.sfname = "main"
 
 let get_methods l classy = List.concat [classy.scbody.sconstructors;(List.concat [classy.scbody.smethods;l])]
