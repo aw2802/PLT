@@ -512,9 +512,9 @@ let translate sast =
 			let _ = stmt_gen llbuilder (SBlock (constructor.sfbody)) in 
 
 			L.build_ret pointer_to_class llbuilder
-		in
-		let _ = List.map build_constructor sclass_decl.scbody.sconstructors in
-	let _ = List.map build_constructors classes in 
+		in 
+		List.map build_constructor class_name.scbody.sconstructors in
+	let _ =  List.map build_constructors classes in 
 
 
 	(*Main method generation*)
