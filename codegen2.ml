@@ -133,7 +133,7 @@ let translate sast =
 		List.map define_functions c.scbody.sconstructors
 	in
 	let _ = List.map define_constructors classes in
-	
+
 
 	(*Stmt and expr handling*)
 
@@ -495,7 +495,7 @@ let translate sast =
 			let f = find_func_in_module vname in 	
 			let llbuilder = L.builder_at_end context (L.entry_block f) in
 
-			let struct_type = find_llvm_struct_type vname
+			let struct_type = find_llvm_struct_type vname in
 			let allocatedMemory = L.build_alloca struct_type vname llbuilder in     
 			let pointer_to_class = L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder
 
