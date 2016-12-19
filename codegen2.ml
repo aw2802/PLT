@@ -472,7 +472,7 @@ let translate sast =
 		then ignore (L.build_ret_void llbuilder);
 		()
 	in
-	let _ = print_string (sfunc_decl.sfname ^ "\n"); List.map build_function functions in
+	let _ = print_string ("in here\n"); List.map build_function functions in
 
 
 	(*Main method generation*)
