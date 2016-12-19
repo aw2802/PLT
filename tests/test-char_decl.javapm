@@ -1,0 +1,8 @@
+public class TestCharDecl {
+	public void main() {
+		char c = 'c';
+		println(c);
+
+	}
+
+}

@@ -1,0 +1,6 @@
+public class TestTupleCreation {
+	public void main() {
+		Tuple<int> myTuple = new Tuple<int>(5);
+	}
+
+}
