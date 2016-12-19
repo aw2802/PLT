@@ -519,7 +519,7 @@ let translate sast =
 		let _ = List.map build_constructor constructors
 
 	in
-	let _ = List.map build_constructors classes
+	let _ = List.map build_constructors classes in 
 
 
 	(*Main method generation*)
