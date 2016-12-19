@@ -3,18 +3,68 @@
 open Ast
 open Sast
 
-let rec getType expr classEnv = match expr with
-(*	  Id(s) -> getIdType s*)
-	| Int_Lit(s) -> JInt
-	| Float_Lit(f)	-> JFloat
-	| Char_Lit(c)	-> JChar
-	| String_Lit(s)	-> JString
-	| Bool_Lit(b)	-> JBoolean
-	| Binop(e1, op, e2) -> getType e1 classEnv
-	| Unop(op, e)	-> getType e classEnv
-	| Assign(s, e)	-> getType expr classEnv
-(*	| FuncCall(s, el)	-> getFuncReturnType s env
-*)
+module StringMap = Map.Make(String)
+
+type methodSignature = {
+        mscope: scope;
+        mname : string;
+        mformalTypes: data_type list;
+	mReturn: data_type;
+}
+
+type classMap = {
+        mutable variableMap: Ast.vdecl StringMap.t;
+        mutable constructorMap: methodSignature StringMap.t;
+        mutable methodMap:  methodSignature StringMap.t;
+}
+
+type classEnv = {
+ 	mutable className: string;
+ 	mutable classMaps: classMap StringMap.t;
+ 	mutable classMap: classMap;
+}
+
+type env = {
+        mutable envClassName: string;
+        mutable envClassMaps: classMap StringMap.t;
+        mutable envClassMap: classMap;
+        mutable envLocals: data_type StringMap.t;
+        mutable envParams: data_type StringMap.t;
+        mutable envReturnType: data_type;
+}
+
+let getIdType s env =
+	let checking =
+	if StringMap.mem s env.envLocals
+		then StringMap.find s env.envLocals
+	else if StringMap.mem s env.envClassMap.variableMap
+                then (StringMap.find s env.envClassMap.variableMap).vtype
+	else JInt
+	in checking
+	
+let getFuncType s env =
+	(StringMap.find s env.envClassMap.methodMap).mReturn
+
+let rec getType expr env = match expr with
+	  Id(s) 		-> getIdType s env
+	| Int_Lit(s) 		-> JInt
+	| Float_Lit(f)		-> JFloat
+	| Char_Lit(c)		-> JChar
+	| String_Lit(s)		-> JString
+	| Bool_Lit(b)		-> JBoolean
+	| Noexpr		-> JVoid
+	| Null			-> JVoid
+	| Binop(e1, op, e2) 	-> getType e1 env
+	| Unop(op, e)		-> getType e env
+	| Assign(s, e)		-> getType e env
+	| TupleCreate(dl, el) 	-> Tuple(dl)
+	| TupleAccess(e1, e2) 	-> getType e1 env
+	| ObjAccess(e1, e2)	-> getType e1 env
+	| CreateObject(s, el) 	-> getType (Id(s)) env
+	| ArrayCreate(d, el)	-> Arraytype(d, List.length el)
+	| ArrayAccess(e, el)	-> getType e env  
+	| FuncCall(s, el)	-> getFuncType s env
+
 
 let addComma l =
 	if l = [] then ""

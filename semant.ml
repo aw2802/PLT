@@ -11,41 +11,7 @@ let createClassIndices cdecls=
 	Hashtbl.add classIndices cdecl.cname index in (*scope handling is missing*)
 	List.iteri classHandler cdecls
 
-type methodSignature = {
-	mscope: scope;
-	mname : string;
-	mformalTypes: data_type list; 
-}
 
-type classMap = {
-        mutable variableMap: Ast.vdecl StringMap.t;
-        mutable constructorMap: methodSignature StringMap.t;
-        mutable methodMap:  methodSignature StringMap.t;
-}
-
-type classEnv = {
-	mutable className: string;
-	mutable classMaps: classMap StringMap.t;
-	mutable classMap: classMap;
-}
-
-type env = {
-        mutable envClassName: string;
-        mutable envClassMaps: classMap StringMap.t;
-        mutable envClassMap: classMap;
-        mutable envLocals: data_type StringMap.t;
-        mutable envParams: data_type StringMap.t;
-        mutable envReturnType: data_type;
-}
-
-let updateEnv env envName = {
-	envClassName = envName;
-	envClassMaps = env.envClassMaps;
-	envClassMap  = env.envClassMap;
-	envLocals    = env.envLocals;
-	envParams    = env.envParams;
-	envReturnType = env.envReturnType;
-}
 	
 let isMain f = f.sfname = "main"
 
@@ -89,30 +55,38 @@ let convertToSast classes =
 			| Null		-> SNull
 			| Noexpr	-> SNoexpr
 			| Id(id)	-> SId(id, JInt) (** @TODO Sast has SId(string, datatype) **)
-			| Binop(expr1, op, expr2)	-> SBinop(convertExprToSast expr1 env, op, convertExprToSast expr2 env, getType expr1 env)
-			| ArrayCreate(d, el)  -> SArrayCreate(d, (List.map (fun e -> convertExprToSast e env) el), Arraytype(d, List.length el))
+			| Binop(expr1, op, expr2)	-> SBinop(convertExprToSast expr1 env, op, convertExprToSast expr2 env, JInt(*getType expr1 env*))
+			| ArrayCreate(d, el)  -> SArrayCreate(d, (List.map (fun e -> convertExprToSast e env) el), JInt(*Arraytype(d, List.length el)*))
 			| ArrayAccess(e, el)  -> SArrayAccess(convertExprToSast e env, (List.map (fun e -> convertExprToSast e env) el), JInt) (* @TODO *)
-			| Assign(e1, e2)		-> SAssign(convertExprToSast e1 env, convertExprToSast e2 env, getType e1 env)
+			| Assign(e1, e2)		-> SAssign(convertExprToSast e1 env, convertExprToSast e2 env, JInt (*getType e1 env*))
 			| FuncCall(s, el)		-> SFuncCall(s, (List.map (fun e -> convertExprToSast e env) el), JInt(*getFuncType s*), 0) (*@TODO getFuncType in utils*)
-			| Unop(op, expr)		-> SUnop(op, convertExprToSast expr env, getType expr env)
-			| CreateObject(s,el)	-> SCreateObject(s, (List.map (fun e -> convertExprToSast e env) el), Object(s))
-			| ObjAccess(e1,e2) -> SObjAccess(convertExprToSast e1 env, convertExprToSast e2 env, getType e1 env) (* @TODO Double check type *)
-			| TupleCreate(dl, el)	-> STupleCreate(dl, (List.map (fun e -> convertExprToSast e env) el), Tuple(dl))
-			| TupleAccess(e1, e2)	-> STupleAccess(convertExprToSast e1 env, convertExprToSast e2 env, getType e1 env) (* @TODO Double Check type*)		
-		
+			| Unop(op, expr)		-> SUnop(op, convertExprToSast expr env, JInt(*getType expr env*))
+			| CreateObject(s,el)	-> SCreateObject(s, (List.map (fun e -> convertExprToSast e env) el), JInt (*Object(s)*))
+			| ObjAccess(e1,e2) -> SObjAccess(convertExprToSast e1 env, convertExprToSast e2 env, JInt(*getType e1 env*)) (* @TODO Double check type *)
+			| TupleCreate(dl, el)	-> STupleCreate(dl, (List.map (fun e -> convertExprToSast e env) el), JInt(*Tuple(dl)*))
+			| TupleAccess(e1, e2)	-> STupleAccess(convertExprToSast e1 env, convertExprToSast e2 env, JInt (*getType e1 env*)) (* @TODO Double Check type*)		
 		in
+		let convertVdeclToSast vdecl env = {
+			svscope = vdecl.vscope;
+			svtype = vdecl.vtype;
+			svname = vdecl.vname;
+			svexpr = convertExprToSast vdecl.vexpr env;
+		} in
 		let checkLocalVarDecl dt id e env =
-			if StringMap.mem id env.envLocals || StringMap.mem id env.envClassMap.variableMap
+			"placeholder"
+(*			if StringMap.mem id env.envLocals || StringMap.mem id env.envClassMap.variableMap
 				then raise(Failure("Variable name already used"))
 			else if ((e <> Ast.Noexpr) && ((getType e env) <> dt))
 				then raise(Failure(str_of_expr e ^ " is of type " ^ str_of_type (getType e env) ^ " but expression of type " ^ str_of_type dt ^ " was expected"));
 			env.envLocals <- StringMap.add id dt env.envLocals 
-		in
+*)		in
 		let checkReturn e env =
 			"placeholder"
-		in
+(*			if getType e env <> env.envReturnType
+				then raise(Failure("Return types doesn't match expected return type"))
+*)		in
 		let checkIf e s1 s2 env =
-			"placeholder"
+			"placeholder"			
 		in
 		let checkFor e1 e2 e3 s env = 
 			"placeholder"
@@ -122,9 +96,9 @@ let convertToSast classes =
 		in	
 		let rec convertStmtToSast stmt env = match stmt with
 			  Block(sl)			-> SBlock(List.map (fun s -> convertStmtToSast s env) sl)
-			| Expr(expr)			-> SExpr(convertExprToSast expr env, getType expr env)
-(*			| VarDecl(vdecl)		-> SVarDecl(convertVdeclToSast vdecl env, getType vdecl.vexpr)
-*)			| LocalVarDecl(dt, id, expr)	-> checkLocalVarDecl dt id expr env; SLocalVarDecl(dt, id, convertExprToSast expr env)
+			| Expr(expr)			-> SExpr(convertExprToSast expr env, JInt(*getType expr env*))
+			| VarDecl(vdecl)		-> SVarDecl(convertVdeclToSast vdecl env)
+			| LocalVarDecl(dt, id, expr)	-> (checkLocalVarDecl dt id expr env; SLocalVarDecl(dt, id, convertExprToSast expr env))
 			| Return(expr)  		-> checkReturn expr env; SReturn(convertExprToSast expr env, getType expr env)
 			| If(expr, stmt1, stmt2)	-> checkIf expr stmt1 stmt2 env; SIf(convertExprToSast expr env, convertStmtToSast stmt1 env, convertStmtToSast stmt2 env)
 			| For(expr1, expr2, expr3, stmt)-> checkFor expr1 expr2 expr3 stmt env; SFor(convertExprToSast expr1 env, convertExprToSast expr2 env, convertExprToSast expr3 env, convertStmtToSast stmt env)
@@ -157,6 +131,7 @@ let convertToSast classes =
 			mscope = func_decl.fscope;
 			mname = func_decl.fname;
 			mformalTypes = List.map (fun fl -> fl.fvtype) func_decl.fformals;
+			mReturn = func_decl.freturn;
 		} in signature
 	in
 	let setEnvParams formals env =
@@ -207,6 +182,7 @@ let convertToSast classes =
                 	mscope = constructor.fscope;
                         mname  = constructor.fname;
                         mformalTypes = formalTypes;
+			mReturn = JVoid;
                 }
 
 	in
@@ -236,17 +212,16 @@ let convertToSast classes =
 
 	in
 	(* Sematic checking for class variable *)
-	let checkVdecl vdecl classEnv = 
+	let checkVdecl vdecl env = 
 		let check = 
-			if StringMap.mem vdecl.vname classEnv.classMap.variableMap
+			if StringMap.mem vdecl.vname env.envClassMap.variableMap
 				then raise (Failure("Variable name already used"))
-			else if vdecl.vexpr <> Ast.Noexpr && getType vdecl.vexpr classEnv <> vdecl.vtype
-				then raise (Failure(str_of_expr vdecl.vexpr ^ " is of type " ^ str_of_type (getType vdecl.vexpr classEnv) ^ " but type " ^ str_of_type vdecl.vtype ^ " is expected"))
+			else if vdecl.vexpr <> Ast.Noexpr && getType vdecl.vexpr env <> vdecl.vtype
+				then raise (Failure(str_of_expr vdecl.vexpr ^ " is of type " ^ str_of_type (getType vdecl.vexpr env) ^ " but type " ^ str_of_type vdecl.vtype ^ " is expected"))
 		in check
 	in
 
 	let convertVariableToSast vdecl classEnv =
-		checkVdecl vdecl classEnv;
 		let env = {
                         envClassName = classEnv.className;
                         envClassMaps = classEnv.classMaps;
@@ -254,7 +229,9 @@ let convertToSast classes =
                         envLocals    = StringMap.empty;
                         envParams    = StringMap.empty;
                         envReturnType= JVoid; (*@TODO make sure return is not possible here*)
-                } in 
+                } in
+		let _ = checkVdecl vdecl env
+		in
 		let result = {
                         svscope = vdecl.vscope;
                         svtype  = vdecl.vtype;
