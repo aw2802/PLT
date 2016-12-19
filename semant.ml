@@ -21,6 +21,16 @@ let get_main m = try (List.hd (List.filter isMain (List.fold_left get_methods []
 
 let get_methods_minus_main m = snd (List.partition isMain (List.fold_left get_methods [] m))
 
+let newEnv env = {
+      	envClassName = env.envClassName;
+     	envClassMaps = env.envClassMaps;
+    	envClassMap  = env.envClassMap;
+    	envLocals    = env.envLocals;
+     	envParams    = env.envParams;
+      	envReturnType = env.envReturnType;
+ 	envBuiltinMethods = env.envBuiltinMethods;
+}
+
 let typOFSexpr = function
 		SInt_Lit(i)			-> JInt	
 	| 	SBoolean_Lit(b)			-> JBoolean	
@@ -89,10 +99,10 @@ let convertToSast classes =
 		let checkIf e s1 s2 env =
 			if (getType e env) <> JBoolean
 				then raise(Failure("Expected boolean expression in " ^ (str_of_expr e)))	
-(*@TODO return new env*)
 		in
 		let checkFor e1 e2 e3 s env = 
-			"placeholder"
+			if (getType e2 env) <> JBoolean
+				then raise(Failure("Expected boolean expression in " ^ (str_of_expr e2)))
 		in
 		let checkWhile e s env = 
 			if (getType e env) <> JBoolean
@@ -104,9 +114,9 @@ let convertToSast classes =
 			| VarDecl(vdecl)		-> SVarDecl(convertVdeclToSast vdecl env)
 			| LocalVarDecl(dt, id, expr)	-> (checkLocalVarDecl dt id expr env; SLocalVarDecl(dt, id, convertExprToSast expr env))
 			| Return(expr)  		-> checkReturn expr env; SReturn(convertExprToSast expr env, getType expr env)
-			| If(expr, stmt1, stmt2)	-> checkIf expr stmt1 stmt2 env; SIf(convertExprToSast expr env, convertStmtToSast stmt1 env, convertStmtToSast stmt2 env)
-			| For(expr1, expr2, expr3, stmt)-> checkFor expr1 expr2 expr3 stmt env; SFor(convertExprToSast expr1 env, convertExprToSast expr2 env, convertExprToSast expr3 env, convertStmtToSast stmt env)
-			| While(expr, stmt)		-> checkWhile expr stmt env; SWhile(convertExprToSast expr env, convertStmtToSast stmt env)
+			| If(expr, stmt1, stmt2)	-> checkIf expr stmt1 stmt2 env; SIf(convertExprToSast expr env, convertStmtToSast stmt1 (newEnv env), convertStmtToSast stmt2 (newEnv env))
+			| For(expr1, expr2, expr3, stmt)-> checkFor expr1 expr2 expr3 stmt env; SFor(convertExprToSast expr1 env, convertExprToSast expr2 env, convertExprToSast expr3 env, convertStmtToSast stmt (newEnv env))
+			| While(expr, stmt)		-> checkWhile expr stmt env; SWhile(convertExprToSast expr env, convertStmtToSast stmt (newEnv env))
 	in
 	
 	(* Semantic Checking for class methods *)
