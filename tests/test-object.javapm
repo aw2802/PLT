@@ -1,5 +1,6 @@
 public class Car{
   Car(int x) {
+  	printf(x);
 //	return;
   }
 }
