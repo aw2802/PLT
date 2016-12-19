@@ -129,6 +129,12 @@ let translate sast =
 	in
 	let _ =  List.map define_functions functions in
 
+	let define_constructors c =
+		List.map define_functions c.scbody.sconstructors
+	in
+	let _ = List.map define_constructors classes in
+	
+
 	(*Stmt and expr handling*)
 
 	let rec stmt_gen llbuilder = function 
@@ -477,6 +483,43 @@ let translate sast =
 		()
 	in
 	let _ = print_string ("function gen\n"); List.map build_function functions in
+
+	let build_constructors sclass_decl =
+		let constructors = sclass_decl.scbody.sconstructors in
+		let vname = ssclass_decl.scname in
+
+		(*If a class has multiple constructors it will get overwritten at the moment*)
+		let build_constructor constructor = 
+			Hashtbl.clear local_var_table;
+		
+			let f = find_func_in_module vname in 	
+			let llbuilder = L.builder_at_end context (L.entry_block f) in
+
+			let struct_type = find_llvm_struct_type vname
+			let allocatedMemory = L.build_alloca struct_type vname llbuilder in     
+			let pointer_to_class = L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder
+
+			let init_formals f sfformals =
+				let sfformals = Array.of_list (sfformals) in
+				Array.iteri (
+					fun i a ->
+			        	let formal = sfformals.(i) in
+			        	ignore (stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, SNoexpr)));
+			    ) 
+			    (params f)
+			in
+			print_string ("function gen before init formals\n");
+			let _ = init_formals f sfunc_decl.sfformals in 
+			print_string ("function gen before statement gen\n");
+			let _  = stmt_gen llbuilder (SBlock (sfunc_decl.sfbody)) in 
+			print_string ("function gen after statement gen\n");
+
+			L.build_ret pointer_to_class llbuilder
+		in
+		let _ = List.map build_constructor constructors
+
+	in
+	let _ = List.map build_constructors classes
 
 
 	(*Main method generation*)

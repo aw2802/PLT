@@ -13,7 +13,7 @@ let createClassIndices cdecls=
 
 let isMain f = f.sfname = "main"
 
-let get_methods l classy = List.concat [classy.scbody.sconstructors;(List.concat [classy.scbody.smethods;l])]
+let get_methods l classy = List.concat [classy.scbody.smethods;l]
 
 let get_main m = List.hd (List.filter isMain (List.fold_left get_methods [] m))
 
