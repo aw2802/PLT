@@ -1,6 +1,6 @@
 public class Car{
   Car(int x) {
-  	printf(x);
+  	println(x);
 //	return;
   }
 }
@@ -8,7 +8,7 @@ public class Car{
 public class TestObject{
   public void main(){
    	Car myCar = new Car(5);
-    	print("Created!");
+    	println("Created!");
   }
 }
 
