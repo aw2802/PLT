@@ -503,7 +503,8 @@ let translate sast =
 		let scdecl_llvm_arr = L.build_array_alloca void_ppt (const_int i32_t len) "tmp" llbuilder in
 
 		let handle_scdecl scdecl = 
-			let index = Hashtbl.find Semant.classIndices scdecl.scname in
+			let index = try Hashtbl.find Semant.classIndices scdecl.scname with 
+			| Not_found -> raise (Failure("can't find classname" ^ scdecl.scname)) in
 			let len = List.length scdecl.scbody.smethods in
 			let sfdecl_llvm_arr = L.build_array_alloca void_pt (const_int i32_t len) "tmp" llbuilder in
 
