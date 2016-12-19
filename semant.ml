@@ -97,7 +97,7 @@ let convertToSast classes =
 			| Expr(expr)			-> SExpr(convertExprToSast expr env, getType expr env)
 			| VarDecl(vdecl)		-> SVarDecl(convertVdeclToSast vdecl env)
 			| LocalVarDecl(dt, id, expr)	-> (checkLocalVarDecl dt id expr env; SLocalVarDecl(dt, id, convertExprToSast expr env))
-			| Return(expr)  		-> checkReturn expr env; SReturn(convertExprToSast expr env, getType expr env)
+			| Return(expr)  		-> checkReturn expr env; SReturn(convertExprToSast expr env, (*getType expr env*))
 			| If(expr, stmt1, stmt2)	-> checkIf expr stmt1 stmt2 env; SIf(convertExprToSast expr env, convertStmtToSast stmt1 env, convertStmtToSast stmt2 env)
 			| For(expr1, expr2, expr3, stmt)-> checkFor expr1 expr2 expr3 stmt env; SFor(convertExprToSast expr1 env, convertExprToSast expr2 env, convertExprToSast expr3 env, convertStmtToSast stmt env)
 			| While(expr, stmt)		-> checkWhile expr stmt env; SWhile(convertExprToSast expr env, convertStmtToSast stmt env)
