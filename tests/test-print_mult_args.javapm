@@ -1,0 +1,7 @@
+public class TestPrintMultArgs {
+	public void main() {
+		print("hello ", "world");
+		println();
+		println("hello ", "world");
+	}
+}

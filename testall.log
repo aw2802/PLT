@@ -224,7 +224,7 @@ diff -b test-notEqual.out tests/test-notEqual.out > test-notEqual.diff
 
 ###### Testing test-object
 ./javapm tests/test-object.javapm > test-object.ll
-Fatal error: exception Failure("Function: Car not found in module.")
+Fatal error: exception Failure("hd")
 ###### FAILED
 
 ###### Testing test-or
@@ -237,6 +237,12 @@ diff -b test-or.out tests/test-or.out > test-or.diff
 ./javapm tests/test-printAdd.javapm > test-printAdd.ll
 lli test-printAdd.ll > test-printAdd.out
 diff -b test-printAdd.out tests/test-printAdd.out > test-printAdd.diff
+###### SUCCESS
+
+###### Testing test-print_mult_args
+./javapm tests/test-print_mult_args.javapm > test-print_mult_args.ll
+lli test-print_mult_args.ll > test-print_mult_args.out
+diff -b test-print_mult_args.out tests/test-print_mult_args.out > test-print_mult_args.diff
 ###### SUCCESS
 
 ###### Testing test-subtract
