@@ -1,11 +1,16 @@
 public class TestBool {
 
 	public void main() {
-		if(true and true) {
-			print("true and true");
+		boolean myBool = true;
+		
+
+		if(myBool or true) {
+			println("true and true");
 		}
 		else {
 			print("Nope");
 		}
+		
+		println(myBool);
 	}
 }

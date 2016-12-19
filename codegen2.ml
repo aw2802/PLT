@@ -127,7 +127,7 @@ let translate sast =
 		in 
 		L.define_function fname fty the_module (*The function name should be Class.fname?*)
 	in
-	let _ = List.map define_functions functions in
+	let _ =  List.map define_functions functions in
 
 	(*Stmt and expr handling*)
 
@@ -250,9 +250,13 @@ let translate sast =
 		List.iteri (
 			fun i f ->
 	        let tuple_value = L.build_struct_gep allocatedMemory i "temp" llbuilder in
-	        	ignore(L.build_store (expr_gen llbuilder f) tuple_value llbuilder);
-	    	) 
-	    expr_list; 
+	        	ignore(L.build_store (match f with 			
+	        			| SId(id, d) -> get_value true id llbuilder
+						| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
+						| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
+						| _ -> expr_gen llbuilder f) tuple_value llbuilder);
+	    ) expr_list; 
+	     
 		L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder
 
 	and generate_tuple_access deref e1 e2 llbuilder =
@@ -462,14 +466,17 @@ let translate sast =
 		    ) 
 		    (params f)
 		in
+		print_string ("function gen before init formals\n");
 		let _ = init_formals f sfunc_decl.sfformals in 
-
+		print_string ("function gen before statement gen\n");
 		let _  = stmt_gen llbuilder (SBlock (sfunc_decl.sfbody)) in 
+		print_string ("function gen after statement gen\n");
 		if sfunc_decl.sfreturn = JVoid
 		then ignore (L.build_ret_void llbuilder);
+		print_string ("function gen end\n");
 		()
 	in
-	let _ = List.map build_function functions in
+	let _ = print_string ("function gen\n"); List.map build_function functions in
 
 
 	(*Main method generation*)
@@ -482,7 +489,7 @@ let translate sast =
 
 			L.build_ret (L.const_int i32_t 0) llbuilder
 		in
-		let _ = build_main main in
+		let _ = print_string ("main\n"); build_main main in
 
 	(*Class generation *)
 
@@ -495,11 +502,14 @@ let translate sast =
 		let llbuilder = L.builder_at_end context (entry_block f) in
 
 		let len = List.length sclass_decl in
+		
 		let total_len = ref 0 in
-		let scdecl_llvm_arr = L.build_array_alloca void_ppt (const_int i32_t len) "tmp" llbuilder in
 
+		let scdecl_llvm_arr = L.build_array_alloca void_ppt (const_int i32_t len) "tmp" llbuilder in
+		
 		let handle_scdecl scdecl = 
-			let index = Hashtbl.find Semant.classIndices scdecl.scname in
+			let index = try Hashtbl.find Semant.classIndices scdecl.scname with 
+			| Not_found -> raise (Failure("can't find classname" ^ scdecl.scname)) in
 			let len = List.length scdecl.scbody.smethods in
 			let sfdecl_llvm_arr = L.build_array_alloca void_pt (const_int i32_t len) "tmp" llbuilder in
 
@@ -533,7 +543,7 @@ let translate sast =
 
 			L.build_ret fptr llbuilder 
 	in
-	let _ = build_classes classes in
+	let _ = print_string ("classes\n"); build_classes classes in
 
 	the_module;
 
