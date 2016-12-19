@@ -349,7 +349,7 @@ let translate sast =
 			| "print" -> print_func_gen "" expr_list llbuilder
 			| "println" -> print_func_gen "\n" expr_list llbuilder
 			| _ -> 	let f = find_func_in_module fname in
-					let params = List.map (expr_gen llbuilder) expr_list in
+					let params = List.map (expr_gen llbuilder) expr_list in (*Fix passing variable to function*)
 					L.build_call f (Array.of_list params) (fname^"_result") llbuilder
 
 	and generate_object_create id el llbuilder =
@@ -468,7 +468,7 @@ let translate sast =
 			Array.iteri (
 				fun i a ->
 		        	let formal = sfformals.(i) in
-		        	ignore (stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, SNoexpr)));
+		        	ignore (stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, a)));
 		    ) 
 		    (params f)
 		in
@@ -498,7 +498,7 @@ let translate sast =
 				Array.iteri (
 					fun i a ->
 			        	let formal = sfformals.(i) in
-			        	ignore (stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, SNoexpr)));
+			        	ignore (stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, a)));
 			    ) 
 			    (params f)
 			in
