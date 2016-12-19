@@ -1,3 +1,9 @@
+public class Car{
+  Car(int x) {
+//	return;
+  }
+}
+
 public class TestObject{
   public void main(){
    	Car myCar = new Car(5);
@@ -5,8 +11,3 @@ public class TestObject{
   }
 }
 
-public class Car{
-  Car(int x) {
-//	return;
-  }
-}
