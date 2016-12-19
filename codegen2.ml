@@ -132,7 +132,7 @@ let translate sast =
 	(*Stmt and expr handling*)
 
 	let rec stmt_gen llbuilder = function 
-		  SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
+		  SBlock sl        ->	List.map (stmt_gen llbuilder) sl
  		| SExpr (se, _)    ->   expr_gen llbuilder se
 		| SVarDecl sv           ->  generate_vardecl sv.svscope sv.svtype sv.svname sv.svexpr llbuilder
 		| SLocalVarDecl (dt, vname, vexpr)		-> generate_local_vardecl dt vname vexpr llbuilder
