@@ -468,9 +468,7 @@ let translate sast =
 			Array.iteri (
 				fun i a ->
 		        	let formal = sfformals.(i) in
-		        	let e = "dummy" in
-		        	set_value_name e a;
-		        	ignore (stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, e)));
+		        	ignore (stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, formal)));
 		    ) 
 		    (params f)
 		in
@@ -500,9 +498,7 @@ let translate sast =
 				Array.iteri (
 					fun i a ->
 			        	let formal = sfformals.(i) in
-		        		let e = "dummy" in
-		        		set_value_name e a;
-		        		ignore (stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, e)));
+		        		ignore (stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, formal)));
 			    ) 
 			    (params f)
 			in
