@@ -75,7 +75,7 @@ let translate sast =
 		let _ = L.define_function "lookup" lookup_t the_module in
 		()
 	in
-	let _ = print_string ("util\n"); util_func () in
+	let _ = util_func () in
 	
 	let zero = const_int i32_t 0 in
 
@@ -85,7 +85,7 @@ let translate sast =
 		let struct_typ = L.named_struct_type context c.scname in
 		Hashtbl.add struct_typ_table c.scname struct_typ
 	in
-	let _ = print_string ("add classes to hashmap\n");List.map add_classes_to_hashTable classes in
+	let _ = List.map add_classes_to_hashTable classes in
 
 	let define_classes c = 
 		let struct_t = Hashtbl.find struct_typ_table c.scname in
@@ -102,7 +102,7 @@ let translate sast =
 	    name_list; 
 		L.struct_set_body struct_t type_array true
 	in
-	let _ = print_string ("define_classes\n"); List.map define_classes classes in	
+	let _ = List.map define_classes classes in	
 
 	(*Define Functions*)
 	let define_functions f =
@@ -127,7 +127,7 @@ let translate sast =
 		in 
 		L.define_function fname fty the_module (*The function name should be Class.fname?*)
 	in
-	let _ = print_string ("define funtions\n"); List.map define_functions functions in
+	let _ =  List.map define_functions functions in
 
 	(*Stmt and expr handling*)
 
@@ -468,8 +468,10 @@ let translate sast =
 		in
 		let _ = init_formals f sfunc_decl.sfformals in 
 		let _  = stmt_gen llbuilder (SBlock (sfunc_decl.sfbody)) in 
+		print_string ("function gen after statement gen\n");
 		if sfunc_decl.sfreturn = JVoid
 		then ignore (L.build_ret_void llbuilder);
+		print_string ("function gen end\n");
 		()
 	in
 	let _ = print_string ("function gen\n"); List.map build_function functions in
