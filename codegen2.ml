@@ -498,7 +498,10 @@ let translate sast =
 		let llbuilder = L.builder_at_end context (entry_block f) in
 
 		let len = List.length sclass_decl in
+		
+		print_string (len ^ "\n");
 		let total_len = ref 0 in
+		print_string ("total_len\n"); 
 		let scdecl_llvm_arr = L.build_array_alloca void_ppt (const_int i32_t len) "tmp" llbuilder in
 		print_string ("in here\n"); 
 		let handle_scdecl scdecl = 
