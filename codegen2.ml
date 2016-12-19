@@ -502,9 +502,7 @@ let translate sast =
 			    ) 
 			    (params f)
 			in
-			print_string ("constructor gen before init formals\n");
 			let _ = init_formals f constructor.sfformals in 
-			print_string ("constructor gen before statement gen\n");
 			let _ = stmt_gen llbuilder (SBlock (constructor.sfbody)) in 
 
 			L.build_ret pointer_to_class llbuilder
