@@ -130,7 +130,7 @@ let translate sast =
 	let _ =  List.map define_functions functions in
 
 	let define_constructors c =
-		let _ = List.map define_functions c.scbody.sconstructors
+		List.map define_functions c.scbody.sconstructors
 	in
 	let _ = List.map define_constructors classes in
 
@@ -512,9 +512,8 @@ let translate sast =
 			let _ = init_formals f constructor.sfformals in 
 			print_string ("constructor gen before statement gen\n");
 			let _  = stmt_gen llbuilder (SBlock (constructor.sfbody)) in 
-			print_string ("constructor gen after statement gen\n");
 
-			ignore(L.build_ret pointer_to_class llbuilder);
+			L.build_ret pointer_to_class llbuilder
 		in
 		let _ = List.map build_constructor constructors
 
@@ -524,15 +523,15 @@ let translate sast =
 
 	(*Main method generation*)
 	let build_main main =
-		    let fty = L.function_type i32_t[||] in 
-			let f = L.define_function "main" fty the_module in 	
-			let llbuilder = L.builder_at_end context (L.entry_block f) in
+		let fty = L.function_type i32_t[||] in 
+		let f = L.define_function "main" fty the_module in 	
+		let llbuilder = L.builder_at_end context (L.entry_block f) in
 			
-			let _ = stmt_gen llbuilder (SBlock (main.sfbody)) in  
+		let _ = stmt_gen llbuilder (SBlock (main.sfbody)) in  
 
-			L.build_ret (L.const_int i32_t 0) llbuilder
-		in
-		let _ = print_string ("main\n"); build_main main in
+		L.build_ret (L.const_int i32_t 0) llbuilder
+	in
+	let _ = print_string ("main\n"); build_main main in
 
 	(*Class generation *)
 
