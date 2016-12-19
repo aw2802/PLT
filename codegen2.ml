@@ -472,17 +472,13 @@ let translate sast =
 		    ) 
 		    (params f)
 		in
-		print_string ("function gen before init formals\n");
 		let _ = init_formals f sfunc_decl.sfformals in 
-		print_string ("function gen before statement gen\n");
 		let _ = stmt_gen llbuilder (SBlock (sfunc_decl.sfbody)) in 
-		print_string ("function gen after statement gen\n");
 		if sfunc_decl.sfreturn = JVoid
 		then ignore (L.build_ret_void llbuilder);
-		print_string ("function gen end\n");
 		()
 	in
-	let _ = print_string ("function gen\n"); List.map build_function functions in
+	let _ = List.map build_function functions in
 
 	let build_constructors class_name =
 
@@ -527,7 +523,7 @@ let translate sast =
 
 		L.build_ret (L.const_int i32_t 0) llbuilder
 	in
-	let _ = print_string ("main\n"); build_main main in
+	let _ = build_main main in
 
 	(*Class generation *)
 
@@ -581,7 +577,7 @@ let translate sast =
 
 			L.build_ret fptr llbuilder 
 	in
-	let _ = print_string ("classes\n"); build_classes classes in
+	let _ = build_classes classes in
 
 	the_module;
 
