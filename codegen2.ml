@@ -475,7 +475,7 @@ let translate sast =
 		print_string ("function gen before init formals\n");
 		let _ = init_formals f sfunc_decl.sfformals in 
 		print_string ("function gen before statement gen\n");
-		let _  = stmt_gen llbuilder (SBlock (sfunc_decl.sfbody)) in 
+		let _ = stmt_gen llbuilder (SBlock (sfunc_decl.sfbody)) in 
 		print_string ("function gen after statement gen\n");
 		if sfunc_decl.sfreturn = JVoid
 		then ignore (L.build_ret_void llbuilder);
@@ -484,19 +484,17 @@ let translate sast =
 	in
 	let _ = print_string ("function gen\n"); List.map build_function functions in
 
-	let build_constructors sclass_decl =
-		let constructors = sclass_decl.scbody.sconstructors in
-		let vname = ssclass_decl.scname in
+	let build_constructors class_name =
 
 		(*If a class has multiple constructors it will get overwritten at the moment*)
 		let build_constructor constructor = 
 			Hashtbl.clear local_var_table;
 		
-			let f = find_func_in_module vname in 	
+			let f = find_func_in_module class_name.scname in 	
 			let llbuilder = L.builder_at_end context (L.entry_block f) in
 
-			let struct_type = find_llvm_struct_type vname in
-			let allocatedMemory = L.build_alloca struct_type vname llbuilder in     
+			let struct_type = find_llvm_struct_type class_name.scname in
+			let allocatedMemory = L.build_alloca struct_type "object" llbuilder in     
 			let pointer_to_class = L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder in
 
 			let init_formals f sfformals =
@@ -515,9 +513,7 @@ let translate sast =
 
 			L.build_ret pointer_to_class llbuilder
 		in
-		let _ = List.map build_constructor constructors
-
-	in
+		let _ = List.map build_constructor sclass_decl.scbody.sconstructors in
 	let _ = List.map build_constructors classes in 
 
 
