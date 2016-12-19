@@ -96,7 +96,7 @@ let convertToSast classes =
 		in	
 		let rec convertStmtToSast stmt env = match stmt with
 			  Block(sl)			-> SBlock(List.map (fun s -> convertStmtToSast s env) sl)
-			| Expr(expr)			-> SExpr(convertExprToSast expr env, JInt(*getType expr env*))
+			| Expr(expr)			-> SExpr(convertExprToSast expr env, getType expr env)
 			| VarDecl(vdecl)		-> SVarDecl(convertVdeclToSast vdecl env)
 			| LocalVarDecl(dt, id, expr)	-> (checkLocalVarDecl dt id expr env; SLocalVarDecl(dt, id, convertExprToSast expr env))
 			| Return(expr)  		-> checkReturn expr env; SReturn(convertExprToSast expr env, getType expr env)
