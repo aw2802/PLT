@@ -472,7 +472,7 @@ let translate sast =
 		then ignore (L.build_ret_void llbuilder);
 		()
 	in
-	let _ = print_string ("in here\n"); List.map build_function functions in
+	let _ = List.map build_function functions in
 
 
 	(*Main method generation*)
@@ -500,7 +500,7 @@ let translate sast =
 		let len = List.length sclass_decl in
 		let total_len = ref 0 in
 		let scdecl_llvm_arr = L.build_array_alloca void_ppt (const_int i32_t len) "tmp" llbuilder in
-
+		print_string ("in here\n"); 
 		let handle_scdecl scdecl = 
 			let index = try Hashtbl.find Semant.classIndices scdecl.scname with 
 			| Not_found -> raise (Failure("can't find classname" ^ scdecl.scname)) in
