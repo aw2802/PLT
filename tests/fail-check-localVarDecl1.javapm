@@ -1,0 +1,10 @@
+public class Dummy {
+	public boolean x = true;
+	public int a = 3+4;
+	public void main() {
+		3;
+		int x = 2;
+		float a;
+		boolean a;
+	}
+}

@@ -1,0 +1,12 @@
+public class TwoFunctionsWithParameters {
+	public void main() {
+		println("Hi");
+		int printMe = say5(true);
+		println(printMe);
+	}
+	
+	public int say5(boolean x) {
+		println(x);
+		return 1;
+	}
+}

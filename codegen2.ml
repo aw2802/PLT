@@ -129,6 +129,12 @@ let translate sast =
 	in
 	let _ =  List.map define_functions functions in
 
+	let define_constructors c =
+		List.map define_functions c.scbody.sconstructors
+	in
+	let _ = List.map define_constructors classes in
+
+
 	(*Stmt and expr handling*)
 
 	let rec stmt_gen llbuilder = function 
@@ -343,7 +349,7 @@ let translate sast =
 			| "print" -> print_func_gen "" expr_list llbuilder
 			| "println" -> print_func_gen "\n" expr_list llbuilder
 			| _ -> 	let f = find_func_in_module fname in
-					let params = List.map (expr_gen llbuilder) expr_list in
+					let params = List.map (expr_gen llbuilder) expr_list in (*Fix passing variable to function*)
 					L.build_call f (Array.of_list params) (fname^"_result") llbuilder
 
 	and generate_object_create id el llbuilder =
@@ -462,34 +468,66 @@ let translate sast =
 			Array.iteri (
 				fun i a ->
 		        	let formal = sfformals.(i) in
-		        	ignore (stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, SNoexpr)));
+		        	let allocatedMemory = stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, SNoexpr)) in
+		        	let n = formal.sformal_name in
+		        	set_value_name n a;
+		        	ignore (L.build_store a allocatedMemory llbuilder);
 		    ) 
 		    (params f)
 		in
-		print_string ("function gen before init formals\n");
 		let _ = init_formals f sfunc_decl.sfformals in 
-		print_string ("function gen before statement gen\n");
-		let _  = stmt_gen llbuilder (SBlock (sfunc_decl.sfbody)) in 
-		print_string ("function gen after statement gen\n");
+		let _ = stmt_gen llbuilder (SBlock (sfunc_decl.sfbody)) in 
 		if sfunc_decl.sfreturn = JVoid
 		then ignore (L.build_ret_void llbuilder);
-		print_string ("function gen end\n");
 		()
 	in
-	let _ = print_string ("function gen\n"); List.map build_function functions in
+	let _ = List.map build_function functions in
+
+	let build_constructors class_name =
+
+		(*If a class has multiple constructors it will get overwritten at the moment*)
+		let build_constructor constructor = 
+			Hashtbl.clear local_var_table;
+		
+			let f = find_func_in_module class_name.scname in 	
+			let llbuilder = L.builder_at_end context (L.entry_block f) in
+
+			let struct_type = find_llvm_struct_type class_name.scname in
+			let allocatedMemory = L.build_alloca struct_type "object" llbuilder in     
+			let pointer_to_class = L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder in
+
+			let init_formals f sfformals =
+				let sfformals = Array.of_list (sfformals) in
+				Array.iteri (
+					fun i a ->
+			        	let formal = sfformals.(i) in
+		        		let allocatedMemory = stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, SNoexpr)) in
+		        		let n = formal.sformal_name in
+		        		set_value_name n a;
+		        		ignore (L.build_store a allocatedMemory llbuilder);
+			    ) 
+			    (params f)
+			in
+			let _ = init_formals f constructor.sfformals in 
+			let _ = stmt_gen llbuilder (SBlock (constructor.sfbody)) in 
+
+			L.build_ret pointer_to_class llbuilder
+		in 
+		List.map build_constructor class_name.scbody.sconstructors in
+	let _ =  List.map build_constructors classes in 
 
 
 	(*Main method generation*)
 	let build_main main =
-		    let fty = L.function_type i32_t[||] in 
-			let f = L.define_function "main" fty the_module in 	
-			let llbuilder = L.builder_at_end context (L.entry_block f) in
+		let fty = L.function_type i32_t[||] in 
+		let f = L.define_function "main" fty the_module in 	
+		let llbuilder = L.builder_at_end context (L.entry_block f) in
 			
-			let _ = stmt_gen llbuilder (SBlock (main.sfbody)) in  
+		let _ = stmt_gen llbuilder (SBlock (main.sfbody)) in  
 
-			L.build_ret (L.const_int i32_t 0) llbuilder
-		in
-		let _ = print_string ("main\n"); build_main main in
+		L.build_ret (L.const_int i32_t 0) llbuilder
+	in
+	let _ = build_main main in
 
 	(*Class generation *)
 
@@ -543,7 +581,7 @@ let translate sast =
 
 			L.build_ret fptr llbuilder 
 	in
-	let _ = print_string ("classes\n"); build_classes classes in
+	let _ = build_classes classes in
 
 	the_module;
 
