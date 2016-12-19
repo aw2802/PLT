@@ -130,7 +130,7 @@ let translate sast =
 	let _ =  List.map define_functions functions in
 
 	let define_constructors c =
-		List.map define_functions c.scbody.sconstructors
+		let _ = List.map define_functions c.scbody.sconstructors
 	in
 	let _ = List.map define_constructors classes in
 
