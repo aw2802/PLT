@@ -485,7 +485,7 @@ let translate sast =
 
 			L.build_ret (L.const_int i32_t 0) llbuilder
 		in
-		let _ = build_main main in
+		let _ = print_string ("main\n"); build_main main in
 
 	(*Class generation *)
 
