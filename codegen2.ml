@@ -514,7 +514,7 @@ let translate sast =
 			let _  = stmt_gen llbuilder (SBlock (sfunc_decl.sfbody)) in 
 			print_string ("constructor  gen after statement gen\n");
 
-			ignore(L.build_ret pointer_to_class llbuilder)
+			ignore(L.build_ret pointer_to_class llbuilder);
 		in
 		let _ = List.map build_constructor constructors
 
