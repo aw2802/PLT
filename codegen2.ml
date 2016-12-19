@@ -497,7 +497,7 @@ let translate sast =
 
 			let struct_type = find_llvm_struct_type vname in
 			let allocatedMemory = L.build_alloca struct_type vname llbuilder in     
-			let pointer_to_class = L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder
+			let pointer_to_class = L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder in
 
 			let init_formals f sfformals =
 				let sfformals = Array.of_list (sfformals) in
@@ -508,11 +508,11 @@ let translate sast =
 			    ) 
 			    (params f)
 			in
-			print_string ("function gen before init formals\n");
+			print_string ("constructor gen before init formals\n");
 			let _ = init_formals f sfunc_decl.sfformals in 
-			print_string ("function gen before statement gen\n");
+			print_string ("constructor  gen before statement gen\n");
 			let _  = stmt_gen llbuilder (SBlock (sfunc_decl.sfbody)) in 
-			print_string ("function gen after statement gen\n");
+			print_string ("constructor  gen after statement gen\n");
 
 			L.build_ret pointer_to_class llbuilder
 		in
