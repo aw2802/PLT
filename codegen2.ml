@@ -452,9 +452,10 @@ let translate sast =
 	let build_function sfunc_decl =
 		Hashtbl.clear local_var_table;
 
-		print_string (sfunc_decl.sfname);
+		print_string (sfunc_decl.sfname ^ "\n");
 
 		let f = find_func_in_module sfunc_decl.sfname in 	
+		print_string (sfunc_decl.sfname ^ "\n");
 		let llbuilder = L.builder_at_end context (L.entry_block f) in 
 
 		(*L.position_at_end (L.entry_block f) llbuilder; *)
