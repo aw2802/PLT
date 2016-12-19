@@ -466,15 +466,13 @@ let translate sast =
 		    ) 
 		    (params f)
 		in
-		print_string (sfunc_decl.sfname ^ "\n");
 		let _ = init_formals f sfunc_decl.sfformals in 
-
 		let _  = stmt_gen llbuilder (SBlock (sfunc_decl.sfbody)) in 
 		if sfunc_decl.sfreturn = JVoid
 		then ignore (L.build_ret_void llbuilder);
 		()
 	in
-	let _ = List.map build_function functions in
+	let _ = print_string (sfunc_decl.sfname ^ "\n"); List.map build_function functions in
 
 
 	(*Main method generation*)
