@@ -466,7 +466,9 @@ let translate sast =
 		    ) 
 		    (params f)
 		in
+		print_string ("function gen before init formals\n");
 		let _ = init_formals f sfunc_decl.sfformals in 
+		print_string ("function gen before statement gen\n");
 		let _  = stmt_gen llbuilder (SBlock (sfunc_decl.sfbody)) in 
 		print_string ("function gen after statement gen\n");
 		if sfunc_decl.sfreturn = JVoid
