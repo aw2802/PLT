@@ -9,7 +9,8 @@ let _ =
 	let lexbuf = Lexing.from_channel in_channel in
 
 	let ast  = Parser.program Scanner.token lexbuf in
-	let sast = Semant.check ast in
-	let outprog = ignore(print_string("Semantic check done")); Codegen2.translate sast in
+
+	let sast = print_string("Going into semant");Semant.check ast in
+	let outprog = print_string("Semantic check done"); Codegen2.translate sast in
 	Llvm_analysis.assert_valid_module outprog;
 	print_string (Llvm.string_of_llmodule outprog);;
