@@ -22,6 +22,7 @@ type classEnv = {
  	mutable className: string;
  	mutable classMaps: classMap StringMap.t;
  	mutable classMap: classMap;
+	builtinMethods: string list;
 }
 
 type env = {
@@ -31,19 +32,42 @@ type env = {
         mutable envLocals: data_type StringMap.t;
         mutable envParams: data_type StringMap.t;
         mutable envReturnType: data_type;
+	envBuiltinMethods: string list;
 }
+
+let getListOfFormalTypes c = 
+	List.map (fun f -> f.fvtype) c.fformals
 
 let getIdType s env =
 	let checking =
 	if StringMap.mem s env.envLocals
-		then StringMap.find s env.envLocals
+		then begin
+			try (StringMap.find s env.envLocals)
+			with Not_found -> raise(Failure("unfound local")) 
+		end
 	else if StringMap.mem s env.envClassMap.variableMap
-                then (StringMap.find s env.envClassMap.variableMap).vtype
-	else JInt
+                then begin
+			try (StringMap.find s env.envClassMap.variableMap).vtype
+			with Not_found -> JInt
+		end
+	else raise(Failure("Undeclared identifier " ^ s))
 	in checking
 	
-let getFuncType s env =
-	(StringMap.find s env.envClassMap.methodMap).mReturn
+let getFuncType s fl env =
+	if List.mem s env.envBuiltinMethods
+		then JVoid
+	else begin
+		let updated = ref false
+		and
+		t = ref JVoid
+		in
+		StringMap.iter (fun _ v -> if v.mformalTypes=fl 
+			then (t:=v.mReturn; updated:=true)) 
+			(StringMap.filter (fun k _-> k=s) env.envClassMap.methodMap);
+		if !updated = true 
+			then !t
+		else raise(Failure("Undeclared method " ^ s))
+	end
 
 let rec getType expr env = match expr with
 	  Id(s) 		-> getIdType s env
@@ -63,7 +87,7 @@ let rec getType expr env = match expr with
 	| CreateObject(s, el) 	-> getType (Id(s)) env
 	| ArrayCreate(d, el)	-> Arraytype(d, List.length el)
 	| ArrayAccess(e, el)	-> getType e env  
-	| FuncCall(s, el)	-> getFuncType s env
+	| FuncCall(s, el)	-> getFuncType s (List.map (fun e -> getType e env) el) env
 
 
 let addComma l =
