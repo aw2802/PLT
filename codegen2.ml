@@ -436,7 +436,8 @@ let translate sast =
 		let printf = find_func_in_module "printf" in
 		let map_expr_to_printfexpr expr = match expr with
 			| SId(id, d) -> if d = A.JBoolean then 
-								if get_value true id llbuilder then (expr_gen llbuilder (SString_Lit("true"))) 
+								let value = get_value true id llbuilder in
+								if  value = boolean_True then (expr_gen llbuilder (SString_Lit("true"))) 
 								else (expr_gen llbuilder (SString_Lit("false"))) 
 							else get_value true id llbuilder
 			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
