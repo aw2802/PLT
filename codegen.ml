@@ -86,17 +86,17 @@ let translate sast =
 	let define_vardecl c =
 		List.iteri (
 			fun i v ->
-	        	Hashtbl.add global_var_table v.svname boolean_True; print_string(v.svname);
+	        	Hashtbl.add global_var_table v.svname boolean_True;
 	    	) 
 	    c.scbody.svariables; 
 	in
-	let _ = print_string("in vardecl"); List.map define_vardecl classes in
+	let _ = List.map define_vardecl classes in
 	
 	let add_classes_to_hashTable c =
 		let struct_typ = L.named_struct_type context c.scname in
 		Hashtbl.add struct_typ_table c.scname struct_typ
 	in
-	let _ = print_string("in class"); List.map add_classes_to_hashTable classes in
+	let _ = List.map add_classes_to_hashTable classes in
 
 	let define_classes c = 
 		let struct_t = Hashtbl.find struct_typ_table c.scname in
