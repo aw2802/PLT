@@ -6,7 +6,8 @@ public class String{
 	}
 
 	public String toString(){
-		return new String(string);
+		String c = new String(string);
+		return c;
 	}
 
 	public void printString(){
