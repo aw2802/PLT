@@ -521,14 +521,19 @@ let translate sast =
 			let allocatedMemory = L.build_alloca struct_type "object" llbuilder in    
 			List.iteri (
 			fun i f ->
+			let expr = f.svexpr in
 	        let tuple_value = L.build_struct_gep allocatedMemory i "temp" llbuilder in
-	        	ignore(L.build_store (match f with 			
+	        	ignore(L.build_store (match expr with 			
 	        			| SId(id, d) -> get_value true id llbuilder
 						| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 						| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
 						| _ -> expr_gen llbuilder f) tuple_value llbuilder);
-	    	) class_name.scbody.svariables; 
-
+	        		let scope = f.scope;
+	        		Hashtbl.add 
+						(match scope with
+						| A.Public -> global_var_table 
+						| A.Private -> class_private_vars) vname tuple_value;
+	    		) class_name.scbody.svariables; 
 
 			let pointer_to_class = L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder in
 
