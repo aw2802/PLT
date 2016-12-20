@@ -269,9 +269,9 @@ let convertToSast classes =
 	in
 	let convertCbodyToSast cbody classEnv =
 	{
-		svariables = List.map (fun v -> convertVariableToSast v classEnv) cbody.variables;
-        sconstructors = List.map (fun cst -> convertConstructorToSast cst classEnv) cbody.constructors;
-		smethods = List.map (fun m -> convertMethodToSast m classEnv) cbody.methods;
+		svariables = List.map (fun v -> convertVariableToSast v classEnv) (List.rev cbody.variables);
+        sconstructors = List.map (fun cst -> convertConstructorToSast cst classEnv) (List.rev cbody.constructors);
+		smethods = List.map (fun m -> convertMethodToSast m classEnv) (List.rev cbody.methods);
     }
 
 	in
