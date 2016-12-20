@@ -412,7 +412,7 @@ let translate sast =
 			| And		-> L.build_and
 			| Or 		-> L.build_or 
 			| _ 		-> raise(Failure("Invalid operator for ints"))
-		) value1 value2 "binop" llbuilder
+		) value1 value2 "binop_int" llbuilder
 		in
 
 		let float_binop value1 value2 llbuilder = (match op with
@@ -429,7 +429,7 @@ let translate sast =
 			| And		-> L.build_and
 			| Or 		-> L.build_or 
 			| _ 		-> raise(Failure("Invalid operator for ints"))
-		) value1 value2 "binop" llbuilder
+		) value1 value2 "binop_float" llbuilder
 
 		in
 
@@ -441,7 +441,7 @@ let translate sast =
 			| (JFloat, JFloat) -> float_binop value1 value2 llbuilder
 			| (JInt, _) -> int_binop value1 value2 llbuilder
 			| (_, JInt) -> int_binop value1 value2 llbuilder
-			| _ -> raise(Failure("Invalid datatype for binop"))
+			| (_, _) -> int_binop value1 value2 llbuilder
 
 		in
 
