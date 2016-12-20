@@ -469,7 +469,6 @@ let translate sast =
 				fun i a ->
 		        	let formal = sfformals.(i) in
 		        	let allocatedMemory = stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, SNoexpr)) in
-		        	print_string(formal.sformal_name);
 				let n = formal.sformal_name in
 		        	set_value_name n a;
 		        	ignore (L.build_store a allocatedMemory llbuilder);
@@ -502,7 +501,6 @@ let translate sast =
 				Array.iteri (
 					fun i a ->
 			        	let formal = sfformals.(i) in
-			    		print_string (formal.sformal_name);
 		        		let allocatedMemory = stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, SNoexpr)) in
 		        		let n = formal.sformal_name in
 		        		set_value_name n a;
