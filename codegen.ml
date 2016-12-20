@@ -398,7 +398,7 @@ let translate sast =
 			| _ -> expr_gen llbuilder e2	
 		in
 
-		(match op with
+		let int_binop = (match op with
 			  Add 		-> L.build_add 
 			| Sub 		-> L.build_sub
 			| Mult 		-> L.build_mul 
@@ -413,6 +413,39 @@ let translate sast =
 			| Or 		-> L.build_or 
 			| _ 		-> raise(Failure("Invalid operator for ints"))
 		) value1 value2 "binop" llbuilder
+		in
+
+		let float_binop = (match op with
+			  Add 		-> L.build_fadd 
+			| Sub 		-> L.build_fsub
+			| Mult 		-> L.build_fmul 
+			| Div 		-> L.build_fdiv 
+			| Equal 	-> L.build_fcmp L.Fcmp.Eq 
+			| Neq 		-> L.build_fcmp L.Fcmp.Ne 
+			| Less 		-> L.build_fcmp L.Fcmp.Slt 
+			| Leq 		-> L.build_fcmp L.Fcmp.Sle 
+			| Greater	-> L.build_fcmp L.Fcmp.Sgt 
+			| Geq 		-> L.build_fcmp L.Fcmp.Sge
+			| And		-> L.build_and
+			| Or 		-> L.build_or 
+			| _ 		-> raise(Failure("Invalid operator for ints"))
+		) value1 value2 "binop" llbuilder
+
+		in
+
+		let decide_on_type e1 e2 llbuilder =
+			match ((Semant.typOFSexpr e1), (Semant.typOFSexpr e2)) with
+			| (JInt,JInt) -> float_binop value1 value2 llbuilder
+			| (JInt, JFloat) -> float_binop value1 value2 llbuilder
+			| (JFloat, JInt) -> float_binop value1 value2 llbuilder
+			| (JInt, _) -> int_binop value1 value2 llbuilder
+			| (_, JInt) -> int_binop value1 value2 llbuilder
+			| _ -> raise(Failure("Invalid datatype for binop"))
+
+		in
+
+		decide_on_type e1 e2 llbuilder
+
 
 	and unop_gen op e llbuilder = 
 		let exp_type = Semant.typOFSexpr e in
