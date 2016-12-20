@@ -420,12 +420,12 @@ let translate sast =
 			| Sub 		-> L.build_fsub
 			| Mult 		-> L.build_fmul 
 			| Div 		-> L.build_fdiv 
-			| Equal 	-> L.build_fcmp L.Fcmp.Eq 
-			| Neq 		-> L.build_fcmp L.Fcmp.Ne 
-			| Less 		-> L.build_fcmp L.Fcmp.Slt 
-			| Leq 		-> L.build_fcmp L.Fcmp.Sle 
-			| Greater	-> L.build_fcmp L.Fcmp.Sgt 
-			| Geq 		-> L.build_fcmp L.Fcmp.Sge
+			| Equal 	-> L.build_fcmp L.Fcmp.OEq 
+			| Neq 		-> L.build_fcmp L.Fcmp.ONe 
+			| Less 		-> L.build_fcmp L.Fcmp.Ult 
+			| Leq 		-> L.build_fcmp L.Fcmp.Ole 
+			| Greater	-> L.build_fcmp L.Fcmp.Ogt 
+			| Geq 		-> L.build_fcmp L.Fcmp.Oge
 			| And		-> L.build_and
 			| Or 		-> L.build_or 
 			| _ 		-> raise(Failure("Invalid operator for ints"))
