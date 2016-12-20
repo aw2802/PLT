@@ -132,8 +132,15 @@ let translate sast =
 	in
 	let _ =  List.map define_functions functions in
 
+	let define_vardecl v =
+		Hashtbl.add 
+			(match v.svscope with
+				| A.Public -> global_var_table 
+				| A.Private -> class_private_vars) v.svname v.svname
+
 	let define_constructors c =
 		List.map define_functions c.scbody.sconstructors
+		List.map define_vardecl c.scbody.svariables
 	in
 	let _ = List.map define_constructors classes in
 
