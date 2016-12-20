@@ -435,7 +435,10 @@ let translate sast =
 	and print_func_gen newLine expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
 		let map_expr_to_printfexpr expr = match expr with
-			| SId(id, d) -> let getBool = if d = A.JBoolean then if get_value true id llbuilder then (expr_gen llbuilder (SString_Lit("true"))) else (expr_gen llbuilder (SString_Lit("false"))) 
+			| SId(id, d) -> if d = A.JBoolean then 
+								if get_value true id llbuilder then (expr_gen llbuilder (SString_Lit("true"))) 
+								else (expr_gen llbuilder (SString_Lit("false"))) 
+							else get_value true id llbuilder
 			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
 			| SBoolean_Lit (b) ->	if b then (expr_gen llbuilder (SString_Lit("true"))) else (expr_gen llbuilder (SString_Lit("false")))
 			| _ -> expr_gen llbuilder expr
