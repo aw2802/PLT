@@ -54,7 +54,7 @@ and find_llvm_tuple_type dt_list =
 
 and find_llvm_struct_type name = 
 	try Hashtbl.find struct_typ_table name
-	with | Not_found -> raise(Failure ("undeclared struct"^ name))
+	with | Not_found -> raise(Failure ("undeclared struct "^ name))
 
 let find_func_in_module fname = 
 	match (L.lookup_function fname the_module) with
@@ -83,6 +83,13 @@ let translate sast =
 	let zero = const_int i32_t 0 in
 
 	(*Define Classes*)
+	
+	let add_classes_to_hashTable c =
+		let struct_typ = L.named_struct_type context c.scname in
+		Hashtbl.add struct_typ_table c.scname struct_typ
+	in
+	let _ = List.map add_classes_to_hashTable classes in
+
 	let define_vardecl c =
 		List.iteri (
 			fun i v ->
@@ -91,12 +98,6 @@ let translate sast =
 	    c.scbody.svariables; 
 	in
 	let _ = List.map define_vardecl classes in
-	
-	let add_classes_to_hashTable c =
-		let struct_typ = L.named_struct_type context c.scname in
-		Hashtbl.add struct_typ_table c.scname struct_typ
-	in
-	let _ = List.map add_classes_to_hashTable classes in
 
 	let define_classes c = 
 		let struct_t = Hashtbl.find struct_typ_table c.scname in
@@ -368,7 +369,11 @@ let translate sast =
 			| "print" -> print_func_gen "" expr_list llbuilder
 			| "println" -> print_func_gen "\n" expr_list llbuilder
 			| _ -> 	let f = find_func_in_module fname in
-					let params = List.map (expr_gen llbuilder) expr_list in (*Fix passing variable to function*)
+					let map_param_to_llvalue llbuilder e = match e with
+						| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
+						| _ -> expr_gen llbuilder e
+					in
+					let params = List.map (map_param_to_llvalue llbuilder) expr_list in (*Fix passing variable to function*)
 					L.build_call f (Array.of_list params) (fname^"_result") llbuilder
 
 	and generate_object_create id el llbuilder =
