@@ -140,7 +140,7 @@ let translate sast =
 	in
 
 	let define_constructors c =
-		List.map define_functions c.scbody.sconstructors;
+		ignore(List.map define_functions c.scbody.sconstructors);
 		List.map define_vardecl c.scbody.svariables
 	in
 	let _ = List.map define_constructors classes in
