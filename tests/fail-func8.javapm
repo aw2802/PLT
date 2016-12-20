@@ -1,0 +1,15 @@
+public class FailFunc8{
+	public void foo(int a, boolean b)
+	{
+	}
+
+	public void bar()
+	{
+	}
+
+	public int main()
+	{
+	  foo(42, true);
+	  foo(42, bar()); /* int and void, not int and bool */
+	}
+}
