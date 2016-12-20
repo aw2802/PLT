@@ -15,19 +15,21 @@ public class TestBool {
 
 		if(falseBool) {
 		
+			println("False not processed correctly.");
+		}
+		else {
+		
 			println("Inside falsebool");
 			println(falseBool);
 		}
-		else {
-			println("False not processed correctly.");
-		}
 
 		if(true) {
-			println("Literal true works.");
+			println(true);
 		} 
 		else {
 			println("Should never go here.");
 		}
-		
+
+		println(false);		
 	}
 }
