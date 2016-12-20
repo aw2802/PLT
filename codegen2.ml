@@ -90,7 +90,7 @@ let translate sast =
 	    	) 
 	    c.scbody.svariables; 
 	in
-	let _ = List.map define_vardecl classes in
+	let _ = print_string("in vardecl"); List.map define_vardecl classes in
 	
 	let add_classes_to_hashTable c =
 		let struct_typ = L.named_struct_type context c.scname in
