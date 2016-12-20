@@ -141,6 +141,8 @@ let convertToSast classes =
 		in List.iter (fun e -> result := !result || e) (List.map (fun n -> List.length (List.filter (fun s -> s = n) names) > 1) names);!result
 	in
 	let checkMethod func_decl classEnv =
+		"placeholder"
+		(*
 		let formalTypes = getListOfFormalTypes func_decl
 		in
 		let checkSignature _ v =
@@ -159,7 +161,7 @@ let convertToSast classes =
 			mname = func_decl.fname;
 			mformalTypes = List.map (fun fl -> fl.fvtype) func_decl.fformals;
 			mReturn = func_decl.freturn;
-		} in signature
+		} in signature *)
 	in
 	let setEnvParams formals env =
 			List.map (fun f -> env.envParams <- StringMap.add f.fvname f.fvtype env.envParams) formals
