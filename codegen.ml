@@ -490,7 +490,7 @@ let translate sast =
 		let tmp_count = ref 0 in
 		let incr_tmp = fun x -> incr tmp_count in
 		let map_expr_to_printfexpr expr = match expr with
-			| SId(id, d) -> (match d with
+			| SId(id, d) -> get_value true id llbuilder (*(match d with
 							| A.JBoolean -> incr_tmp ();
 											let tmp_var = "print_bool" in
 											let trueStr = SString_Lit("true") in
@@ -504,7 +504,7 @@ let translate sast =
 							| A.Arraytype(JChar, _) -> let llvalue = get_value true id llbuilder in
 													L.build_load llvalue "string" llbuilder
 
-							| _ -> get_value true id llbuilder)
+							| _ -> get_value true id llbuilder)*)
 			| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
 			| SBoolean_Lit (b) ->	if b then (expr_gen llbuilder (SString_Lit("true"))) else (expr_gen llbuilder (SString_Lit("false")))
