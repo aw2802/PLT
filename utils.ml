@@ -43,13 +43,15 @@ let getIdType s env =
 	if StringMap.mem s env.envLocals
 		then begin
 			try (StringMap.find s env.envLocals)
-			with Not_found -> raise(Failure("unfound local")) 
+			with Not_found -> raise(Failure("Unfound local")) 
 		end
 	else if StringMap.mem s env.envClassMap.variableMap
                 then begin
 			try (StringMap.find s env.envClassMap.variableMap).vtype
 			with Not_found -> JInt
 		end
+	else if StringMap.mem s env.envClassMaps
+		then Object(s)
 	else raise(Failure("Undeclared identifier " ^ s))
 	in checking
 	

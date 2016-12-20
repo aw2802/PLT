@@ -59,6 +59,19 @@ let convertToSast classes =
 		let checkBinop e1 op e2 =
 			"placeholder"
 		in
+		let checkUnop op e env =
+			"placeholder"
+		in
+		let checkFuncCall s el env = 
+			"placeholder"
+		in
+		let checkAssign e1 e2 env =
+			let typ1  = (getType e1 env)
+			and typ2  = (getType e2 env)
+			in
+			if typ1 <> typ2
+				then raise(Failure("Expected " ^ (str_of_type typ1) ^ " expression in " ^ (str_of_expr e1)))
+		in
 		let rec convertExprToSast expr env = match expr with
 			  Int_Lit(i)	-> SInt_Lit(i)
 			| Bool_Lit(b)	-> SBoolean_Lit(b)
@@ -71,9 +84,9 @@ let convertToSast classes =
 			| Binop(expr1, op, expr2)	-> (checkBinop expr1 op expr2;SBinop(convertExprToSast expr1 env, op, convertExprToSast expr2 env, getType expr1 env))
 			| ArrayCreate(d, el)  -> SArrayCreate(d, (List.map (fun e -> convertExprToSast e env) el), Arraytype(d, List.length el))
 			| ArrayAccess(e, el)  -> SArrayAccess(convertExprToSast e env, (List.map (fun e -> convertExprToSast e env) el), JInt) (* @TODO *)
-			| Assign(e1, e2)		-> SAssign(convertExprToSast e1 env, convertExprToSast e2 env, getType e1 env)
-			| FuncCall(s, el)		-> SFuncCall(s, (List.map (fun e -> convertExprToSast e env) el), getType (FuncCall(s, el)) env, 0)
-			| Unop(op, expr)		-> SUnop(op, convertExprToSast expr env, getType expr env)
+			| Assign(e1, e2)		-> (checkAssign e1 e2 env; SAssign(convertExprToSast e1 env, convertExprToSast e2 env, getType e1 env))
+			| FuncCall(s, el)		-> (checkFuncCall s el env; SFuncCall(s, (List.map (fun e -> convertExprToSast e env) el), getType (FuncCall(s, el)) env, 0))
+			| Unop(op, expr)		-> (checkUnop op expr env; SUnop(op, convertExprToSast expr env, getType expr env))
 			| CreateObject(s,el)	-> SCreateObject(s, (List.map (fun e -> convertExprToSast e env) el), Object(s))
 			| ObjAccess(e1,e2) -> SObjAccess(convertExprToSast e1 env, convertExprToSast e2 env, JInt (*getType e1 env*)) (* @TODO Double check type *)
 			| TupleCreate(dl, el)	-> STupleCreate(dl, (List.map (fun e -> convertExprToSast e env) el), Tuple(dl))
