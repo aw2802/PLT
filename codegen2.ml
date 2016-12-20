@@ -444,7 +444,7 @@ let translate sast =
 											let trueStr = SString_Lit("true") in
 											let falseStr = SString_Lit("false") in
 											let id = SId(tmp_var, JString) in 
-											ignore(stmt_gen llbuilder (SLocalVarDecl(str_type, tmp_var, SNoexpr)));
+											ignore(stmt_gen llbuilder (SLocalVarDecl(JString, tmp_var, SNoexpr)));
 											ignore(stmt_gen llbuilder (SIf(expr, 
 											SExpr(SAssign(id, trueStr, JString), JString), 
 											SExpr(SAssign(id, falseStr, JString), JString))));
