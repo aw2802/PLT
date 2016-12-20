@@ -529,7 +529,7 @@ let translate sast =
 					| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
 					| _ -> expr_gen llbuilder expr) tuple_value llbuilder);
 	        	
-	        	let scope = f.scope in
+	        	let scope = f.svscope in
 	        	Hashtbl.add (match scope with
 						| A.Public -> global_var_table 
 						| A.Private -> class_private_vars) vname tuple_value;
