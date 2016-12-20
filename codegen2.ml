@@ -83,7 +83,15 @@ let translate sast =
 	let zero = const_int i32_t 0 in
 
 	(*Define Classes*)
-
+	let define_vardecl c =
+		List.iteri (
+			fun i v ->
+	        	Hashtbl.add global_var_table v.svname boolean_True;
+	    	) 
+	    c.scbody.svariables; 
+	in
+	let _ = List.map define_vardecl classes in
+	
 	let add_classes_to_hashTable c =
 		let struct_typ = L.named_struct_type context c.scname in
 		Hashtbl.add struct_typ_table c.scname struct_typ
@@ -132,13 +140,8 @@ let translate sast =
 	in
 	let _ =  List.map define_functions functions in
 
-	let define_vardecl v =
-		Hashtbl.add global_var_table v.svname boolean_True
-	in
-
 	let define_constructors c =
-		ignore(List.map define_functions c.scbody.sconstructors);
-		List.map define_vardecl c.scbody.svariables
+		List.map define_functions c.scbody.sconstructors
 	in
 	let _ = List.map define_constructors classes in
 
