@@ -1,0 +1,22 @@
+public class Demo {
+	public main void(){
+
+		PrintMe p = new PrintMe(5);
+		Tuple<char[], int> returnedTuple = testTuple(3);
+		println(returnedTuple<<0>>);
+		println(returnedTuple<<1>>);
+
+	}
+
+	public Tuple<char[], int> testTuple(int t){
+		Tuple<char[], int> myTuple = new Tuple<char[a], int>("Zeynep", t);
+		return myTuple;
+	}
+
+}
+
+public class PrintMe {
+	PrintMe(int x){
+		println(x);
+	}	
+}
