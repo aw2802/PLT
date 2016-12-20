@@ -32,9 +32,8 @@ diff -b test-arithmetic.out tests/test-arithmetic.out > test-arithmetic.diff
 
 ###### Testing test-array
 ./javapm tests/test-array.javapm > test-array.ll
-lli test-array.ll > test-array.out
-diff -b test-array.out tests/test-array.out > test-array.diff
-###### SUCCESS
+Fatal error: exception Match_failure("utils.ml", 138, 27)
+###### FAILED
 
 ###### Testing test-array_create
 ./javapm tests/test-array_create.javapm > test-array_create.ll
@@ -56,17 +55,17 @@ diff -b test-assign.out tests/test-assign.out > test-assign.diff
 ###### Testing test-bool
 ./javapm tests/test-bool.javapm > test-bool.ll
 lli test-bool.ll > test-bool.out
-0  libLLVM-3.8.so.1 0x00007f5c3a4b9d38 llvm::sys::PrintStackTrace(llvm::raw_ostream&) + 56
-1  libLLVM-3.8.so.1 0x00007f5c3a4b7fc6 llvm::sys::RunSignalHandlers() + 54
-2  libLLVM-3.8.so.1 0x00007f5c3a4b8129
-3  libc.so.6        0x00007f5c3980b4b0
-4  libc.so.6        0x00007f5c39824cc0 _IO_vfprintf + 6992
-5  libc.so.6        0x00007f5c3982b899 _IO_printf + 153
-6  libc.so.6        0x00007f5c3cb16093 _IO_printf + 53389459
-7  libLLVM-3.8.so.1 0x00007f5c3b0bd391 llvm::MCJIT::runFunction(llvm::Function*, llvm::ArrayRef<llvm::GenericValue>) + 465
-8  libLLVM-3.8.so.1 0x00007f5c3b09840c llvm::ExecutionEngine::runFunctionAsMain(llvm::Function*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, char const* const*) + 556
+0  libLLVM-3.8.so.1 0x00007f2a9582ed38 llvm::sys::PrintStackTrace(llvm::raw_ostream&) + 56
+1  libLLVM-3.8.so.1 0x00007f2a9582cfc6 llvm::sys::RunSignalHandlers() + 54
+2  libLLVM-3.8.so.1 0x00007f2a9582d129
+3  libc.so.6        0x00007f2a94b804b0
+4  libc.so.6        0x00007f2a94b99cc0 _IO_vfprintf + 6992
+5  libc.so.6        0x00007f2a94ba0899 _IO_printf + 153
+6  libc.so.6        0x00007f2a97e8b093 _IO_printf + 53389459
+7  libLLVM-3.8.so.1 0x00007f2a96432391 llvm::MCJIT::runFunction(llvm::Function*, llvm::ArrayRef<llvm::GenericValue>) + 465
+8  libLLVM-3.8.so.1 0x00007f2a9640d40c llvm::ExecutionEngine::runFunctionAsMain(llvm::Function*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, char const* const*) + 556
 9  lli              0x0000000000418382 main + 6290
-10 libc.so.6        0x00007f5c397f6830 __libc_start_main + 240
+10 libc.so.6        0x00007f2a94b6b830 __libc_start_main + 240
 11 lli              0x00000000004191f9 _start + 41
 Stack dump:
 0.	Program arguments: lli test-bool.ll 
@@ -93,7 +92,7 @@ diff -b test-comments.out tests/test-comments.out > test-comments.diff
 
 ###### Testing test-constructors
 ./javapm tests/test-constructors.javapm > test-constructors.ll
-Fatal error: exception Parsing.Parse_error
+Fatal error: exception Failure("Undeclared identifier x")
 ###### FAILED
 
 ###### Testing test-div
@@ -109,7 +108,7 @@ Fatal error: exception Failure("Expected boolean expression in i == 2")
 
 ###### Testing test-fibonacci
 ./javapm tests/test-fibonacci.javapm > test-fibonacci.ll
-Fatal error: exception Parsing.Parse_error
+Fatal error: exception Failure("Undeclared method fib")
 ###### FAILED
 
 ###### Testing test-float
@@ -122,19 +121,17 @@ lli: test-float.ll:27:16: error: constexpr requires integer operands
 
 ###### Testing test-for
 ./javapm tests/test-for.javapm > test-for.ll
-lli test-for.ll > test-for.out
-diff -b test-for.out tests/test-for.out > test-for.diff
-###### SUCCESS
+Fatal error: exception Failure("Expected boolean expression in i < 5")
+###### FAILED
 
 ###### Testing test-for_nest
 ./javapm tests/test-for_nest.javapm > test-for_nest.ll
-lli test-for_nest.ll > test-for_nest.out
-diff -b test-for_nest.out tests/test-for_nest.out > test-for_nest.diff
-###### SUCCESS
+Fatal error: exception Failure("Expected boolean expression in i < 3")
+###### FAILED
 
 ###### Testing test-func_in_object
 ./javapm tests/test-func_in_object.javapm > test-func_in_object.ll
-Fatal error: exception Parsing.Parse_error
+Fatal error: exception Failure("Undeclared identifier x")
 ###### FAILED
 
 ###### Testing test-gcd
@@ -232,7 +229,7 @@ Fatal error: exception Failure("Expected boolean expression in i != 1")
 
 ###### Testing test-object
 ./javapm tests/test-object.javapm > test-object.ll
-Fatal error: exception Failure("Undeclared identifier x")
+Fatal error: exception Failure("hd")
 ###### FAILED
 
 ###### Testing test-or
@@ -260,9 +257,8 @@ diff -b test-subtract.out tests/test-subtract.out > test-subtract.diff
 
 ###### Testing test-tuple_access
 ./javapm tests/test-tuple_access.javapm > test-tuple_access.ll
-lli test-tuple_access.ll > test-tuple_access.out
-diff -b test-tuple_access.out tests/test-tuple_access.out > test-tuple_access.diff
-###### SUCCESS
+Fatal error: exception Match_failure("utils.ml", 138, 27)
+###### FAILED
 
 ###### Testing test-tuple_creation
 ./javapm tests/test-tuple_creation.javapm > test-tuple_creation.ll

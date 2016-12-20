@@ -138,7 +138,7 @@ let translate sast =
 	(*Stmt and expr handling*)
 
 	let rec stmt_gen llbuilder = function 
-		  SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
+		  SBlock sl        ->	generate_block sl llbuilder
  		| SExpr (se, _)    ->   expr_gen llbuilder se
 		| SVarDecl sv           ->  generate_vardecl sv.svscope sv.svtype sv.svname sv.svexpr llbuilder
 		| SLocalVarDecl (dt, vname, vexpr)		-> generate_local_vardecl dt vname vexpr llbuilder
@@ -146,6 +146,11 @@ let translate sast =
 		| SWhile(e, s) -> generate_while e s llbuilder
 		| SFor(e1, e2, e3, s) -> generate_for e1 e2 e3 s llbuilder
 		| SReturn(e, d)		-> generate_return e d llbuilder
+
+	
+	and generate_block sl llbuilder = 
+		try List.hd (List.map (stmt_gen llbuilder) sl) with 
+		| Failure("hd") -> raise(Failure("No body"));
 
 	and generate_return e d llbuilder =
 		match e with
@@ -433,6 +438,12 @@ let translate sast =
 			| _ -> expr_gen llbuilder expr
 		in
 		let params = List.map map_expr_to_printfexpr expr_list in
+		let map_bool_to_string llvalue = match llvalue with
+			| 1 -> expr_gen llbuilder SString_Lit("true")
+			| 0 -> expr_gen llbuilder SString_Lit("false")
+			| _ -> llvalue
+		in
+		let params = map_bool_to_string params in
 		let expr_types = List.map (Semant.typOFSexpr) expr_list in
 
 		let map_expr_to_type e = match e with
@@ -469,8 +480,7 @@ let translate sast =
 				fun i a ->
 		        	let formal = sfformals.(i) in
 		        	let allocatedMemory = stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, SNoexpr)) in
-		        	print_string(formal.sformal_name);
-				let n = formal.sformal_name in
+					let n = formal.sformal_name in
 		        	set_value_name n a;
 		        	ignore (L.build_store a allocatedMemory llbuilder);
 		    ) 
@@ -502,11 +512,10 @@ let translate sast =
 				Array.iteri (
 					fun i a ->
 			        	let formal = sfformals.(i) in
-			    		print_string (formal.sformal_name);
-		        		let allocatedMemory = stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, SNoexpr)) in
+		        		let varMem = stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, SNoexpr)) in
 		        		let n = formal.sformal_name in
 		        		set_value_name n a;
-		        		ignore (L.build_store a allocatedMemory llbuilder);
+		        		ignore (L.build_store a varMem llbuilder);
 			    ) 
 			    (params f)
 			in
