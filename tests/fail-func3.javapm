@@ -1,0 +1,10 @@
+public class FailFunc3{
+	public int foo(int a, boolean b, int c) { }
+
+	public void bar(int a, void b, int c) {} /* Error: illegal void formal b */
+
+	public int main()
+	{
+	  return 0;
+	}
+}
