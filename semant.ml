@@ -99,7 +99,7 @@ let convertToSast classes =
 			svexpr = convertExprToSast vdecl.vexpr env;
 		} in
 		let checkLocalVarDecl dt id e env =
-			if StringMap.mem id env.envLocals || StringMap.mem id env.envClassMap.variableMap
+			if StringMap.mem id env.envParams || StringMap.mem id env.envLocals || StringMap.mem id env.envClassMap.variableMap
 				then raise(Failure("Variable name already used"))
 			else if ((e <> Ast.Noexpr) && ((getType e env) <> dt))
 				then raise(Failure(str_of_expr e ^ " is of type " ^ str_of_type (getType e env) ^ " but expression of type " ^ str_of_type dt ^ " was expected"));
@@ -124,8 +124,8 @@ let convertToSast classes =
 		let rec convertStmtToSast stmt env = match stmt with
 			  Block(sl)			-> SBlock(List.map (fun s -> convertStmtToSast s env) sl)
 			| Expr(expr)			-> SExpr(convertExprToSast expr env, getType expr env)
-			| VarDecl(vdecl)		-> SVarDecl(convertVdeclToSast vdecl env)
-			| LocalVarDecl(dt, id, expr)	-> (checkLocalVarDecl dt id expr env; SLocalVarDecl(dt, id, convertExprToSast expr env))
+(*			| VarDecl(vdecl)		-> SVarDecl(convertVdeclToSast vdecl env)
+*)			| LocalVarDecl(dt, id, expr)	-> (checkLocalVarDecl dt id expr env; SLocalVarDecl(dt, id, convertExprToSast expr env))
 			| Return(expr)  		-> checkReturn expr env; SReturn(convertExprToSast expr env, getType expr env)
 			| If(expr, stmt1, stmt2)	-> checkIf expr stmt1 stmt2 env; SIf(convertExprToSast expr env, convertStmtToSast stmt1 (newEnv env), convertStmtToSast stmt2 (newEnv env))
 			| For(expr1, expr2, expr3, stmt)-> checkFor expr1 expr2 expr3 stmt env; SFor(convertExprToSast expr1 env, convertExprToSast expr2 env, convertExprToSast expr3 env, convertStmtToSast stmt (newEnv env))
@@ -248,8 +248,6 @@ let convertToSast classes =
 	in
 
 	let convertVariableToSast vdecl classEnv =
-		let _ =  classEnv.classMap.variableMap <- StringMap.add vdecl.vname vdecl classEnv.classMap.variableMap
-		in
 		let env = {
                         envClassName = classEnv.className;
                         envClassMaps = classEnv.classMaps;
@@ -260,7 +258,9 @@ let convertToSast classes =
 			envBuiltinMethods = classEnv.builtinMethods;
                 } in
 		let _ = checkVdecl vdecl env
-		in {
+		in
+		let _ =  classEnv.classMap.variableMap <- StringMap.add vdecl.vname vdecl classEnv.classMap.variableMap
+	in {
                         svscope = vdecl.vscope;
                         svtype  = vdecl.vtype;
                         svname  = vdecl.vname;
