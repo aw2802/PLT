@@ -18,8 +18,8 @@ let i1_t = L.i1_type context;; (* boolean *)
 let i64_t = L.i64_type context ;; (* idk *)
 let f_t = L.double_type context;; (* float *)
 
-let boolean_True =  L.const_int i1_t 0;;
-let boolean_False = L.const_int i1_t 1;;
+let boolean_True =  L.const_int i1_t 1;;
+let boolean_False = L.const_int i1_t 0;;
 
 let str_t = L.pointer_type i8_t;; 
 let void_t = L.void_type context;; (* void *)
@@ -436,9 +436,11 @@ let translate sast =
 		let printf = find_func_in_module "printf" in
 		let map_expr_to_printfexpr expr = match expr with
 			| SId(id, d) -> if d = A.JBoolean then 
-								let value = get_value true id llbuilder in
-								if  value = boolean_True then (expr_gen llbuilder (SString_Lit("true"))) 
-								else (expr_gen llbuilder (SString_Lit("false"))) 
+								let value = (get_value true id llbuilder) in
+								match value with 
+								  | boolean_True -> (expr_gen llbuilder (SString_Lit("true")))
+								  | boolean_False -> (expr_gen llbuilder (SString_Lit("false"))) 
+								  | _ -> raise (Failure("cannot match boolean"))
 							else get_value true id llbuilder
 			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
 			| SBoolean_Lit (b) ->	if b then (expr_gen llbuilder (SString_Lit("true"))) else (expr_gen llbuilder (SString_Lit("false")))
@@ -453,7 +455,7 @@ let translate sast =
 		| JFloat	 ->	"%f"
 		| JChar		 ->	"%c"
 		| JString	 -> "%s"
-		| _ 			-> raise (Failure("Print invalid type"))
+		| _ 		-> raise (Failure("Print invalid type"))
 
 		in
 		let print_types = List.fold_left (fun s t -> s ^ map_expr_to_type t) "" expr_types in
