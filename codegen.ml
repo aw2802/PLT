@@ -502,6 +502,7 @@ let translate sast =
 											SExpr(SAssign(id, falseStr, Arraytype(JChar, 1)), Arraytype(JChar, 1)))));
 											expr_gen llbuilder id
 							| _ -> get_value true id llbuilder)
+			| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
 			| SBoolean_Lit (b) ->	if b then (expr_gen llbuilder (SString_Lit("true"))) else (expr_gen llbuilder (SString_Lit("false")))
 			| _ -> expr_gen llbuilder expr
