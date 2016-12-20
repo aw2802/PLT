@@ -18,6 +18,9 @@ let i1_t = L.i1_type context;; (* boolean *)
 let i64_t = L.i64_type context ;; (* idk *)
 let f_t = L.double_type context;; (* float *)
 
+let Boolean_True =  L.const_int i1_t 1;;
+let Boolean_False = L.const_int i1_t 0;;
+
 let str_t = L.pointer_type i8_t;; 
 let void_t = L.void_type context;; (* void *)
 
@@ -439,8 +442,8 @@ let translate sast =
 		in
 		let params = List.map map_expr_to_printfexpr expr_list in
 		let map_bool_to_string llvalue = match llvalue with
-			| 1 -> expr_gen llbuilder (SString_Lit("true"))
-			| 0 -> expr_gen llbuilder (SString_Lit("false"))
+			| Boolean_True -> expr_gen llbuilder (SString_Lit("true"))
+			| Boolean_False -> expr_gen llbuilder (SString_Lit("false"))
 			| _ -> llvalue
 		in
 		let params = map_bool_to_string params in
