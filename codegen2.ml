@@ -442,8 +442,8 @@ let translate sast =
 			| SId(id, d) -> (match d with
 							| A.JBoolean -> let value = (get_value true id llbuilder) in
 											(match value with 
+											| boolean_False -> (expr_gen llbuilder (SString_Lit("false"))) 
 								  			| boolean_True -> (expr_gen llbuilder (SString_Lit("true")))
-								  			| boolean_False -> (expr_gen llbuilder (SString_Lit("false"))) 
 								  			| _ -> raise (Failure("cannot match boolean")))
 							| _ -> get_value true id llbuilder)
 			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
