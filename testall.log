@@ -43,10 +43,7 @@ diff -b test-array_create.out tests/test-array_create.out > test-array_create.di
 
 ###### Testing test-array_func_param
 ./javapm tests/test-array_func_param.javapm > test-array_func_param.ll
-Call parameter type does not match function signature!
-  %myArr = alloca i32*
- i32*  %printArr_result = call i32 @printArr(i32** %myArr)
-LLVM ERROR: Broken module found, compilation aborted!
+Fatal error: exception Failure("(a)[ is of type int[] but expression of type int was expected")
 ###### FAILED
 
 ###### Testing test-array_object
@@ -413,72 +410,6 @@ FAILED fail-for4.err differs from tests/fail-for4.err
 ./javapm tests/fail-for5.javapm 2> fail-for5.err >> testall.log
 diff -b fail-for5.err tests/fail-for5.err > fail-for5.diff
 FAILED fail-for5.err differs from tests/fail-for5.err
-###### FAILED
-
-###### Testing fail-func1
-./javapm tests/fail-func1.javapm 2> fail-func1.err >> testall.log
-diff -b fail-func1.err tests/fail-func1.err > fail-func1.diff
-FAILED fail-func1.err differs from tests/fail-func1.err
-###### FAILED
-
-###### Testing fail-func2
-./javapm tests/fail-func2.javapm 2> fail-func2.err >> testall.log
-diff -b fail-func2.err tests/fail-func2.err > fail-func2.diff
-FAILED fail-func2.err differs from tests/fail-func2.err
-###### FAILED
-
-###### Testing fail-func3
-./javapm tests/fail-func3.javapm 2> fail-func3.err >> testall.log
-diff -b fail-func3.err tests/fail-func3.err > fail-func3.diff
-FAILED fail-func3.err differs from tests/fail-func3.err
-###### FAILED
-
-###### Testing fail-func4
-./javapm tests/fail-func4.javapm 2> fail-func4.err >> testall.log
-diff -b fail-func4.err tests/fail-func4.err > fail-func4.diff
-FAILED fail-func4.err differs from tests/fail-func4.err
-###### FAILED
-
-###### Testing fail-func5
-./javapm tests/fail-func5.javapm 2> fail-func5.err >> testall.log
-diff -b fail-func5.err tests/fail-func5.err > fail-func5.diff
-FAILED fail-func5.err differs from tests/fail-func5.err
-###### FAILED
-
-###### Testing fail-func6
-./javapm tests/fail-func6.javapm 2> fail-func6.err >> testall.log
-diff -b fail-func6.err tests/fail-func6.err > fail-func6.diff
-FAILED fail-func6.err differs from tests/fail-func6.err
-###### FAILED
-
-###### Testing fail-func7
-./javapm tests/fail-func7.javapm 2> fail-func7.err >> testall.log
-diff -b fail-func7.err tests/fail-func7.err > fail-func7.diff
-FAILED fail-func7.err differs from tests/fail-func7.err
-###### FAILED
-
-###### Testing fail-func8
-./javapm tests/fail-func8.javapm 2> fail-func8.err >> testall.log
-diff -b fail-func8.err tests/fail-func8.err > fail-func8.diff
-FAILED fail-func8.err differs from tests/fail-func8.err
-###### FAILED
-
-###### Testing fail-func9
-./javapm tests/fail-func9.javapm 2> fail-func9.err >> testall.log
-diff -b fail-func9.err tests/fail-func9.err > fail-func9.diff
-FAILED fail-func9.err differs from tests/fail-func9.err
-###### FAILED
-
-###### Testing fail-global1
-./javapm tests/fail-global1.javapm 2> fail-global1.err >> testall.log
-diff -b fail-global1.err tests/fail-global1.err > fail-global1.diff
-FAILED fail-global1.err differs from tests/fail-global1.err
-###### FAILED
-
-###### Testing fail-global2
-./javapm tests/fail-global2.javapm 2> fail-global2.err >> testall.log
-diff -b fail-global2.err tests/fail-global2.err > fail-global2.diff
-FAILED fail-global2.err differs from tests/fail-global2.err
 ###### FAILED
 
 ###### Testing fail-if1
