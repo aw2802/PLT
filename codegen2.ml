@@ -149,7 +149,6 @@ let translate sast =
 		| SWhile(e, s) -> generate_while e s llbuilder
 		| SFor(e1, e2, e3, s) -> generate_for e1 e2 e3 s llbuilder
 		| SReturn(e, d)		-> generate_return e d llbuilder
-
 	
 	and generate_block sl llbuilder = 
 		try List.hd (List.map (stmt_gen llbuilder) sl) with 
@@ -210,7 +209,11 @@ let translate sast =
 		generate_while e2 whileBody llbuilder
 
 	and generate_if e s1 s2 llbuilder =
-		let boolean_condition = expr_gen llbuilder e in
+		let boolean_condition = 
+		match e with
+			| SId (n, dt)	-> get_value true n llbuilder 
+			| _ -> expr_gen llbuilder e 
+		in
 
 		let start_block = L.insertion_block llbuilder in
 		let parent_function = L.block_parent start_block in
@@ -436,17 +439,22 @@ let translate sast =
 	and print_func_gen newLine expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
 		let map_expr_to_printfexpr expr = match expr with
-			| SId(id, d) -> get_value true id llbuilder
+			| SId(id, d) -> (match d with
+							| A.JBoolean -> let tmp_var = "print_bool" in
+											let trueStr = SString_Lit("truee") in
+											let falseStr = SString_Lit("false") in
+											let id = SId(tmp_var, Arraytype(JChar, 5)) in 
+											ignore(stmt_gen llbuilder (SLocalVarDecl(Arraytype(JChar, 5), tmp_var, SNoexpr)));
+											ignore(stmt_gen llbuilder (SIf(expr, 
+											SExpr(SAssign(id, trueStr, Arraytype(JChar, 5)), Arraytype(JChar, 5)), 
+											SExpr(SAssign(id, falseStr, Arraytype(JChar, 5)), Arraytype(JChar, 5)))));
+											expr_gen llbuilder id
+							| _ -> get_value true id llbuilder)
 			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
+			| SBoolean_Lit (b) ->	if b then (expr_gen llbuilder (SString_Lit("true"))) else (expr_gen llbuilder (SString_Lit("false")))
 			| _ -> expr_gen llbuilder expr
 		in
 		let params = List.map map_expr_to_printfexpr expr_list in
-		let map_bool_to_string llvalue = match llvalue with
-			| boolean_True -> expr_gen llbuilder (SString_Lit("true"))
-			| boolean_False -> expr_gen llbuilder (SString_Lit("false"))
-			| _ -> llvalue
-		in
-		let params = List.map map_bool_to_string params in
 		let expr_types = List.map (Semant.typOFSexpr) expr_list in
 
 		let map_expr_to_type e = match e with
@@ -454,8 +462,8 @@ let translate sast =
 		| JBoolean	 ->	"%s" (*needs to be implemented*)
 		| JFloat	 ->	"%f"
 		| JChar		 ->	"%c"
-		| JString	 -> "%s"
-		| _ 			-> raise (Failure("Print invalid type"))
+		| Arraytype(JChar, 1) 	-> "%s"
+		| _ 		-> raise (Failure("Print invalid type"))
 
 		in
 		let print_types = List.fold_left (fun s t -> s ^ map_expr_to_type t) "" expr_types in
