@@ -6,7 +6,6 @@ type data_type =
   | JBoolean
   | JFloat
   | JInt
-  | JString
   | Object of string
   | Arraytype of data_type * int 
   | Tuple of data_type list

@@ -35,7 +35,7 @@ let typOFSexpr = function
 		SInt_Lit(i)			-> JInt	
 	| 	SBoolean_Lit(b)			-> JBoolean	
 	| 	SFloat_Lit(f)			-> JFloat
-	| 	SString_Lit(s) 			-> JString
+	| 	SString_Lit(s) 			-> Object("String")
 	| 	SChar_Lit(c) 			-> JChar
 	| 	SId(_, d) 			-> d
 	| 	SBinop(_, _, _, d) 		-> d
