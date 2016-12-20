@@ -166,6 +166,11 @@ let convertToSast classes =
 		
 	in
 	let convertMethodToSast func_decl classEnv =
+	
+		let methodSignature = checkMethod func_decl classEnv
+		in
+		let _ = classEnv.classMap.methodMap <- StringMap.add func_decl.fname methodSignature classEnv.classMap.methodMap
+		in
 		let env = {
 			envClassName = classEnv.className;
 			envClassMaps = classEnv.classMaps;
@@ -176,19 +181,13 @@ let convertToSast classes =
 			envBuiltinMethods = classEnv.builtinMethods;
 		} in 
 		let _ = setEnvParams func_decl.fformals env
-		in
-		let methodSignature = checkMethod func_decl classEnv
-		in
-		let result =
-		{
+		in {
 			sfscope = func_decl.fscope;
 			sfname = func_decl.fname;
 			sfformals = List.map (fun f -> convertFormalToSast f env) func_decl.fformals; 
 			sfreturn = func_decl.freturn;
 			sfbody = List.map (fun s -> convertStmtToSast s env) func_decl.fbody;
-		} in
-		classEnv.classMap.methodMap <- StringMap.add func_decl.fname methodSignature classEnv.classMap.methodMap;
-		result
+		}
 
 	in
 	(* Semantic checking for class constructor *)
@@ -215,6 +214,10 @@ let convertToSast classes =
 
 	in
 	let convertConstructorToSast constructor classEnv =
+		let constructorSignature = checkConstructor constructor classEnv
+		in
+		let _ = classEnv.classMap.constructorMap <- StringMap.add (strOfFormals constructorSignature.mformalTypes) constructorSignature classEnv.classMap.constructorMap
+		in
 		let env = {
 			envClassName = classEnv.className;
 			envClassMaps = classEnv.classMaps;
@@ -225,20 +228,14 @@ let convertToSast classes =
 			envBuiltinMethods = classEnv.builtinMethods;
 		} in
 		let _ = setEnvParams constructor.fformals env
-		in 
-		let constructorSignature = checkConstructor constructor classEnv
-		in
-		let result =
-		{
+		in {
 			sfscope = constructor.fscope;
 			sfname = constructor.fname;
 			sfformals = List.map (fun f -> convertFormalToSast f env) constructor.fformals; 
 			sfreturn = constructor.freturn;
 			sfbody = List.map (fun s -> convertStmtToSast s env) constructor.fbody;
-		} in
-		classEnv.classMap.constructorMap <- StringMap.add (strOfFormals constructorSignature.mformalTypes) constructorSignature classEnv.classMap.constructorMap;
-		result
-
+		}
+	
 	in
 	(* Sematic checking for class variable *)
 	let checkVdecl vdecl env = 
@@ -251,6 +248,8 @@ let convertToSast classes =
 	in
 
 	let convertVariableToSast vdecl classEnv =
+		let _ =  classEnv.classMap.variableMap <- StringMap.add vdecl.vname vdecl classEnv.classMap.variableMap
+		in
 		let env = {
                         envClassName = classEnv.className;
                         envClassMaps = classEnv.classMaps;
@@ -261,10 +260,7 @@ let convertToSast classes =
 			envBuiltinMethods = classEnv.builtinMethods;
                 } in
 		let _ = checkVdecl vdecl env
-		in
-		let _ =  classEnv.classMap.variableMap <- StringMap.add vdecl.vname vdecl classEnv.classMap.variableMap
-		in
-		{
+		in {
                         svscope = vdecl.vscope;
                         svtype  = vdecl.vtype;
                         svname  = vdecl.vname;
