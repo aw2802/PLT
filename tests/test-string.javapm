@@ -1,0 +1,25 @@
+public class String{
+	private char[] string;
+
+	puclic String(char[] s){
+		string = s;
+	}
+
+	public String toString(){
+		return new String(string);
+	}
+
+	public void printString(){
+		
+		println(string);
+		
+	}
+}
+
+public class Tester{
+	
+	public void main(){
+		String s = new String("hello");
+		s.printString();
+	}
+}

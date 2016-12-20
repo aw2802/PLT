@@ -438,16 +438,19 @@ let translate sast =
 
 	and print_func_gen newLine expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
+		let tmp_count = ref 0 in
+		let incr_tmp = fun x -> incr tmp_count in
 		let map_expr_to_printfexpr expr = match expr with
 			| SId(id, d) -> (match d with
-							| A.JBoolean -> let tmp_var = "print_bool" in
-											let trueStr = SString_Lit("truee") in
+							| A.JBoolean -> incr_tmp ();
+											let tmp_var = "print_bool" in
+											let trueStr = SString_Lit("true") in
 											let falseStr = SString_Lit("false") in
-											let id = SId(tmp_var, Arraytype(JChar, 5)) in 
-											ignore(stmt_gen llbuilder (SLocalVarDecl(Arraytype(JChar, 5), tmp_var, SNoexpr)));
+											let id = SId(tmp_var, Arraytype(JChar, 1)) in 
+											ignore(stmt_gen llbuilder (SLocalVarDecl(Arraytype(JChar, 1), tmp_var, SNoexpr)));
 											ignore(stmt_gen llbuilder (SIf(expr, 
-											SExpr(SAssign(id, trueStr, Arraytype(JChar, 5)), Arraytype(JChar, 5)), 
-											SExpr(SAssign(id, falseStr, Arraytype(JChar, 5)), Arraytype(JChar, 5)))));
+											SExpr(SAssign(id, trueStr, Arraytype(JChar, 1)), Arraytype(JChar, 1)), 
+											SExpr(SAssign(id, falseStr, Arraytype(JChar, 1)), Arraytype(JChar, 1)))));
 											expr_gen llbuilder id
 							| _ -> get_value true id llbuilder)
 			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
