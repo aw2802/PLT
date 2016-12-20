@@ -501,6 +501,9 @@ let translate sast =
 											SExpr(SAssign(id, trueStr, Arraytype(JChar, 1)), Arraytype(JChar, 1)), 
 											SExpr(SAssign(id, falseStr, Arraytype(JChar, 1)), Arraytype(JChar, 1)))));
 											expr_gen llbuilder id
+							| A.Arraytype(JChar, _) -> let llvalue = get_value true id llbuilder in
+													L.build_load llvalue "string" llbuilder
+
 							| _ -> get_value true id llbuilder)
 			| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
@@ -515,7 +518,7 @@ let translate sast =
 		| JBoolean	 ->	"%s" (*needs to be implemented*)
 		| JFloat	 ->	"%f"
 		| JChar		 ->	"%c"
-		| Arraytype(JChar, 1) 	-> "%s"
+		| Arraytype(JChar, _) 	-> "%s"
 		| _ 		-> raise (Failure("Print invalid type"))
 
 		in
