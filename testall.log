@@ -59,10 +59,22 @@ diff -b test-assign.out tests/test-assign.out > test-assign.diff
 
 ###### Testing test-bool
 ./javapm tests/test-bool.javapm > test-bool.ll
-lli test-bool.ll > test-bool.out
-diff -b test-bool.out tests/test-bool.out > test-bool.diff
-FAILED test-bool.out differs from tests/test-bool.out
+Stored value type does not match pointer operand type!
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @tmp.2, i32 0, i32 0), i8******* %print_bool
+ i8******Stored value type does not match pointer operand type!
+  store i8* getelementptr inbounds ([6 x i8], [6 x i8]* @tmp.3, i32 0, i32 0), i8******* %print_bool
+ i8******Stored value type does not match pointer operand type!
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @tmp.11, i32 0, i32 0), i8******* %print_bool14
+ i8******Stored value type does not match pointer operand type!
+  store i8* getelementptr inbounds ([6 x i8], [6 x i8]* @tmp.12, i32 0, i32 0), i8******* %print_bool14
+ i8******LLVM ERROR: Broken module found, compilation aborted!
 ###### FAILED
+
+###### Testing test-char_array
+./javapm tests/test-char_array.javapm > test-char_array.ll
+lli test-char_array.ll > test-char_array.out
+diff -b test-char_array.out tests/test-char_array.out > test-char_array.diff
+###### SUCCESS
 
 ###### Testing test-char_decl
 ./javapm tests/test-char_decl.javapm > test-char_decl.ll
@@ -410,6 +422,56 @@ FAILED fail-for4.err differs from tests/fail-for4.err
 ./javapm tests/fail-for5.javapm 2> fail-for5.err >> testall.log
 diff -b fail-for5.err tests/fail-for5.err > fail-for5.diff
 FAILED fail-for5.err differs from tests/fail-for5.err
+###### FAILED
+
+###### Testing fail-func1
+./javapm tests/fail-func1.javapm 2> fail-func1.err >> testall.log
+diff -b fail-func1.err tests/fail-func1.err > fail-func1.diff
+###### SUCCESS
+
+###### Testing fail-func2
+./javapm tests/fail-func2.javapm 2> fail-func2.err >> testall.log
+diff -b fail-func2.err tests/fail-func2.err > fail-func2.diff
+###### SUCCESS
+
+###### Testing fail-func3
+./javapm tests/fail-func3.javapm 2> fail-func3.err >> testall.log
+diff -b fail-func3.err tests/fail-func3.err > fail-func3.diff
+###### SUCCESS
+
+###### Testing fail-func4
+./javapm tests/fail-func4.javapm 2> fail-func4.err >> testall.log
+diff -b fail-func4.err tests/fail-func4.err > fail-func4.diff
+###### SUCCESS
+
+###### Testing fail-func5
+./javapm tests/fail-func5.javapm 2> fail-func5.err >> testall.log
+diff -b fail-func5.err tests/fail-func5.err > fail-func5.diff
+FAILED fail-func5.err differs from tests/fail-func5.err
+###### FAILED
+
+###### Testing fail-func6
+./javapm tests/fail-func6.javapm 2> fail-func6.err >> testall.log
+diff -b fail-func6.err tests/fail-func6.err > fail-func6.diff
+FAILED fail-func6.err differs from tests/fail-func6.err
+###### FAILED
+
+###### Testing fail-func7
+./javapm tests/fail-func7.javapm 2> fail-func7.err >> testall.log
+diff -b fail-func7.err tests/fail-func7.err > fail-func7.diff
+FAILED fail-func7.err differs from tests/fail-func7.err
+###### FAILED
+
+###### Testing fail-func8
+./javapm tests/fail-func8.javapm 2> fail-func8.err >> testall.log
+diff -b fail-func8.err tests/fail-func8.err > fail-func8.diff
+FAILED fail-func8.err differs from tests/fail-func8.err
+###### FAILED
+
+###### Testing fail-func9
+./javapm tests/fail-func9.javapm 2> fail-func9.err >> testall.log
+diff -b fail-func9.err tests/fail-func9.err > fail-func9.diff
+FAILED fail-func9.err differs from tests/fail-func9.err
 ###### FAILED
 
 ###### Testing fail-if1
