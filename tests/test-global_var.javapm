@@ -3,14 +3,13 @@ public class TestGlobalVar {
 		OtherClass x = new OtherClass();
 		
 	}
-
-
 }
 
 public class OtherClass {
 	public int y;
 	OtherClass() {
 		y = 5;
+		println(y);
 	}
 
 }
