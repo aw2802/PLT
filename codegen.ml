@@ -435,7 +435,7 @@ let translate sast =
 
 		let decide_on_type e1 e2 llbuilder =
 			match ((Semant.typOFSexpr e1), (Semant.typOFSexpr e2)) with
-			| (JInt,JInt) -> float_binop value1 value2 llbuilder
+			| (JInt,JInt) -> int_binop value1 value2 llbuilder
 			| (JInt, JFloat) -> float_binop value1 value2 llbuilder
 			| (JFloat, JInt) -> float_binop value1 value2 llbuilder
 			| (JInt, _) -> int_binop value1 value2 llbuilder
