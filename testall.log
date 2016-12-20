@@ -14,9 +14,8 @@ diff -b test-addAssign.out tests/test-addAssign.out > test-addAssign.diff
 
 ###### Testing test-and
 ./javapm tests/test-and.javapm > test-and.ll
-lli test-and.ll > test-and.out
-diff -b test-and.out tests/test-and.out > test-and.diff
-###### SUCCESS
+Fatal error: exception Failure("Invalid datatype for binop")
+###### FAILED
 
 ###### Testing test-andOp
 ./javapm tests/test-andOp.javapm > test-andOp.ll
@@ -44,8 +43,9 @@ diff -b test-array_create.out tests/test-array_create.out > test-array_create.di
 
 ###### Testing test-array_func_param
 ./javapm tests/test-array_func_param.javapm > test-array_func_param.ll
-Fatal error: exception Failure("Undeclared method printArr")
-###### FAILED
+lli test-array_func_param.ll > test-array_func_param.out
+diff -b test-array_func_param.out tests/test-array_func_param.out > test-array_func_param.diff
+###### SUCCESS
 
 ###### Testing test-array_object
 ./javapm tests/test-array_object.javapm > test-array_object.ll
@@ -69,13 +69,15 @@ FAILED test-bool.out differs from tests/test-bool.out
 ./javapm tests/test-char_array.javapm > test-char_array.ll
 lli test-char_array.ll > test-char_array.out
 diff -b test-char_array.out tests/test-char_array.out > test-char_array.diff
-###### SUCCESS
+FAILED test-char_array.out differs from tests/test-char_array.out
+###### FAILED
 
 ###### Testing test-char_decl
 ./javapm tests/test-char_decl.javapm > test-char_decl.ll
 lli test-char_decl.ll > test-char_decl.out
 diff -b test-char_decl.out tests/test-char_decl.out > test-char_decl.diff
-###### SUCCESS
+FAILED test-char_decl.out differs from tests/test-char_decl.out
+###### FAILED
 
 ###### Testing test-comments
 ./javapm tests/test-comments.javapm > test-comments.ll
@@ -85,12 +87,18 @@ diff -b test-comments.out tests/test-comments.out > test-comments.diff
 
 ###### Testing test-constructors
 ./javapm tests/test-constructors.javapm > test-constructors.ll
-Fatal error: exception Failure("Undeclared identifier name")
+Fatal error: exception Failure("undeclared struct String")
 ###### FAILED
 
 ###### Testing test-demo
 ./javapm tests/test-demo.javapm > test-demo.ll
-Fatal error: exception Parsing.Parse_error
+Stored value type does not match pointer operand type!
+  store i8* getelementptr inbounds ([7 x i8], [7 x i8]* @tmp, i32 0, i32 0), i32* %temp
+ i32Stored value type does not match pointer operand type!
+  store i32 %t3, i8** %temp2
+ i8*Function return type does not match operand type of return inst!
+  ret <{ i32, i8* }>** %myTuple
+ <{ i32, i8* }>*LLVM ERROR: Broken module found, compilation aborted!
 ###### FAILED
 
 ###### Testing test-demo1
@@ -116,18 +124,14 @@ diff -b test-equal.out tests/test-equal.out > test-equal.diff
 ./javapm tests/test-fibonacci.javapm > test-fibonacci.ll
 Function return type does not match operand type of return inst!
   ret i32* %z
- i32Call parameter type does not match function signature!
-  %x = alloca i32
- i32  %fib_result = call i32 @fib(i32* %x)
-LLVM ERROR: Broken module found, compilation aborted!
+ i32LLVM ERROR: Broken module found, compilation aborted!
 ###### FAILED
 
 ###### Testing test-float
 ./javapm tests/test-float.javapm > test-float.ll
 lli test-float.ll > test-float.out
-lli: test-float.ll:27:16: error: constexpr requires integer operands
-  store double sub (double 2.250000e+00, double 2.500000e-01), double* %i
-               ^
+diff -b test-float.out tests/test-float.out > test-float.diff
+FAILED test-float.out differs from tests/test-float.out
 ###### FAILED
 
 ###### Testing test-for
@@ -144,7 +148,7 @@ diff -b test-for_nest.out tests/test-for_nest.out > test-for_nest.diff
 
 ###### Testing test-func_in_object
 ./javapm tests/test-func_in_object.javapm > test-func_in_object.ll
-Fatal error: exception Failure("Undeclared method add")
+Fatal error: exception Failure("Function: Calculator not found in module.")
 ###### FAILED
 
 ###### Testing test-gcd
@@ -161,8 +165,9 @@ diff -b test-geq.out tests/test-geq.out > test-geq.diff
 
 ###### Testing test-global_var
 ./javapm tests/test-global_var.javapm > test-global_var.ll
-Fatal error: exception Failure("Undeclared identifier y")
-###### FAILED
+lli test-global_var.ll > test-global_var.out
+diff -b test-global_var.out tests/test-global_var.out > test-global_var.diff
+###### SUCCESS
 
 ###### Testing test-gt
 ./javapm tests/test-gt.javapm > test-gt.ll
@@ -226,13 +231,15 @@ diff -b test-mult_classes.out tests/test-mult_classes.out > test-mult_classes.di
 
 ###### Testing test-mult_func_param
 ./javapm tests/test-mult_func_param.javapm > test-mult_func_param.ll
-Fatal error: exception Failure("Undeclared method say5")
-###### FAILED
+lli test-mult_func_param.ll > test-mult_func_param.out
+diff -b test-mult_func_param.out tests/test-mult_func_param.out > test-mult_func_param.diff
+###### SUCCESS
 
 ###### Testing test-mult_functions
 ./javapm tests/test-mult_functions.javapm > test-mult_functions.ll
-Fatal error: exception Failure("Undeclared method sayBye")
-###### FAILED
+lli test-mult_functions.ll > test-mult_functions.out
+diff -b test-mult_functions.out tests/test-mult_functions.out > test-mult_functions.diff
+###### SUCCESS
 
 ###### Testing test-negate
 ./javapm tests/test-negate.javapm > test-negate.ll
@@ -285,7 +292,7 @@ FAILED test-string.out differs from tests/test-string.out
 
 ###### Testing test-string2
 ./javapm tests/test-string2.javapm > test-string2.ll
-Fatal error: exception Parsing.Parse_error
+Segmentation fault (core dumped)
 ###### FAILED
 
 ###### Testing test-subtract
@@ -355,42 +362,77 @@ diff -b fail-check-class2.err tests/fail-check-class2.err > fail-check-class2.di
 ###### Testing fail-check-constructor1
 ./javapm tests/fail-check-constructor1.javapm 2> fail-check-constructor1.err >> testall.log
 diff -b fail-check-constructor1.err tests/fail-check-constructor1.err > fail-check-constructor1.diff
-###### SUCCESS
+FAILED fail-check-constructor1.err differs from tests/fail-check-constructor1.err
+###### FAILED
 
 ###### Testing fail-check-constructor2
 ./javapm tests/fail-check-constructor2.javapm 2> fail-check-constructor2.err >> testall.log
 diff -b fail-check-constructor2.err tests/fail-check-constructor2.err > fail-check-constructor2.diff
-###### SUCCESS
+FAILED fail-check-constructor2.err differs from tests/fail-check-constructor2.err
+###### FAILED
 
 ###### Testing fail-check-localVarDecl1
 ./javapm tests/fail-check-localVarDecl1.javapm 2> fail-check-localVarDecl1.err >> testall.log
-diff -b fail-check-localVarDecl1.err tests/fail-check-localVarDecl1.err > fail-check-localVarDecl1.diff
-###### SUCCESS
+; ModuleID = 'javapm'
+
+declare i32 @printf(i8*, ...)
+
+declare i8* @malloc(i32)
+
+define i64* @lookup(i32 %c_index, i32 %f_index) {
+entry:
+  %tmp = alloca i64**
+  %tmp1 = alloca i64*
+  %tmp2 = getelementptr i64*, i64** %tmp1, i32 0
+  store i64* bitcast (i32 ()* @main to i64*), i64** %tmp2
+  %tmp3 = getelementptr i64**, i64*** %tmp, i32 0
+  store i64** %tmp1, i64*** %tmp3
+  %tmp4 = getelementptr i64**, i64*** %tmp, i32 %c_index
+  %tmp5 = load i64**, i64*** %tmp4
+  %tmp6 = getelementptr i64*, i64** %tmp5, i32 %f_index
+  %tmp7 = load i64*, i64** %tmp6
+  ret i64* %tmp7
+}
+
+define i32 @main() {
+entry:
+  %x = alloca i32
+  store i32 2, i32* %x
+  %a = alloca double
+  %a1 = alloca i1
+  ret i32 0
+}
+###### FAILED
 
 ###### Testing fail-check-localVarDecl2
 ./javapm tests/fail-check-localVarDecl2.javapm 2> fail-check-localVarDecl2.err >> testall.log
 diff -b fail-check-localVarDecl2.err tests/fail-check-localVarDecl2.err > fail-check-localVarDecl2.diff
-###### SUCCESS
+FAILED fail-check-localVarDecl2.err differs from tests/fail-check-localVarDecl2.err
+###### FAILED
 
 ###### Testing fail-check-method1
 ./javapm tests/fail-check-method1.javapm 2> fail-check-method1.err >> testall.log
 diff -b fail-check-method1.err tests/fail-check-method1.err > fail-check-method1.diff
-###### SUCCESS
+FAILED fail-check-method1.err differs from tests/fail-check-method1.err
+###### FAILED
 
 ###### Testing fail-check-method2
 ./javapm tests/fail-check-method2.javapm 2> fail-check-method2.err >> testall.log
 diff -b fail-check-method2.err tests/fail-check-method2.err > fail-check-method2.diff
-###### SUCCESS
+FAILED fail-check-method2.err differs from tests/fail-check-method2.err
+###### FAILED
 
 ###### Testing fail-check-variable1
 ./javapm tests/fail-check-variable1.javapm 2> fail-check-variable1.err >> testall.log
 diff -b fail-check-variable1.err tests/fail-check-variable1.err > fail-check-variable1.diff
-###### SUCCESS
+FAILED fail-check-variable1.err differs from tests/fail-check-variable1.err
+###### FAILED
 
 ###### Testing fail-check-variable2
 ./javapm tests/fail-check-variable2.javapm 2> fail-check-variable2.err >> testall.log
 diff -b fail-check-variable2.err tests/fail-check-variable2.err > fail-check-variable2.diff
-###### SUCCESS
+FAILED fail-check-variable2.err differs from tests/fail-check-variable2.err
+###### FAILED
 
 ###### Testing fail-dead1
 ./javapm tests/fail-dead1.javapm 2> fail-dead1.err >> testall.log
@@ -425,32 +467,38 @@ FAILED fail-for1.err differs from tests/fail-for1.err
 ###### Testing fail-for2
 ./javapm tests/fail-for2.javapm 2> fail-for2.err >> testall.log
 diff -b fail-for2.err tests/fail-for2.err > fail-for2.diff
-###### SUCCESS
+FAILED fail-for2.err differs from tests/fail-for2.err
+###### FAILED
 
 ###### Testing fail-for3
 ./javapm tests/fail-for3.javapm 2> fail-for3.err >> testall.log
 diff -b fail-for3.err tests/fail-for3.err > fail-for3.diff
-###### SUCCESS
+FAILED fail-for3.err differs from tests/fail-for3.err
+###### FAILED
 
 ###### Testing fail-for4
 ./javapm tests/fail-for4.javapm 2> fail-for4.err >> testall.log
 diff -b fail-for4.err tests/fail-for4.err > fail-for4.diff
-###### SUCCESS
+FAILED fail-for4.err differs from tests/fail-for4.err
+###### FAILED
 
 ###### Testing fail-for5
 ./javapm tests/fail-for5.javapm 2> fail-for5.err >> testall.log
 diff -b fail-for5.err tests/fail-for5.err > fail-for5.diff
-###### SUCCESS
+FAILED fail-for5.err differs from tests/fail-for5.err
+###### FAILED
 
 ###### Testing fail-func1
 ./javapm tests/fail-func1.javapm 2> fail-func1.err >> testall.log
 diff -b fail-func1.err tests/fail-func1.err > fail-func1.diff
-###### SUCCESS
+FAILED fail-func1.err differs from tests/fail-func1.err
+###### FAILED
 
 ###### Testing fail-func2
 ./javapm tests/fail-func2.javapm 2> fail-func2.err >> testall.log
 diff -b fail-func2.err tests/fail-func2.err > fail-func2.diff
-###### SUCCESS
+FAILED fail-func2.err differs from tests/fail-func2.err
+###### FAILED
 
 ###### Testing fail-func3
 ./javapm tests/fail-func3.javapm 2> fail-func3.err >> testall.log
@@ -490,17 +538,20 @@ FAILED fail-func9.err differs from tests/fail-func9.err
 ###### Testing fail-if1
 ./javapm tests/fail-if1.javapm 2> fail-if1.err >> testall.log
 diff -b fail-if1.err tests/fail-if1.err > fail-if1.diff
-###### SUCCESS
+FAILED fail-if1.err differs from tests/fail-if1.err
+###### FAILED
 
 ###### Testing fail-if2
 ./javapm tests/fail-if2.javapm 2> fail-if2.err >> testall.log
 diff -b fail-if2.err tests/fail-if2.err > fail-if2.diff
-###### SUCCESS
+FAILED fail-if2.err differs from tests/fail-if2.err
+###### FAILED
 
 ###### Testing fail-if3
 ./javapm tests/fail-if3.javapm 2> fail-if3.err >> testall.log
 diff -b fail-if3.err tests/fail-if3.err > fail-if3.diff
-###### SUCCESS
+FAILED fail-if3.err differs from tests/fail-if3.err
+###### FAILED
 
 ###### Testing fail-nomain
 ./javapm tests/fail-nomain.javapm 2> fail-nomain.err >> testall.log
@@ -510,19 +561,23 @@ diff -b fail-nomain.err tests/fail-nomain.err > fail-nomain.diff
 ###### Testing fail-return1
 ./javapm tests/fail-return1.javapm 2> fail-return1.err >> testall.log
 diff -b fail-return1.err tests/fail-return1.err > fail-return1.diff
-###### SUCCESS
+FAILED fail-return1.err differs from tests/fail-return1.err
+###### FAILED
 
 ###### Testing fail-return2
 ./javapm tests/fail-return2.javapm 2> fail-return2.err >> testall.log
 diff -b fail-return2.err tests/fail-return2.err > fail-return2.diff
-###### SUCCESS
+FAILED fail-return2.err differs from tests/fail-return2.err
+###### FAILED
 
 ###### Testing fail-while1
 ./javapm tests/fail-while1.javapm 2> fail-while1.err >> testall.log
 diff -b fail-while1.err tests/fail-while1.err > fail-while1.diff
-###### SUCCESS
+FAILED fail-while1.err differs from tests/fail-while1.err
+###### FAILED
 
 ###### Testing fail-while2
 ./javapm tests/fail-while2.javapm 2> fail-while2.err >> testall.log
 diff -b fail-while2.err tests/fail-while2.err > fail-while2.diff
-###### SUCCESS
+FAILED fail-while2.err differs from tests/fail-while2.err
+###### FAILED

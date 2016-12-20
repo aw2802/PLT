@@ -2,6 +2,9 @@ public class TestFloat{
   public void main(){
     float i;
     i = 2.25-0.25;
-    print(i);
+    println(i);
+	println(2.25);
+	int j = 5;
+println(j);
   }
 }
