@@ -1,0 +1,14 @@
+public class TestArrayParam {
+
+	public void main() {
+		int[] myArr = new int[2];
+		printArr(myArr);
+	}
+
+	public int printArr(int[] a) {
+		int x = a[0];
+		println(x);
+		return 1;
+	}
+
+}

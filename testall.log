@@ -41,6 +41,14 @@ lli test-array_create.ll > test-array_create.out
 diff -b test-array_create.out tests/test-array_create.out > test-array_create.diff
 ###### SUCCESS
 
+###### Testing test-array_func_param
+./javapm tests/test-array_func_param.javapm > test-array_func_param.ll
+Call parameter type does not match function signature!
+  %myArr = alloca i32*
+ i32*  %printArr_result = call i32 @printArr(i32** %myArr)
+LLVM ERROR: Broken module found, compilation aborted!
+###### FAILED
+
 ###### Testing test-array_object
 ./javapm tests/test-array_object.javapm > test-array_object.ll
 Fatal error: exception Parsing.Parse_error
@@ -54,7 +62,9 @@ diff -b test-assign.out tests/test-assign.out > test-assign.diff
 
 ###### Testing test-bool
 ./javapm tests/test-bool.javapm > test-bool.ll
-Fatal error: exception Failure("Invalid Data Type")
+lli test-bool.ll > test-bool.out
+diff -b test-bool.out tests/test-bool.out > test-bool.diff
+FAILED test-bool.out differs from tests/test-bool.out
 ###### FAILED
 
 ###### Testing test-char_decl
