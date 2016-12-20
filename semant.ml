@@ -262,15 +262,14 @@ let convertToSast classes =
                 } in
 		let _ = checkVdecl vdecl env
 		in
-		let result = {
+		let _ =  classEnv.classMap.variableMap <- StringMap.add vdecl.vname vdecl classEnv.classMap.variableMap
+		in
+		{
                         svscope = vdecl.vscope;
                         svtype  = vdecl.vtype;
                         svname  = vdecl.vname;
                         svexpr  = convertExprToSast vdecl.vexpr env;
                 }
-		in
-		classEnv.classMap.variableMap <- StringMap.add vdecl.vname vdecl classEnv.classMap.variableMap; result
-
 	in
 	let convertCbodyToSast cbody classEnv =
 	{

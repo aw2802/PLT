@@ -45,16 +45,19 @@ let getIdType s env =
 			try (StringMap.find s env.envLocals)
 			with Not_found -> raise(Failure("Unfound local")) 
 		end
+	else if StringMap.mem s env.envParams
+		then try (StringMap.find s env.envParams)
+		with Not_found -> raise(Failure("Unfound param"))
 	else if StringMap.mem s env.envClassMap.variableMap
                 then begin
 			try (StringMap.find s env.envClassMap.variableMap).vtype
-			with Not_found -> JInt
+			with Not_found -> raise(Failure("Unfound class variable"))
 		end
 	else if StringMap.mem s env.envClassMaps
 		then Object(s)
 	else raise(Failure("Undeclared identifier " ^ s))
 	in checking
-	
+
 let getFuncType s fl env =
 	if List.mem s env.envBuiltinMethods
 		then JVoid
@@ -80,7 +83,11 @@ let rec getType expr env = match expr with
 	| Bool_Lit(b)		-> JBoolean
 	| Noexpr		-> JVoid
 	| Null			-> JVoid
-	| Binop(e1, op, e2) 	-> getType e1 env
+	| Binop(e1, op, e2) 	-> (match op with
+					  Equal|Neq|Less|Leq|Greater|Geq|Or|And|Not -> JBoolean
+					| Add|Sub|Mult|Div -> if ((getType e1 env)=JFloat) || ((getType e2 env)=JFloat)
+								then JFloat
+								else JInt)
 	| Unop(op, e)		-> getType e env
 	| Assign(s, e)		-> getType e env
 	| TupleCreate(dl, el) 	-> Tuple(dl)
