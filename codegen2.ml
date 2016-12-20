@@ -96,7 +96,7 @@ let translate sast =
 		let struct_typ = L.named_struct_type context c.scname in
 		Hashtbl.add struct_typ_table c.scname struct_typ
 	in
-	let _ = List.map add_classes_to_hashTable classes in
+	let _ = print_string("in class"); List.map add_classes_to_hashTable classes in
 
 	let define_classes c = 
 		let struct_t = Hashtbl.find struct_typ_table c.scname in
