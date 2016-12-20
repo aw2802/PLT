@@ -370,7 +370,9 @@ let translate sast =
 			| "println" -> print_func_gen "\n" expr_list llbuilder
 			| _ -> 	let f = find_func_in_module fname in
 					let map_param_to_llvalue llbuilder e = match e with
+						| SId(id, d) -> get_value true id llbuilder
 						| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
+						| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
 						| _ -> expr_gen llbuilder e
 					in
 					let params = List.map (map_param_to_llvalue llbuilder) expr_list in (*Fix passing variable to function*)
