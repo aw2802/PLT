@@ -1,7 +1,11 @@
 public class Dummy {
-	public void hello() {
+	public int hello() {
+		return 3;
 	}
-	
+	public void testHello() {
+		int x = hello();
+	}
 	public void hello() {
+
 	}
 }

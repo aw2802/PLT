@@ -11,6 +11,6 @@ let _ =
 	let ast  = Parser.program Scanner.token lexbuf in
 
 	let sast = Semant.check ast in
-	let outprog = Codegen2.translate sast in
+	let outprog = Codegen.translate sast in
 	Llvm_analysis.assert_valid_module outprog;
 	print_string (Llvm.string_of_llmodule outprog);;
