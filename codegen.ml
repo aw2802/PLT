@@ -438,6 +438,7 @@ let translate sast =
 			| (JInt,JInt) -> int_binop value1 value2 llbuilder
 			| (JInt, JFloat) -> float_binop value1 value2 llbuilder
 			| (JFloat, JInt) -> float_binop value1 value2 llbuilder
+			| (JFloat, JFloat) -> float_binop value1 value2 llbuilder
 			| (JInt, _) -> int_binop value1 value2 llbuilder
 			| (_, JInt) -> int_binop value1 value2 llbuilder
 			| _ -> raise(Failure("Invalid datatype for binop"))
