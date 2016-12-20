@@ -42,7 +42,6 @@ and get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	| A.JBoolean -> i1_t
 	| A.JFloat -> f_t
 	| A.JInt -> i32_t
-	| A.JString ->  get_ptr_type (A.Arraytype(JChar, 1))
 	| A.Object(s) -> L.pointer_type(find_llvm_struct_type s)
 	| A.Arraytype(data_type, i) ->  get_ptr_type (A.Arraytype(data_type, (i)))
 	| A.Tuple(dt_list) -> L.pointer_type(find_llvm_tuple_type dt_list)
@@ -444,11 +443,11 @@ let translate sast =
 							| A.JBoolean -> let tmp_var = "print_bool" in
 											let trueStr = SString_Lit("true") in
 											let falseStr = SString_Lit("false") in
-											let id = SId(tmp_var, JString) in 
-											ignore(stmt_gen llbuilder (SLocalVarDecl(JString, tmp_var, SNoexpr)));
+											let id = SId(tmp_var, Arraytype(JChar, 1)) in 
+											ignore(stmt_gen llbuilder (SLocalVarDecl(Arraytype(JChar, 1), tmp_var, SNoexpr)));
 											ignore(stmt_gen llbuilder (SIf(expr, 
-											SExpr(SAssign(id, trueStr, JString), JString), 
-											SExpr(SAssign(id, falseStr, JString), JString))));
+											SExpr(SAssign(id, trueStr, Arraytype(JChar, 1)), Arraytype(JChar, 1)), 
+											SExpr(SAssign(id, falseStr, Arraytype(JChar, 1)), Arraytype(JChar, 1)))));
 											expr_gen llbuilder id
 							| _ -> get_value true id llbuilder)
 			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
@@ -463,7 +462,7 @@ let translate sast =
 		| JBoolean	 ->	"%s" (*needs to be implemented*)
 		| JFloat	 ->	"%f"
 		| JChar		 ->	"%c"
-		| JString	 -> "%s"
+		| Arraytype(JChar, 1) 	-> "%s"
 		| _ 		-> raise (Failure("Print invalid type"))
 
 		in

@@ -79,7 +79,7 @@ let rec getType expr env = match expr with
 	| Int_Lit(s) 		-> JInt
 	| Float_Lit(f)		-> JFloat
 	| Char_Lit(c)		-> JChar
-	| String_Lit(s)		-> JString
+	| String_Lit(s)		-> Arraytype(JChar, 1)
 	| Bool_Lit(b)		-> JBoolean
 	| Noexpr		-> JVoid
 	| Null			-> JVoid
