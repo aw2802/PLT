@@ -35,8 +35,9 @@ type env = {
 	envBuiltinMethods: string list;
 }
 
-let getListOfFormalTypes c = 
-	List.map (fun f -> f.fvtype) c.fformals
+let getListOfFormalTypes c =
+	if List.length c.fformals == 0 then []
+	else List.map (fun f -> f.fvtype) c.fformals
 
 let getIdType s env =
 	let checking =
@@ -57,7 +58,11 @@ let getIdType s env =
 		then Object(s)
 	else raise(Failure("Undeclared identifier " ^ s))
 	in checking
-
+(*
+let getObjElmType s e env =
+	let objType = getIdType Id(s)
+	in try (  List.find e(List.find objType env.envClassMaps)
+*)	
 let getFuncType s fl env =
 	if List.mem s env.envBuiltinMethods
 		then JVoid
@@ -91,11 +96,12 @@ let rec getType expr env = match expr with
 	| Unop(op, e)		-> getType e env
 	| Assign(s, e)		-> getType e env
 	| TupleCreate(dl, el) 	-> Tuple(dl)
-	| TupleAccess(e1, e2) 	-> getType e1 env
-	| ObjAccess(e1, e2)	-> getType e1 env
-	| CreateObject(s, el) 	-> getType (Id(s)) env
+	| TupleAccess(e1, e2) 	-> JInt (*(match e1 with
+					  Id(s) -> getTupleElmType s e2 env)*)
+	| ObjAccess(e1, e2)	-> JInt(*(match e1 with Id(s) -> getObjElmType s e2 env*)
+	| CreateObject(s, el) 	-> Object(s)
 	| ArrayCreate(d, el)	-> Arraytype(d, List.length el)
-	| ArrayAccess(e, el)	-> getType e env  
+	| ArrayAccess(e, el)	-> JInt(*(match e with Id(s) -> getType Id(s))*)
 	| FuncCall(s, el)	-> getFuncType s (List.map (fun e -> getType e env) el) env
 
 
@@ -165,7 +171,7 @@ let rec str_of_expr expr = match expr with
 	| TupleCreate(dl, el)	-> "new Tuple<" ^ addComma (List.map str_of_type dl) ^ "> (" ^ addComma (List.map str_of_expr el)
 	| TupleAccess(e1, e2)	-> "(" ^ str_of_expr e1 ^ ")<<" ^ str_of_expr e2 ^ ">>"
 	| ArrayCreate(dt, el)	-> "new " ^ str_of_type dt ^ to_string (List.map (fun e -> "[" ^ str_of_expr e ^ "]") el) 
-	| ArrayAccess(e, el)	-> "(" ^ str_of_expr e ^ ")[" ^ to_string (List.map (fun e -> "[" ^ str_of_expr e ^ "]") el)
+	| ArrayAccess(e, el)	-> "(" ^ str_of_expr e ^ ")" ^ to_string (List.map (fun e -> "[" ^ str_of_expr e ^ "]") el)
 (* Pretty Printing for Sast *)
 
 let appendList h t = match t with
