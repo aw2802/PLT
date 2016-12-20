@@ -32,8 +32,9 @@ diff -b test-arithmetic.out tests/test-arithmetic.out > test-arithmetic.diff
 
 ###### Testing test-array
 ./javapm tests/test-array.javapm > test-array.ll
-Fatal error: exception Failure("Expected int[] expression in (b)[")
-###### FAILED
+lli test-array.ll > test-array.out
+diff -b test-array.out tests/test-array.out > test-array.diff
+###### SUCCESS
 
 ###### Testing test-array_create
 ./javapm tests/test-array_create.javapm > test-array_create.ll
@@ -43,7 +44,7 @@ diff -b test-array_create.out tests/test-array_create.out > test-array_create.di
 
 ###### Testing test-array_func_param
 ./javapm tests/test-array_func_param.javapm > test-array_func_param.ll
-Fatal error: exception Failure("(a)[ is of type int[] but expression of type int was expected")
+Fatal error: exception Failure("Undeclared method printArr")
 ###### FAILED
 
 ###### Testing test-array_object
@@ -59,15 +60,9 @@ diff -b test-assign.out tests/test-assign.out > test-assign.diff
 
 ###### Testing test-bool
 ./javapm tests/test-bool.javapm > test-bool.ll
-Stored value type does not match pointer operand type!
-  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @tmp.2, i32 0, i32 0), i8******* %print_bool
- i8******Stored value type does not match pointer operand type!
-  store i8* getelementptr inbounds ([6 x i8], [6 x i8]* @tmp.3, i32 0, i32 0), i8******* %print_bool
- i8******Stored value type does not match pointer operand type!
-  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @tmp.11, i32 0, i32 0), i8******* %print_bool14
- i8******Stored value type does not match pointer operand type!
-  store i8* getelementptr inbounds ([6 x i8], [6 x i8]* @tmp.12, i32 0, i32 0), i8******* %print_bool14
- i8******LLVM ERROR: Broken module found, compilation aborted!
+lli test-bool.ll > test-bool.out
+diff -b test-bool.out tests/test-bool.out > test-bool.diff
+FAILED test-bool.out differs from tests/test-bool.out
 ###### FAILED
 
 ###### Testing test-char_array
@@ -82,11 +77,6 @@ lli test-char_decl.ll > test-char_decl.out
 diff -b test-char_decl.out tests/test-char_decl.out > test-char_decl.diff
 ###### SUCCESS
 
-###### Testing test-check-variable
-./javapm tests/test-check-variable.javapm > test-check-variable.ll
-Fatal error: exception Failure("Variable name already used")
-###### FAILED
-
 ###### Testing test-comments
 ./javapm tests/test-comments.javapm > test-comments.ll
 lli test-comments.ll > test-comments.out
@@ -96,6 +86,11 @@ diff -b test-comments.out tests/test-comments.out > test-comments.diff
 ###### Testing test-constructors
 ./javapm tests/test-constructors.javapm > test-constructors.ll
 Fatal error: exception Failure("Undeclared identifier name")
+###### FAILED
+
+###### Testing test-demo
+./javapm tests/test-demo.javapm > test-demo.ll
+Fatal error: exception Parsing.Parse_error
 ###### FAILED
 
 ###### Testing test-div
@@ -112,7 +107,12 @@ diff -b test-equal.out tests/test-equal.out > test-equal.diff
 
 ###### Testing test-fibonacci
 ./javapm tests/test-fibonacci.javapm > test-fibonacci.ll
-Fatal error: exception Failure("Undeclared method fib")
+Function return type does not match operand type of return inst!
+  ret i32* %z
+ i32Call parameter type does not match function signature!
+  %x = alloca i32
+ i32  %fib_result = call i32 @fib(i32* %x)
+LLVM ERROR: Broken module found, compilation aborted!
 ###### FAILED
 
 ###### Testing test-float
@@ -137,7 +137,7 @@ diff -b test-for_nest.out tests/test-for_nest.out > test-for_nest.diff
 
 ###### Testing test-func_in_object
 ./javapm tests/test-func_in_object.javapm > test-func_in_object.ll
-Fatal error: exception Failure("Expected int expression in z")
+Fatal error: exception Failure("Undeclared method add")
 ###### FAILED
 
 ###### Testing test-gcd
@@ -151,6 +151,11 @@ diff -b test-gcd.out tests/test-gcd.out > test-gcd.diff
 lli test-geq.ll > test-geq.out
 diff -b test-geq.out tests/test-geq.out > test-geq.diff
 ###### SUCCESS
+
+###### Testing test-global_var
+./javapm tests/test-global_var.javapm > test-global_var.ll
+Fatal error: exception Failure("Undeclared identifier y")
+###### FAILED
 
 ###### Testing test-gt
 ./javapm tests/test-gt.javapm > test-gt.ll
@@ -214,15 +219,13 @@ diff -b test-mult_classes.out tests/test-mult_classes.out > test-mult_classes.di
 
 ###### Testing test-mult_func_param
 ./javapm tests/test-mult_func_param.javapm > test-mult_func_param.ll
-lli test-mult_func_param.ll > test-mult_func_param.out
-diff -b test-mult_func_param.out tests/test-mult_func_param.out > test-mult_func_param.diff
-###### SUCCESS
+Fatal error: exception Failure("Undeclared method say5")
+###### FAILED
 
 ###### Testing test-mult_functions
 ./javapm tests/test-mult_functions.javapm > test-mult_functions.ll
-lli test-mult_functions.ll > test-mult_functions.out
-diff -b test-mult_functions.out tests/test-mult_functions.out > test-mult_functions.diff
-###### SUCCESS
+Fatal error: exception Failure("Undeclared method sayBye")
+###### FAILED
 
 ###### Testing test-negate
 ./javapm tests/test-negate.javapm > test-negate.ll
@@ -266,6 +269,18 @@ lli test-print_mult_args.ll > test-print_mult_args.out
 diff -b test-print_mult_args.out tests/test-print_mult_args.out > test-print_mult_args.diff
 ###### SUCCESS
 
+###### Testing test-string
+./javapm tests/test-string.javapm > test-string.ll
+lli test-string.ll > test-string.out
+diff -b test-string.out tests/test-string.out > test-string.diff
+FAILED test-string.out differs from tests/test-string.out
+###### FAILED
+
+###### Testing test-string2
+./javapm tests/test-string2.javapm > test-string2.ll
+Fatal error: exception Parsing.Parse_error
+###### FAILED
+
 ###### Testing test-subtract
 ./javapm tests/test-subtract.javapm > test-subtract.ll
 lli test-subtract.ll > test-subtract.out
@@ -274,8 +289,9 @@ diff -b test-subtract.out tests/test-subtract.out > test-subtract.diff
 
 ###### Testing test-tuple_access
 ./javapm tests/test-tuple_access.javapm > test-tuple_access.ll
-Fatal error: exception Failure("Expected tuple<int,in> expression in (myTuple)<<0>>")
-###### FAILED
+lli test-tuple_access.ll > test-tuple_access.out
+diff -b test-tuple_access.out tests/test-tuple_access.out > test-tuple_access.diff
+###### SUCCESS
 
 ###### Testing test-tuple_creation
 ./javapm tests/test-tuple_creation.javapm > test-tuple_creation.ll
@@ -367,8 +383,7 @@ diff -b fail-check-variable1.err tests/fail-check-variable1.err > fail-check-var
 ###### Testing fail-check-variable2
 ./javapm tests/fail-check-variable2.javapm 2> fail-check-variable2.err >> testall.log
 diff -b fail-check-variable2.err tests/fail-check-variable2.err > fail-check-variable2.diff
-FAILED fail-check-variable2.err differs from tests/fail-check-variable2.err
-###### FAILED
+###### SUCCESS
 
 ###### Testing fail-dead1
 ./javapm tests/fail-dead1.javapm 2> fail-dead1.err >> testall.log
@@ -439,11 +454,6 @@ diff -b fail-func2.err tests/fail-func2.err > fail-func2.diff
 diff -b fail-func3.err tests/fail-func3.err > fail-func3.diff
 ###### SUCCESS
 
-###### Testing fail-func4
-./javapm tests/fail-func4.javapm 2> fail-func4.err >> testall.log
-diff -b fail-func4.err tests/fail-func4.err > fail-func4.diff
-###### SUCCESS
-
 ###### Testing fail-func5
 ./javapm tests/fail-func5.javapm 2> fail-func5.err >> testall.log
 diff -b fail-func5.err tests/fail-func5.err > fail-func5.diff
@@ -492,8 +502,7 @@ diff -b fail-if3.err tests/fail-if3.err > fail-if3.diff
 ###### Testing fail-nomain
 ./javapm tests/fail-nomain.javapm 2> fail-nomain.err >> testall.log
 diff -b fail-nomain.err tests/fail-nomain.err > fail-nomain.diff
-FAILED fail-nomain.err differs from tests/fail-nomain.err
-###### FAILED
+###### SUCCESS
 
 ###### Testing fail-return1
 ./javapm tests/fail-return1.javapm 2> fail-return1.err >> testall.log

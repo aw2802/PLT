@@ -1,0 +1,9 @@
+public class TestString {
+
+	public void main() {
+
+		char[] str = "Hello World";
+		print(str);
+	}
+
+}

@@ -1,0 +1,21 @@
+public class TestWhileForNested {
+  public void main(){
+    int i = 0;
+    int j;
+    while(i < 2){
+      for(j = 0; j < 2; j = j + 1){
+      	println("In a for in a while!");
+      }  
+      i = i + 1;
+    }
+    println();
+    
+    for(i = 0; i < 2; i = i + 1){
+      j = 0;
+      while(j < 2){
+        println("In a while in a for!");
+	j = j + 1;
+      }
+    }
+  } 
+}

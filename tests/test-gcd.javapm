@@ -2,7 +2,6 @@ public class TestGcd{
   public void main(){
     int x;
     int y;
-    int z;
     x = 66;
     y = 98;
 
@@ -15,7 +14,7 @@ public class TestGcd{
       }
     }      
     
-    print(x);
+    println(x);
 
   }
 }
