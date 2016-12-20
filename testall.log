@@ -4,48 +4,42 @@
 ./javapm tests/test-add.javapm > test-add.ll
 lli test-add.ll > test-add.out
 diff -b test-add.out tests/test-add.out > test-add.diff
-FAILED test-add.out differs from tests/test-add.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-addAssign
 ./javapm tests/test-addAssign.javapm > test-addAssign.ll
 lli test-addAssign.ll > test-addAssign.out
 diff -b test-addAssign.out tests/test-addAssign.out > test-addAssign.diff
-FAILED test-addAssign.out differs from tests/test-addAssign.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-and
 ./javapm tests/test-and.javapm > test-and.ll
 lli test-and.ll > test-and.out
 diff -b test-and.out tests/test-and.out > test-and.diff
-FAILED test-and.out differs from tests/test-and.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-andOp
 ./javapm tests/test-andOp.javapm > test-andOp.ll
 lli test-andOp.ll > test-andOp.out
 diff -b test-andOp.out tests/test-andOp.out > test-andOp.diff
-FAILED test-andOp.out differs from tests/test-andOp.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-arithmetic
 ./javapm tests/test-arithmetic.javapm > test-arithmetic.ll
 lli test-arithmetic.ll > test-arithmetic.out
 diff -b test-arithmetic.out tests/test-arithmetic.out > test-arithmetic.diff
-FAILED test-arithmetic.out differs from tests/test-arithmetic.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-array
 ./javapm tests/test-array.javapm > test-array.ll
-Fatal error: exception Match_failure("utils.ml", 145, 27)
+Fatal error: exception Failure("Expected int[] expression in (b)[")
 ###### FAILED
 
 ###### Testing test-array_create
 ./javapm tests/test-array_create.javapm > test-array_create.ll
 lli test-array_create.ll > test-array_create.out
 diff -b test-array_create.out tests/test-array_create.out > test-array_create.diff
-FAILED test-array_create.out differs from tests/test-array_create.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-array_object
 ./javapm tests/test-array_object.javapm > test-array_object.ll
@@ -56,8 +50,7 @@ Fatal error: exception Parsing.Parse_error
 ./javapm tests/test-assign.javapm > test-assign.ll
 lli test-assign.ll > test-assign.out
 diff -b test-assign.out tests/test-assign.out > test-assign.diff
-FAILED test-assign.out differs from tests/test-assign.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-bool
 ./javapm tests/test-bool.javapm > test-bool.ll
@@ -70,22 +63,18 @@ FAILED test-bool.out differs from tests/test-bool.out
 ./javapm tests/test-char_decl.javapm > test-char_decl.ll
 lli test-char_decl.ll > test-char_decl.out
 diff -b test-char_decl.out tests/test-char_decl.out > test-char_decl.diff
-FAILED test-char_decl.out differs from tests/test-char_decl.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-check-variable
 ./javapm tests/test-check-variable.javapm > test-check-variable.ll
-lli test-check-variable.ll > test-check-variable.out
-diff -b test-check-variable.out tests/test-check-variable.out > test-check-variable.diff
-FAILED test-check-variable.out differs from tests/test-check-variable.out
+Fatal error: exception Failure("Variable name already used")
 ###### FAILED
 
 ###### Testing test-comments
 ./javapm tests/test-comments.javapm > test-comments.ll
 lli test-comments.ll > test-comments.out
 diff -b test-comments.out tests/test-comments.out > test-comments.diff
-FAILED test-comments.out differs from tests/test-comments.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-constructors
 ./javapm tests/test-constructors.javapm > test-constructors.ll
@@ -96,15 +85,13 @@ Fatal error: exception Failure("Undeclared identifier name")
 ./javapm tests/test-div.javapm > test-div.ll
 lli test-div.ll > test-div.out
 diff -b test-div.out tests/test-div.out > test-div.diff
-FAILED test-div.out differs from tests/test-div.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-equal
 ./javapm tests/test-equal.javapm > test-equal.ll
 lli test-equal.ll > test-equal.out
 diff -b test-equal.out tests/test-equal.out > test-equal.diff
-FAILED test-equal.out differs from tests/test-equal.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-fibonacci
 ./javapm tests/test-fibonacci.javapm > test-fibonacci.ll
@@ -114,7 +101,7 @@ Fatal error: exception Failure("Undeclared method fib")
 ###### Testing test-float
 ./javapm tests/test-float.javapm > test-float.ll
 lli test-float.ll > test-float.out
-lli: test-float.ll:28:16: error: constexpr requires integer operands
+lli: test-float.ll:27:16: error: constexpr requires integer operands
   store double sub (double 2.250000e+00, double 2.500000e-01), double* %i
                ^
 ###### FAILED
@@ -123,15 +110,13 @@ lli: test-float.ll:28:16: error: constexpr requires integer operands
 ./javapm tests/test-for.javapm > test-for.ll
 lli test-for.ll > test-for.out
 diff -b test-for.out tests/test-for.out > test-for.diff
-FAILED test-for.out differs from tests/test-for.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-for_nest
 ./javapm tests/test-for_nest.javapm > test-for_nest.ll
 lli test-for_nest.ll > test-for_nest.out
 diff -b test-for_nest.out tests/test-for_nest.out > test-for_nest.diff
-FAILED test-for_nest.out differs from tests/test-for_nest.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-func_in_object
 ./javapm tests/test-func_in_object.javapm > test-func_in_object.ll
@@ -142,159 +127,137 @@ Fatal error: exception Failure("Expected int expression in z")
 ./javapm tests/test-gcd.javapm > test-gcd.ll
 lli test-gcd.ll > test-gcd.out
 diff -b test-gcd.out tests/test-gcd.out > test-gcd.diff
-FAILED test-gcd.out differs from tests/test-gcd.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-geq
 ./javapm tests/test-geq.javapm > test-geq.ll
 lli test-geq.ll > test-geq.out
 diff -b test-geq.out tests/test-geq.out > test-geq.diff
-FAILED test-geq.out differs from tests/test-geq.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-gt
 ./javapm tests/test-gt.javapm > test-gt.ll
 lli test-gt.ll > test-gt.out
 diff -b test-gt.out tests/test-gt.out > test-gt.diff
-FAILED test-gt.out differs from tests/test-gt.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-hello
 ./javapm tests/test-hello.javapm > test-hello.ll
 lli test-hello.ll > test-hello.out
 diff -b test-hello.out tests/test-hello.out > test-hello.diff
-FAILED test-hello.out differs from tests/test-hello.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-if
 ./javapm tests/test-if.javapm > test-if.ll
 lli test-if.ll > test-if.out
 diff -b test-if.out tests/test-if.out > test-if.diff
-FAILED test-if.out differs from tests/test-if.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-if_nest
 ./javapm tests/test-if_nest.javapm > test-if_nest.ll
 lli test-if_nest.ll > test-if_nest.out
 diff -b test-if_nest.out tests/test-if_nest.out > test-if_nest.diff
-FAILED test-if_nest.out differs from tests/test-if_nest.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-initialize
 ./javapm tests/test-initialize.javapm > test-initialize.ll
 lli test-initialize.ll > test-initialize.out
 diff -b test-initialize.out tests/test-initialize.out > test-initialize.diff
-FAILED test-initialize.out differs from tests/test-initialize.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-integer
 ./javapm tests/test-integer.javapm > test-integer.ll
 lli test-integer.ll > test-integer.out
 diff -b test-integer.out tests/test-integer.out > test-integer.diff
-FAILED test-integer.out differs from tests/test-integer.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-leq
 ./javapm tests/test-leq.javapm > test-leq.ll
 lli test-leq.ll > test-leq.out
 diff -b test-leq.out tests/test-leq.out > test-leq.diff
-FAILED test-leq.out differs from tests/test-leq.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-lt
 ./javapm tests/test-lt.javapm > test-lt.ll
 lli test-lt.ll > test-lt.out
 diff -b test-lt.out tests/test-lt.out > test-lt.diff
-FAILED test-lt.out differs from tests/test-lt.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-mult
 ./javapm tests/test-mult.javapm > test-mult.ll
 lli test-mult.ll > test-mult.out
 diff -b test-mult.out tests/test-mult.out > test-mult.diff
-FAILED test-mult.out differs from tests/test-mult.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-mult_classes
 ./javapm tests/test-mult_classes.javapm > test-mult_classes.ll
 lli test-mult_classes.ll > test-mult_classes.out
 diff -b test-mult_classes.out tests/test-mult_classes.out > test-mult_classes.diff
-FAILED test-mult_classes.out differs from tests/test-mult_classes.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-mult_func_param
 ./javapm tests/test-mult_func_param.javapm > test-mult_func_param.ll
 lli test-mult_func_param.ll > test-mult_func_param.out
 diff -b test-mult_func_param.out tests/test-mult_func_param.out > test-mult_func_param.diff
-FAILED test-mult_func_param.out differs from tests/test-mult_func_param.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-mult_functions
 ./javapm tests/test-mult_functions.javapm > test-mult_functions.ll
 lli test-mult_functions.ll > test-mult_functions.out
 diff -b test-mult_functions.out tests/test-mult_functions.out > test-mult_functions.diff
-FAILED test-mult_functions.out differs from tests/test-mult_functions.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-negate
 ./javapm tests/test-negate.javapm > test-negate.ll
 lli test-negate.ll > test-negate.out
 diff -b test-negate.out tests/test-negate.out > test-negate.diff
-FAILED test-negate.out differs from tests/test-negate.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-not
 ./javapm tests/test-not.javapm > test-not.ll
 lli test-not.ll > test-not.out
 diff -b test-not.out tests/test-not.out > test-not.diff
-FAILED test-not.out differs from tests/test-not.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-notEqual
 ./javapm tests/test-notEqual.javapm > test-notEqual.ll
 lli test-notEqual.ll > test-notEqual.out
 diff -b test-notEqual.out tests/test-notEqual.out > test-notEqual.diff
-FAILED test-notEqual.out differs from tests/test-notEqual.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-object
 ./javapm tests/test-object.javapm > test-object.ll
 lli test-object.ll > test-object.out
 diff -b test-object.out tests/test-object.out > test-object.diff
-FAILED test-object.out differs from tests/test-object.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-or
 ./javapm tests/test-or.javapm > test-or.ll
 lli test-or.ll > test-or.out
 diff -b test-or.out tests/test-or.out > test-or.diff
-FAILED test-or.out differs from tests/test-or.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-printAdd
 ./javapm tests/test-printAdd.javapm > test-printAdd.ll
 lli test-printAdd.ll > test-printAdd.out
 diff -b test-printAdd.out tests/test-printAdd.out > test-printAdd.diff
-FAILED test-printAdd.out differs from tests/test-printAdd.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-print_mult_args
 ./javapm tests/test-print_mult_args.javapm > test-print_mult_args.ll
 lli test-print_mult_args.ll > test-print_mult_args.out
 diff -b test-print_mult_args.out tests/test-print_mult_args.out > test-print_mult_args.diff
-FAILED test-print_mult_args.out differs from tests/test-print_mult_args.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-subtract
 ./javapm tests/test-subtract.javapm > test-subtract.ll
 lli test-subtract.ll > test-subtract.out
 diff -b test-subtract.out tests/test-subtract.out > test-subtract.diff
-FAILED test-subtract.out differs from tests/test-subtract.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-tuple_access
 ./javapm tests/test-tuple_access.javapm > test-tuple_access.ll
-Fatal error: exception Match_failure("utils.ml", 145, 27)
+Fatal error: exception Failure("Expected tuple<int,in> expression in (myTuple)<<0>>")
 ###### FAILED
 
 ###### Testing test-tuple_creation
@@ -307,22 +270,19 @@ diff -b test-tuple_creation.out tests/test-tuple_creation.out > test-tuple_creat
 ./javapm tests/test-while.javapm > test-while.ll
 lli test-while.ll > test-while.out
 diff -b test-while.out tests/test-while.out > test-while.diff
-FAILED test-while.out differs from tests/test-while.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-while_for_nested
 ./javapm tests/test-while_for_nested.javapm > test-while_for_nested.ll
 lli test-while_for_nested.ll > test-while_for_nested.out
 diff -b test-while_for_nested.out tests/test-while_for_nested.out > test-while_for_nested.diff
-FAILED test-while_for_nested.out differs from tests/test-while_for_nested.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-while_nest
 ./javapm tests/test-while_nest.javapm > test-while_nest.ll
 lli test-while_nest.ll > test-while_nest.out
 diff -b test-while_nest.out tests/test-while_nest.out > test-while_nest.diff
-FAILED test-while_nest.out differs from tests/test-while_nest.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing fail-assign1
 ./javapm tests/fail-assign1.javapm 2> fail-assign1.err >> testall.log
@@ -390,7 +350,8 @@ diff -b fail-check-variable1.err tests/fail-check-variable1.err > fail-check-var
 ###### Testing fail-check-variable2
 ./javapm tests/fail-check-variable2.javapm 2> fail-check-variable2.err >> testall.log
 diff -b fail-check-variable2.err tests/fail-check-variable2.err > fail-check-variable2.diff
-###### SUCCESS
+FAILED fail-check-variable2.err differs from tests/fail-check-variable2.err
+###### FAILED
 
 ###### Testing fail-dead1
 ./javapm tests/fail-dead1.javapm 2> fail-dead1.err >> testall.log

@@ -1,16 +1,33 @@
 public class TestBool {
 
 	public void main() {
-		boolean myBool = true;
+		boolean trueBool = true;
+		boolean falseBool = false;	
 		
-
-		if(myBool or true) {
-			println("true and true");
+		if(trueBool) {
+			println("Inside truebool");
+			println(trueBool);
 		}
 		else {
-			print("Nope");
+			println("True not processed correctly.");
+		}
+
+
+		if(falseBool) {
+		
+			println("Inside falsebool");
+			println(falseBool);
+		}
+		else {
+			println("False not processed correctly.");
+		}
+
+		if(true) {
+			println("Literal true works.");
+		} 
+		else {
+			println("Should never go here.");
 		}
 		
-		println(myBool);
 	}
 }
