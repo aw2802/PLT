@@ -438,6 +438,10 @@ let translate sast =
 			| _ -> expr_gen llbuilder expr
 		in
 		let params = List.map map_expr_to_printfexpr expr_list in
+		let map_bool_to_string llvalue = match llvalue with
+		| L.const_int i1_t 1 -> expr_gen llbuilder SString_Lit ("true")
+		| L.const_int i1_t 0 -> expr_gen llbuilder SString_Lit ("false")
+		| _ -> llvalue
 		let expr_types = List.map (Semant.typOFSexpr) expr_list in
 
 		let map_expr_to_type e = match e with
