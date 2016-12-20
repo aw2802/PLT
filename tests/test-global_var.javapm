@@ -1,0 +1,16 @@
+public class TestGlobalVar {
+	public void main() {
+		OtherClass x = new OtherClass();
+		
+	}
+
+
+}
+
+public class OtherClass {
+	public int y;
+	OtherClass() {
+		y = 5;
+	}
+
+}

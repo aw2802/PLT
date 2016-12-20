@@ -1,6 +1,6 @@
 public class Demo {
-	public main void(){
 
+	public void main(){
 		PrintMe p = new PrintMe(5);
 		Tuple<char[], int> returnedTuple = testTuple(3);
 		println(returnedTuple<<0>>);

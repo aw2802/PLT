@@ -1,12 +1,13 @@
 public class String{
 	private char[] string;
 
-	puclic String(char[] s){
+	String(char[] s){
 		string = s;
 	}
 
 	public String toString(){
-		return new String(string);
+		String c = new String(string);
+		return c;
 	}
 
 	public void printString(){

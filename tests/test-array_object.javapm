@@ -1,7 +1,11 @@
 public class Car{
-  public string color;
-  getColor(){
+  public String color;
+
+  Car(){
     color = "green";
+  }
+
+  public String getColor(){
     return color;
   }
 }
@@ -11,6 +15,6 @@ public class TestArrayObject{
     Car myCar = new Car();
     Car[] carArray = new Car[5];
     carArray[0] = myCar;
-    print(carArray[0].getColor());
+    println(carArray[0].getColor());
   }
 }

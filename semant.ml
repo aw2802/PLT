@@ -151,7 +151,8 @@ let getListOfFormalTypes c = List.map (fun f -> f.fvtype) c.fformals
 		in List.iter (fun e -> result := !result || e) (List.map (fun n -> List.length (List.filter (fun s -> s = n) names) > 1) names);!result
 	in
 	let checkMethod func_decl classEnv =
-(*		let formalTypes = getListOfFormalTypes func_decl
+(*
+		let formalTypes = getListOfFormalTypes func_decl
 		in
 		let checkSignature _ v =
 			v.mformalTypes=formalTypes
