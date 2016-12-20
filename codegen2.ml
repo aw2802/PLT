@@ -133,14 +133,11 @@ let translate sast =
 	let _ =  List.map define_functions functions in
 
 	let define_vardecl v =
-		let vdecl = v in
-		let n = v.svname in
-		set_value_name n vdecl;
 
 		Hashtbl.add 
 			(match v.svscope with
 				| A.Public -> global_var_table 
-				| A.Private -> class_private_vars) v.svname vdecl
+				| A.Private -> class_private_vars) v.svname boolean_True
 	in
 
 	let define_constructors c =
