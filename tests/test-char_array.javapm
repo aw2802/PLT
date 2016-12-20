@@ -1,0 +1,9 @@
+public class TestCharArray {
+
+	public void main() {
+		
+		char[] arr = "Hello";
+		println(arr);
+	}
+
+}
