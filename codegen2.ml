@@ -518,7 +518,18 @@ let translate sast =
 			let llbuilder = L.builder_at_end context (L.entry_block f) in
 
 			let struct_type = find_llvm_struct_type class_name.scname in
-			let allocatedMemory = L.build_alloca struct_type "object" llbuilder in     
+			let allocatedMemory = L.build_alloca struct_type "object" llbuilder in    
+			List.iteri (
+			fun i f ->
+	        let tuple_value = L.build_struct_gep allocatedMemory i "temp" llbuilder in
+	        	ignore(L.build_store (match f with 			
+	        			| SId(id, d) -> get_value true id llbuilder
+						| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
+						| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
+						| _ -> expr_gen llbuilder f) tuple_value llbuilder);
+	    	) class_name.scbody.svariables; 
+
+
 			let pointer_to_class = L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder in
 
 			let init_formals f sfformals =
