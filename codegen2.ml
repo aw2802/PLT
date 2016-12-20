@@ -18,8 +18,8 @@ let i1_t = L.i1_type context;; (* boolean *)
 let i64_t = L.i64_type context ;; (* idk *)
 let f_t = L.double_type context;; (* float *)
 
-let boolean_True =  i1_t 1;;
-let boolean_False = i1_t 0;;
+let boolean_True =  L.const_int i1_t 1;;
+let boolean_False = L.const_int i1_t 0;;
 
 let str_t = L.pointer_type i8_t;; 
 let void_t = L.void_type context;; (* void *)
