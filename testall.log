@@ -41,6 +41,14 @@ lli test-array_create.ll > test-array_create.out
 diff -b test-array_create.out tests/test-array_create.out > test-array_create.diff
 ###### SUCCESS
 
+###### Testing test-array_func_param
+./javapm tests/test-array_func_param.javapm > test-array_func_param.ll
+Call parameter type does not match function signature!
+  %myArr = alloca i32*
+ i32*  %printArr_result = call i32 @printArr(i32** %myArr)
+LLVM ERROR: Broken module found, compilation aborted!
+###### FAILED
+
 ###### Testing test-array_object
 ./javapm tests/test-array_object.javapm > test-array_object.ll
 Fatal error: exception Parsing.Parse_error
@@ -55,21 +63,8 @@ diff -b test-assign.out tests/test-assign.out > test-assign.diff
 ###### Testing test-bool
 ./javapm tests/test-bool.javapm > test-bool.ll
 lli test-bool.ll > test-bool.out
-0  libLLVM-3.8.so.1 0x00007fa03db93d38 llvm::sys::PrintStackTrace(llvm::raw_ostream&) + 56
-1  libLLVM-3.8.so.1 0x00007fa03db91fc6 llvm::sys::RunSignalHandlers() + 54
-2  libLLVM-3.8.so.1 0x00007fa03db92129
-3  libc.so.6        0x00007fa03cee54b0
-4  libc.so.6        0x00007fa03cefecc0 _IO_vfprintf + 6992
-5  libc.so.6        0x00007fa03cf05899 _IO_printf + 153
-6  libc.so.6        0x00007fa0401f0058 _IO_printf + 53389400
-7  libLLVM-3.8.so.1 0x00007fa03e797391 llvm::MCJIT::runFunction(llvm::Function*, llvm::ArrayRef<llvm::GenericValue>) + 465
-8  libLLVM-3.8.so.1 0x00007fa03e77240c llvm::ExecutionEngine::runFunctionAsMain(llvm::Function*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, char const* const*) + 556
-9  lli              0x0000000000418382 main + 6290
-10 libc.so.6        0x00007fa03ced0830 __libc_start_main + 240
-11 lli              0x00000000004191f9 _start + 41
-Stack dump:
-0.	Program arguments: lli test-bool.ll 
-Segmentation fault (core dumped)
+diff -b test-bool.out tests/test-bool.out > test-bool.diff
+FAILED test-bool.out differs from tests/test-bool.out
 ###### FAILED
 
 ###### Testing test-char_decl
