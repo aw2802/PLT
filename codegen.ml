@@ -398,7 +398,7 @@ let translate sast =
 			| _ -> expr_gen llbuilder e2	
 		in
 
-		let int_binop value1 value2 = (match op with
+		let int_binop value1 value2 llbuilder = (match op with
 			  Add 		-> L.build_add 
 			| Sub 		-> L.build_sub
 			| Mult 		-> L.build_mul 
@@ -415,7 +415,7 @@ let translate sast =
 		) value1 value2 "binop" llbuilder
 		in
 
-		let float_binop value1 value2  = (match op with
+		let float_binop value1 value2 llbuilder = (match op with
 			  Add 		-> L.build_fadd 
 			| Sub 		-> L.build_fsub
 			| Mult 		-> L.build_fmul 
