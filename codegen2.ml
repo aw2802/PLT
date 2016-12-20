@@ -446,8 +446,8 @@ let translate sast =
 											let id = SId(tmp_var, JString) in 
 											ignore(stmt_gen llbuilder (SLocalVarDecl(str_type, tmp_var, SNoexpr)));
 											ignore(stmt_gen llbuilder (SIf(expr, 
-											SExpr(SAssign(id, trueStr, str_type), JString), 
-											SExpr(SAssign(id, falseStr, str_type), JString))));
+											SExpr(SAssign(id, trueStr, JString), JString), 
+											SExpr(SAssign(id, falseStr, JString), JString))));
 											expr_gen llbuilder id
 							| _ -> get_value true id llbuilder)
 			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
