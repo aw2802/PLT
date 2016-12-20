@@ -86,7 +86,7 @@ let translate sast =
 	let define_vardecl c =
 		List.iteri (
 			fun i v ->
-	        	Hashtbl.add global_var_table v.svname boolean_True;
+	        	Hashtbl.add global_var_table v.svname boolean_True; print_string(v.svname);
 	    	) 
 	    c.scbody.svariables; 
 	in
