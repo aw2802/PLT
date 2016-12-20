@@ -420,8 +420,8 @@ let translate sast =
 			| Sub 		-> L.build_fsub
 			| Mult 		-> L.build_fmul 
 			| Div 		-> L.build_fdiv 
-			| Equal 	-> L.build_fcmp L.Fcmp.OEq 
-			| Neq 		-> L.build_fcmp L.Fcmp.ONe 
+			| Equal 	-> L.build_fcmp L.Fcmp.Oeq 
+			| Neq 		-> L.build_fcmp L.Fcmp.One 
 			| Less 		-> L.build_fcmp L.Fcmp.Ult 
 			| Leq 		-> L.build_fcmp L.Fcmp.Ole 
 			| Greater	-> L.build_fcmp L.Fcmp.Ogt 
