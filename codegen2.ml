@@ -439,8 +439,8 @@ let translate sast =
 		in
 		let params = List.map map_expr_to_printfexpr expr_list in
 		let map_bool_to_string llvalue = match llvalue with
-			| 1 -> expr_gen llbuilder SString_Lit("true")
-			| 0 -> expr_gen llbuilder SString_Lit("false")
+			| 1 -> expr_gen llbuilder (SString_Lit("true"))
+			| 0 -> expr_gen llbuilder (SString_Lit("false"))
 			| _ -> llvalue
 		in
 		let params = map_bool_to_string params in
