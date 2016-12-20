@@ -149,7 +149,6 @@ let translate sast =
 		| SWhile(e, s) -> generate_while e s llbuilder
 		| SFor(e1, e2, e3, s) -> generate_for e1 e2 e3 s llbuilder
 		| SReturn(e, d)		-> generate_return e d llbuilder
-
 	
 	and generate_block sl llbuilder = 
 		try List.hd (List.map (stmt_gen llbuilder) sl) with 
@@ -436,8 +435,9 @@ let translate sast =
 	and print_func_gen newLine expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
 		let map_expr_to_printfexpr expr = match expr with
-			| SId(id, d) -> get_value true id llbuilder
+			| SId(id, d) -> let getBool = if d = A.JBoolean then if get_value true id llbuilder then (expr_gen llbuilder (SString_Lit("true"))) else (expr_gen llbuilder (SString_Lit("false"))) 
 			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
+			| SBoolean_Lit (b) ->	if b then (expr_gen llbuilder (SString_Lit("true"))) else (expr_gen llbuilder (SString_Lit("false")))
 			| _ -> expr_gen llbuilder expr
 		in
 		let params = List.map map_expr_to_printfexpr expr_list in
