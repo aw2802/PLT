@@ -9,6 +9,7 @@ let _ =
 	let lexbuf = Lexing.from_channel in_channel in
 
 	let ast  = Parser.program Scanner.token lexbuf in
+	print_string("parsed and scanned");
 
 	let sast = Semant.check ast in
 	let outprog = print_string("in code gen");Codegen2.translate sast in
