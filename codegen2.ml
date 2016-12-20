@@ -137,7 +137,8 @@ let translate sast =
 			(match v.svscope with
 				| A.Public -> global_var_table 
 				| A.Private -> class_private_vars) v.svname v.svname
-
+	in
+	
 	let define_constructors c =
 		List.map define_functions c.scbody.sconstructors
 		List.map define_vardecl c.scbody.svariables
