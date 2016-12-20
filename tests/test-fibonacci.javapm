@@ -1,5 +1,5 @@
 public class TestFibonacci{
-  int fib(int x){
+  public int fib(int x){
     int z;
     if (x < 2){
       z = 1;
@@ -7,7 +7,7 @@ public class TestFibonacci{
     else{
       z = fib(x-1) + fib(x-2); //this. needed?
     }
-    return(z);
+    return z;
   }
 
   public void main(){

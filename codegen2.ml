@@ -18,6 +18,9 @@ let i1_t = L.i1_type context;; (* boolean *)
 let i64_t = L.i64_type context ;; (* idk *)
 let f_t = L.double_type context;; (* float *)
 
+let boolean_True =  L.const_int i1_t 1;;
+let boolean_False = L.const_int i1_t 0;;
+
 let str_t = L.pointer_type i8_t;; 
 let void_t = L.void_type context;; (* void *)
 
@@ -138,7 +141,7 @@ let translate sast =
 	(*Stmt and expr handling*)
 
 	let rec stmt_gen llbuilder = function 
-		  SBlock sl        ->	List.hd (List.map (stmt_gen llbuilder) sl)
+		  SBlock sl        ->	generate_block sl llbuilder
  		| SExpr (se, _)    ->   expr_gen llbuilder se
 		| SVarDecl sv           ->  generate_vardecl sv.svscope sv.svtype sv.svname sv.svexpr llbuilder
 		| SLocalVarDecl (dt, vname, vexpr)		-> generate_local_vardecl dt vname vexpr llbuilder
@@ -146,6 +149,10 @@ let translate sast =
 		| SWhile(e, s) -> generate_while e s llbuilder
 		| SFor(e1, e2, e3, s) -> generate_for e1 e2 e3 s llbuilder
 		| SReturn(e, d)		-> generate_return e d llbuilder
+	
+	and generate_block sl llbuilder = 
+		try List.hd (List.map (stmt_gen llbuilder) sl) with 
+		| Failure("hd") -> raise(Failure("No body"));
 
 	and generate_return e d llbuilder =
 		match e with
@@ -202,7 +209,11 @@ let translate sast =
 		generate_while e2 whileBody llbuilder
 
 	and generate_if e s1 s2 llbuilder =
-		let boolean_condition = expr_gen llbuilder e in
+		let boolean_condition = 
+		match e with
+			| SId (n, dt)	-> get_value true n llbuilder 
+			| _ -> expr_gen llbuilder e 
+		in
 
 		let start_block = L.insertion_block llbuilder in
 		let parent_function = L.block_parent start_block in
@@ -428,8 +439,15 @@ let translate sast =
 	and print_func_gen newLine expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
 		let map_expr_to_printfexpr expr = match expr with
-			| SId(id, d) -> get_value true id llbuilder
+			| SId(id, d) -> (match d with
+							| A.JBoolean -> let value = (get_value true id llbuilder) in
+											(match value with 
+											| boolean_False -> (expr_gen llbuilder (SString_Lit("false"))) 
+								  			| boolean_True -> (expr_gen llbuilder (SString_Lit("true")))
+								  			| _ -> raise (Failure("cannot match boolean")))
+							| _ -> get_value true id llbuilder)
 			| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
+			| SBoolean_Lit (b) ->	if b then (expr_gen llbuilder (SString_Lit("true"))) else (expr_gen llbuilder (SString_Lit("false")))
 			| _ -> expr_gen llbuilder expr
 		in
 		let params = List.map map_expr_to_printfexpr expr_list in
@@ -441,7 +459,7 @@ let translate sast =
 		| JFloat	 ->	"%f"
 		| JChar		 ->	"%c"
 		| JString	 -> "%s"
-		| _ 			-> raise (Failure("Print invalid type"))
+		| _ 		-> raise (Failure("Print invalid type"))
 
 		in
 		let print_types = List.fold_left (fun s t -> s ^ map_expr_to_type t) "" expr_types in
@@ -469,7 +487,7 @@ let translate sast =
 				fun i a ->
 		        	let formal = sfformals.(i) in
 		        	let allocatedMemory = stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, SNoexpr)) in
-		        	let n = formal.sformal_name in
+					let n = formal.sformal_name in
 		        	set_value_name n a;
 		        	ignore (L.build_store a allocatedMemory llbuilder);
 		    ) 
@@ -501,10 +519,10 @@ let translate sast =
 				Array.iteri (
 					fun i a ->
 			        	let formal = sfformals.(i) in
-		        		let allocatedMemory = stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, SNoexpr)) in
+		        		let varMem = stmt_gen llbuilder (SLocalVarDecl(formal.sformal_type, formal.sformal_name, SNoexpr)) in
 		        		let n = formal.sformal_name in
 		        		set_value_name n a;
-		        		ignore (L.build_store a allocatedMemory llbuilder);
+		        		ignore (L.build_store a varMem llbuilder);
 			    ) 
 			    (params f)
 			in

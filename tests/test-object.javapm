@@ -1,7 +1,6 @@
 public class Car{
   Car(int x) {
-  	println(x);
-//	return;
+ 	println(x);
   }
 }
 

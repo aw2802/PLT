@@ -32,9 +32,8 @@ diff -b test-arithmetic.out tests/test-arithmetic.out > test-arithmetic.diff
 
 ###### Testing test-array
 ./javapm tests/test-array.javapm > test-array.ll
-lli test-array.ll > test-array.out
-diff -b test-array.out tests/test-array.out > test-array.diff
-###### SUCCESS
+Fatal error: exception Failure("Expected int[] expression in (b)[")
+###### FAILED
 
 ###### Testing test-array_create
 ./javapm tests/test-array_create.javapm > test-array_create.ll
@@ -56,17 +55,17 @@ diff -b test-assign.out tests/test-assign.out > test-assign.diff
 ###### Testing test-bool
 ./javapm tests/test-bool.javapm > test-bool.ll
 lli test-bool.ll > test-bool.out
-0  libLLVM-3.8.so.1 0x00007fed12de8d38 llvm::sys::PrintStackTrace(llvm::raw_ostream&) + 56
-1  libLLVM-3.8.so.1 0x00007fed12de6fc6 llvm::sys::RunSignalHandlers() + 54
-2  libLLVM-3.8.so.1 0x00007fed12de7129
-3  libc.so.6        0x00007fed1213a4b0
-4  libc.so.6        0x00007fed12153cc0 _IO_vfprintf + 6992
-5  libc.so.6        0x00007fed1215a899 _IO_printf + 153
-6  libc.so.6        0x00007fed15445093 _IO_printf + 53389459
-7  libLLVM-3.8.so.1 0x00007fed139ec391 llvm::MCJIT::runFunction(llvm::Function*, llvm::ArrayRef<llvm::GenericValue>) + 465
-8  libLLVM-3.8.so.1 0x00007fed139c740c llvm::ExecutionEngine::runFunctionAsMain(llvm::Function*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, char const* const*) + 556
+0  libLLVM-3.8.so.1 0x00007fa03db93d38 llvm::sys::PrintStackTrace(llvm::raw_ostream&) + 56
+1  libLLVM-3.8.so.1 0x00007fa03db91fc6 llvm::sys::RunSignalHandlers() + 54
+2  libLLVM-3.8.so.1 0x00007fa03db92129
+3  libc.so.6        0x00007fa03cee54b0
+4  libc.so.6        0x00007fa03cefecc0 _IO_vfprintf + 6992
+5  libc.so.6        0x00007fa03cf05899 _IO_printf + 153
+6  libc.so.6        0x00007fa0401f0058 _IO_printf + 53389400
+7  libLLVM-3.8.so.1 0x00007fa03e797391 llvm::MCJIT::runFunction(llvm::Function*, llvm::ArrayRef<llvm::GenericValue>) + 465
+8  libLLVM-3.8.so.1 0x00007fa03e77240c llvm::ExecutionEngine::runFunctionAsMain(llvm::Function*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, char const* const*) + 556
 9  lli              0x0000000000418382 main + 6290
-10 libc.so.6        0x00007fed12125830 __libc_start_main + 240
+10 libc.so.6        0x00007fa03ced0830 __libc_start_main + 240
 11 lli              0x00000000004191f9 _start + 41
 Stack dump:
 0.	Program arguments: lli test-bool.ll 
@@ -81,9 +80,8 @@ diff -b test-char_decl.out tests/test-char_decl.out > test-char_decl.diff
 
 ###### Testing test-check-variable
 ./javapm tests/test-check-variable.javapm > test-check-variable.ll
-lli test-check-variable.ll > test-check-variable.out
-diff -b test-check-variable.out tests/test-check-variable.out > test-check-variable.diff
-###### SUCCESS
+Fatal error: exception Failure("Variable name already used")
+###### FAILED
 
 ###### Testing test-comments
 ./javapm tests/test-comments.javapm > test-comments.ll
@@ -93,7 +91,7 @@ diff -b test-comments.out tests/test-comments.out > test-comments.diff
 
 ###### Testing test-constructors
 ./javapm tests/test-constructors.javapm > test-constructors.ll
-Fatal error: exception Parsing.Parse_error
+Fatal error: exception Failure("Undeclared identifier name")
 ###### FAILED
 
 ###### Testing test-div
@@ -104,12 +102,13 @@ diff -b test-div.out tests/test-div.out > test-div.diff
 
 ###### Testing test-equal
 ./javapm tests/test-equal.javapm > test-equal.ll
-Fatal error: exception Failure("Expected boolean expression in i == 2")
-###### FAILED
+lli test-equal.ll > test-equal.out
+diff -b test-equal.out tests/test-equal.out > test-equal.diff
+###### SUCCESS
 
 ###### Testing test-fibonacci
 ./javapm tests/test-fibonacci.javapm > test-fibonacci.ll
-Fatal error: exception Parsing.Parse_error
+Fatal error: exception Failure("Undeclared method fib")
 ###### FAILED
 
 ###### Testing test-float
@@ -134,23 +133,26 @@ diff -b test-for_nest.out tests/test-for_nest.out > test-for_nest.diff
 
 ###### Testing test-func_in_object
 ./javapm tests/test-func_in_object.javapm > test-func_in_object.ll
-Fatal error: exception Parsing.Parse_error
+Fatal error: exception Failure("Expected int expression in z")
 ###### FAILED
 
 ###### Testing test-gcd
 ./javapm tests/test-gcd.javapm > test-gcd.ll
-Fatal error: exception Failure("Expected boolean expression in x != y")
-###### FAILED
+lli test-gcd.ll > test-gcd.out
+diff -b test-gcd.out tests/test-gcd.out > test-gcd.diff
+###### SUCCESS
 
 ###### Testing test-geq
 ./javapm tests/test-geq.javapm > test-geq.ll
-Fatal error: exception Failure("Expected boolean expression in i >= j")
-###### FAILED
+lli test-geq.ll > test-geq.out
+diff -b test-geq.out tests/test-geq.out > test-geq.diff
+###### SUCCESS
 
 ###### Testing test-gt
 ./javapm tests/test-gt.javapm > test-gt.ll
-Fatal error: exception Failure("Expected boolean expression in i > j")
-###### FAILED
+lli test-gt.ll > test-gt.out
+diff -b test-gt.out tests/test-gt.out > test-gt.diff
+###### SUCCESS
 
 ###### Testing test-hello
 ./javapm tests/test-hello.javapm > test-hello.ll
@@ -166,8 +168,9 @@ diff -b test-if.out tests/test-if.out > test-if.diff
 
 ###### Testing test-if_nest
 ./javapm tests/test-if_nest.javapm > test-if_nest.ll
-Fatal error: exception Failure("Expected boolean expression in i == 2")
-###### FAILED
+lli test-if_nest.ll > test-if_nest.out
+diff -b test-if_nest.out tests/test-if_nest.out > test-if_nest.diff
+###### SUCCESS
 
 ###### Testing test-initialize
 ./javapm tests/test-initialize.javapm > test-initialize.ll
@@ -183,13 +186,15 @@ diff -b test-integer.out tests/test-integer.out > test-integer.diff
 
 ###### Testing test-leq
 ./javapm tests/test-leq.javapm > test-leq.ll
-Fatal error: exception Failure("Expected boolean expression in i <= j")
-###### FAILED
+lli test-leq.ll > test-leq.out
+diff -b test-leq.out tests/test-leq.out > test-leq.diff
+###### SUCCESS
 
 ###### Testing test-lt
 ./javapm tests/test-lt.javapm > test-lt.ll
-Fatal error: exception Failure("Expected boolean expression in i < j")
-###### FAILED
+lli test-lt.ll > test-lt.out
+diff -b test-lt.out tests/test-lt.out > test-lt.diff
+###### SUCCESS
 
 ###### Testing test-mult
 ./javapm tests/test-mult.javapm > test-mult.ll
@@ -205,8 +210,9 @@ diff -b test-mult_classes.out tests/test-mult_classes.out > test-mult_classes.di
 
 ###### Testing test-mult_func_param
 ./javapm tests/test-mult_func_param.javapm > test-mult_func_param.ll
-Fatal error: exception Failure("Undeclared identifier x")
-###### FAILED
+lli test-mult_func_param.ll > test-mult_func_param.out
+diff -b test-mult_func_param.out tests/test-mult_func_param.out > test-mult_func_param.diff
+###### SUCCESS
 
 ###### Testing test-mult_functions
 ./javapm tests/test-mult_functions.javapm > test-mult_functions.ll
@@ -222,23 +228,27 @@ diff -b test-negate.out tests/test-negate.out > test-negate.diff
 
 ###### Testing test-not
 ./javapm tests/test-not.javapm > test-not.ll
-Fatal error: exception Failure("Expected boolean expression in i != 3")
-###### FAILED
+lli test-not.ll > test-not.out
+diff -b test-not.out tests/test-not.out > test-not.diff
+###### SUCCESS
 
 ###### Testing test-notEqual
 ./javapm tests/test-notEqual.javapm > test-notEqual.ll
-Fatal error: exception Failure("Expected boolean expression in i != 1")
-###### FAILED
+lli test-notEqual.ll > test-notEqual.out
+diff -b test-notEqual.out tests/test-notEqual.out > test-notEqual.diff
+###### SUCCESS
 
 ###### Testing test-object
 ./javapm tests/test-object.javapm > test-object.ll
-Fatal error: exception Failure("Undeclared identifier x")
-###### FAILED
+lli test-object.ll > test-object.out
+diff -b test-object.out tests/test-object.out > test-object.diff
+###### SUCCESS
 
 ###### Testing test-or
 ./javapm tests/test-or.javapm > test-or.ll
-Fatal error: exception Failure("Expected boolean expression in i != 1 or j == 3")
-###### FAILED
+lli test-or.ll > test-or.out
+diff -b test-or.out tests/test-or.out > test-or.diff
+###### SUCCESS
 
 ###### Testing test-printAdd
 ./javapm tests/test-printAdd.javapm > test-printAdd.ll
@@ -260,9 +270,8 @@ diff -b test-subtract.out tests/test-subtract.out > test-subtract.diff
 
 ###### Testing test-tuple_access
 ./javapm tests/test-tuple_access.javapm > test-tuple_access.ll
-lli test-tuple_access.ll > test-tuple_access.out
-diff -b test-tuple_access.out tests/test-tuple_access.out > test-tuple_access.diff
-###### SUCCESS
+Fatal error: exception Failure("Expected tuple<int,in> expression in (myTuple)<<0>>")
+###### FAILED
 
 ###### Testing test-tuple_creation
 ./javapm tests/test-tuple_creation.javapm > test-tuple_creation.ll
@@ -272,18 +281,21 @@ diff -b test-tuple_creation.out tests/test-tuple_creation.out > test-tuple_creat
 
 ###### Testing test-while
 ./javapm tests/test-while.javapm > test-while.ll
-Fatal error: exception Failure("Expected boolean expression in i < 5")
-###### FAILED
+lli test-while.ll > test-while.out
+diff -b test-while.out tests/test-while.out > test-while.diff
+###### SUCCESS
 
 ###### Testing test-while_for_nested
 ./javapm tests/test-while_for_nested.javapm > test-while_for_nested.ll
-Fatal error: exception Failure("Expected boolean expression in i < 2")
-###### FAILED
+lli test-while_for_nested.ll > test-while_for_nested.out
+diff -b test-while_for_nested.out tests/test-while_for_nested.out > test-while_for_nested.diff
+###### SUCCESS
 
 ###### Testing test-while_nest
 ./javapm tests/test-while_nest.javapm > test-while_nest.ll
-Fatal error: exception Failure("Expected boolean expression in i < 1")
-###### FAILED
+lli test-while_nest.ll > test-while_nest.out
+diff -b test-while_nest.out tests/test-while_nest.out > test-while_nest.diff
+###### SUCCESS
 
 ###### Testing fail-assign1
 ./javapm tests/fail-assign1.javapm 2> fail-assign1.err >> testall.log
@@ -351,7 +363,8 @@ diff -b fail-check-variable1.err tests/fail-check-variable1.err > fail-check-var
 ###### Testing fail-check-variable2
 ./javapm tests/fail-check-variable2.javapm 2> fail-check-variable2.err >> testall.log
 diff -b fail-check-variable2.err tests/fail-check-variable2.err > fail-check-variable2.diff
-###### SUCCESS
+FAILED fail-check-variable2.err differs from tests/fail-check-variable2.err
+###### FAILED
 
 ###### Testing fail-dead1
 ./javapm tests/fail-dead1.javapm 2> fail-dead1.err >> testall.log

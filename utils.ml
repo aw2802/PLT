@@ -43,16 +43,21 @@ let getIdType s env =
 	if StringMap.mem s env.envLocals
 		then begin
 			try (StringMap.find s env.envLocals)
-			with Not_found -> raise(Failure("unfound local")) 
+			with Not_found -> raise(Failure("Unfound local")) 
 		end
+	else if StringMap.mem s env.envParams
+		then try (StringMap.find s env.envParams)
+		with Not_found -> raise(Failure("Unfound param"))
 	else if StringMap.mem s env.envClassMap.variableMap
                 then begin
 			try (StringMap.find s env.envClassMap.variableMap).vtype
-			with Not_found -> JInt
+			with Not_found -> raise(Failure("Unfound class variable"))
 		end
+	else if StringMap.mem s env.envClassMaps
+		then Object(s)
 	else raise(Failure("Undeclared identifier " ^ s))
 	in checking
-	
+
 let getFuncType s fl env =
 	if List.mem s env.envBuiltinMethods
 		then JVoid
@@ -78,7 +83,11 @@ let rec getType expr env = match expr with
 	| Bool_Lit(b)		-> JBoolean
 	| Noexpr		-> JVoid
 	| Null			-> JVoid
-	| Binop(e1, op, e2) 	-> getType e1 env
+	| Binop(e1, op, e2) 	-> (match op with
+					  Equal|Neq|Less|Leq|Greater|Geq|Or|And|Not -> JBoolean
+					| Add|Sub|Mult|Div -> if ((getType e1 env)=JFloat) || ((getType e2 env)=JFloat)
+								then JFloat
+								else JInt)
 	| Unop(op, e)		-> getType e env
 	| Assign(s, e)		-> getType e env
 	| TupleCreate(dl, el) 	-> Tuple(dl)
@@ -99,6 +108,11 @@ let addComma l =
 		in
 		String.sub !s 0 ((String.length !s) -2)
 	end
+
+let to_string l =
+	let s = ref ""
+	in let _ = List.iter (fun d -> s:= !s^d)
+	in !s
 
 (* Print data types *)
 
@@ -146,7 +160,12 @@ let rec str_of_expr expr = match expr with
 	| Noexpr		-> ""
 	| FuncCall(s, el)	-> "" ^ s ^ "(" ^ addComma (List.map str_of_expr el) ^ ")"
 	| Unop(op, e)		-> "" ^ str_of_op op ^ " " ^ str_of_expr e
- 
+	| CreateObject(s, el) 	-> "new " ^ s ^ "(" ^ addComma (List.map str_of_expr el) ^ ")"
+	| ObjAccess(e1, e2)	-> "(" ^ str_of_expr e1 ^ ").(" ^ str_of_expr e2 ^")"
+	| TupleCreate(dl, el)	-> "new Tuple<" ^ addComma (List.map str_of_type dl) ^ "> (" ^ addComma (List.map str_of_expr el)
+	| TupleAccess(e1, e2)	-> "(" ^ str_of_expr e1 ^ ")<<" ^ str_of_expr e2 ^ ">>"
+	| ArrayCreate(dt, el)	-> "new " ^ str_of_type dt ^ to_string (List.map (fun e -> "[" ^ str_of_expr e ^ "]") el) 
+	| ArrayAccess(e, el)	-> "(" ^ str_of_expr e ^ ")[" ^ to_string (List.map (fun e -> "[" ^ str_of_expr e ^ "]") el)
 (* Pretty Printing for Sast *)
 
 let appendList h t = match t with

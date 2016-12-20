@@ -1,7 +1,7 @@
 public class Car{
-  String color;
-  String getColor(){
-    this.color = "green";
+  public string color;
+  getColor(){
+    color = "green";
     return color;
   }
 }

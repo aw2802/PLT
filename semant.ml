@@ -15,11 +15,21 @@ let builtinMethods = ["print"; "println"]
 	
 let isMain f = f.sfname = "main"
 
-let get_methods l classy = List.concat [(List.concat [classy.scbody.smethods;l])]
+let get_methods l classy =  List.concat [classy.scbody.smethods;l]
 
 let get_main m = try (List.hd (List.filter isMain (List.fold_left get_methods [] m))) with Failure("hd") -> raise(Failure("No main method was defined"))
 
 let get_methods_minus_main m = snd (List.partition isMain (List.fold_left get_methods [] m))
+
+let newEnv env = {
+      	envClassName = env.envClassName;
+     	envClassMaps = env.envClassMaps;
+    	envClassMap  = env.envClassMap;
+    	envLocals    = env.envLocals;
+     	envParams    = env.envParams;
+      	envReturnType = env.envReturnType;
+ 	envBuiltinMethods = env.envBuiltinMethods;
+}
 
 let typOFSexpr = function
 		SInt_Lit(i)			-> JInt	
@@ -49,6 +59,19 @@ let convertToSast classes =
 		let checkBinop e1 op e2 =
 			"placeholder"
 		in
+		let checkUnop op e env =
+			"placeholder"
+		in
+		let checkFuncCall s el env = 
+			"placeholder"
+		in
+		let checkAssign e1 e2 env =
+			let typ1  = (getType e1 env)
+			and typ2  = (getType e2 env)
+			in
+			if typ1 <> typ2
+				then raise(Failure("Expected " ^ (str_of_type typ1) ^ " expression in " ^ (str_of_expr e1)))
+		in
 		let rec convertExprToSast expr env = match expr with
 			  Int_Lit(i)	-> SInt_Lit(i)
 			| Bool_Lit(b)	-> SBoolean_Lit(b)
@@ -61,9 +84,9 @@ let convertToSast classes =
 			| Binop(expr1, op, expr2)	-> (checkBinop expr1 op expr2;SBinop(convertExprToSast expr1 env, op, convertExprToSast expr2 env, getType expr1 env))
 			| ArrayCreate(d, el)  -> SArrayCreate(d, (List.map (fun e -> convertExprToSast e env) el), Arraytype(d, List.length el))
 			| ArrayAccess(e, el)  -> SArrayAccess(convertExprToSast e env, (List.map (fun e -> convertExprToSast e env) el), JInt) (* @TODO *)
-			| Assign(e1, e2)		-> SAssign(convertExprToSast e1 env, convertExprToSast e2 env, getType e1 env)
-			| FuncCall(s, el)		-> SFuncCall(s, (List.map (fun e -> convertExprToSast e env) el), getType (FuncCall(s, el)) env, 0)
-			| Unop(op, expr)		-> SUnop(op, convertExprToSast expr env, getType expr env)
+			| Assign(e1, e2)		-> (checkAssign e1 e2 env; SAssign(convertExprToSast e1 env, convertExprToSast e2 env, getType e1 env))
+			| FuncCall(s, el)		-> (checkFuncCall s el env; SFuncCall(s, (List.map (fun e -> convertExprToSast e env) el), getType (FuncCall(s, el)) env, 0))
+			| Unop(op, expr)		-> (checkUnop op expr env; SUnop(op, convertExprToSast expr env, getType expr env))
 			| CreateObject(s,el)	-> SCreateObject(s, (List.map (fun e -> convertExprToSast e env) el), Object(s))
 			| ObjAccess(e1,e2) -> SObjAccess(convertExprToSast e1 env, convertExprToSast e2 env, JInt (*getType e1 env*)) (* @TODO Double check type *)
 			| TupleCreate(dl, el)	-> STupleCreate(dl, (List.map (fun e -> convertExprToSast e env) el), Tuple(dl))
@@ -89,10 +112,10 @@ let convertToSast classes =
 		let checkIf e s1 s2 env =
 			if (getType e env) <> JBoolean
 				then raise(Failure("Expected boolean expression in " ^ (str_of_expr e)))	
-(*@TODO return new env*)
 		in
 		let checkFor e1 e2 e3 s env = 
-			"placeholder"
+			if (getType e2 env) <> JBoolean
+				then raise(Failure("Expected boolean expression in " ^ (str_of_expr e2)))
 		in
 		let checkWhile e s env = 
 			if (getType e env) <> JBoolean
@@ -104,9 +127,9 @@ let convertToSast classes =
 			| VarDecl(vdecl)		-> SVarDecl(convertVdeclToSast vdecl env)
 			| LocalVarDecl(dt, id, expr)	-> (checkLocalVarDecl dt id expr env; SLocalVarDecl(dt, id, convertExprToSast expr env))
 			| Return(expr)  		-> checkReturn expr env; SReturn(convertExprToSast expr env, getType expr env)
-			| If(expr, stmt1, stmt2)	-> checkIf expr stmt1 stmt2 env; SIf(convertExprToSast expr env, convertStmtToSast stmt1 env, convertStmtToSast stmt2 env)
-			| For(expr1, expr2, expr3, stmt)-> checkFor expr1 expr2 expr3 stmt env; SFor(convertExprToSast expr1 env, convertExprToSast expr2 env, convertExprToSast expr3 env, convertStmtToSast stmt env)
-			| While(expr, stmt)		-> checkWhile expr stmt env; SWhile(convertExprToSast expr env, convertStmtToSast stmt env)
+			| If(expr, stmt1, stmt2)	-> checkIf expr stmt1 stmt2 env; SIf(convertExprToSast expr env, convertStmtToSast stmt1 (newEnv env), convertStmtToSast stmt2 (newEnv env))
+			| For(expr1, expr2, expr3, stmt)-> checkFor expr1 expr2 expr3 stmt env; SFor(convertExprToSast expr1 env, convertExprToSast expr2 env, convertExprToSast expr3 env, convertStmtToSast stmt (newEnv env))
+			| While(expr, stmt)		-> checkWhile expr stmt env; SWhile(convertExprToSast expr env, convertStmtToSast stmt (newEnv env))
 	in
 	
 	(* Semantic Checking for class methods *)
@@ -143,6 +166,11 @@ let convertToSast classes =
 		
 	in
 	let convertMethodToSast func_decl classEnv =
+	
+		let methodSignature = checkMethod func_decl classEnv
+		in
+		let _ = classEnv.classMap.methodMap <- StringMap.add func_decl.fname methodSignature classEnv.classMap.methodMap
+		in
 		let env = {
 			envClassName = classEnv.className;
 			envClassMaps = classEnv.classMaps;
@@ -153,19 +181,13 @@ let convertToSast classes =
 			envBuiltinMethods = classEnv.builtinMethods;
 		} in 
 		let _ = setEnvParams func_decl.fformals env
-		in
-		let methodSignature = checkMethod func_decl classEnv
-		in
-		let result =
-		{
+		in {
 			sfscope = func_decl.fscope;
 			sfname = func_decl.fname;
 			sfformals = List.map (fun f -> convertFormalToSast f env) func_decl.fformals; 
 			sfreturn = func_decl.freturn;
 			sfbody = List.map (fun s -> convertStmtToSast s env) func_decl.fbody;
-		} in
-		classEnv.classMap.methodMap <- StringMap.add func_decl.fname methodSignature classEnv.classMap.methodMap;
-		result
+		}
 
 	in
 	(* Semantic checking for class constructor *)
@@ -192,6 +214,10 @@ let convertToSast classes =
 
 	in
 	let convertConstructorToSast constructor classEnv =
+		let constructorSignature = checkConstructor constructor classEnv
+		in
+		let _ = classEnv.classMap.constructorMap <- StringMap.add (strOfFormals constructorSignature.mformalTypes) constructorSignature classEnv.classMap.constructorMap
+		in
 		let env = {
 			envClassName = classEnv.className;
 			envClassMaps = classEnv.classMaps;
@@ -202,20 +228,14 @@ let convertToSast classes =
 			envBuiltinMethods = classEnv.builtinMethods;
 		} in
 		let _ = setEnvParams constructor.fformals env
-		in 
-		let constructorSignature = checkConstructor constructor classEnv
-		in
-		let result =
-		{
+		in {
 			sfscope = constructor.fscope;
 			sfname = constructor.fname;
 			sfformals = List.map (fun f -> convertFormalToSast f env) constructor.fformals; 
 			sfreturn = constructor.freturn;
 			sfbody = List.map (fun s -> convertStmtToSast s env) constructor.fbody;
-		} in
-		classEnv.classMap.constructorMap <- StringMap.add (strOfFormals constructorSignature.mformalTypes) constructorSignature classEnv.classMap.constructorMap;
-		result
-
+		}
+	
 	in
 	(* Sematic checking for class variable *)
 	let checkVdecl vdecl env = 
@@ -228,6 +248,8 @@ let convertToSast classes =
 	in
 
 	let convertVariableToSast vdecl classEnv =
+		let _ =  classEnv.classMap.variableMap <- StringMap.add vdecl.vname vdecl classEnv.classMap.variableMap
+		in
 		let env = {
                         envClassName = classEnv.className;
                         envClassMaps = classEnv.classMaps;
@@ -238,16 +260,12 @@ let convertToSast classes =
 			envBuiltinMethods = classEnv.builtinMethods;
                 } in
 		let _ = checkVdecl vdecl env
-		in
-		let result = {
+		in {
                         svscope = vdecl.vscope;
                         svtype  = vdecl.vtype;
                         svname  = vdecl.vname;
                         svexpr  = convertExprToSast vdecl.vexpr env;
                 }
-		in
-		classEnv.classMap.variableMap <- StringMap.add vdecl.vname vdecl classEnv.classMap.variableMap; result
-
 	in
 	let convertCbodyToSast cbody classEnv =
 	{

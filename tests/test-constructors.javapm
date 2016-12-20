@@ -1,13 +1,13 @@
 public class Student{
-  String name;
+  public string name;
   Student (String x){
-    this.name = x;
+    name = x;
   }
 }
 
 public class TestConstructors{
   public void main(){
-    Student Susan = new Student('Susan');
+    Student Susan = new Student("Susan");
     print (Susan.name);
   }
 }

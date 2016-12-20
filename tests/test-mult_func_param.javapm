@@ -1,12 +1,12 @@
 public class TwoFunctionsWithParameters {
 	public void main() {
 		println("Hi");
-		int printMe = say5(true);
+		int printMe = say5(5);
 		println(printMe);
 	}
 	
-	public int say5(boolean x) {
+	public int say5(int x) {
 		println(x);
-		return 1;
+		return 5;
 	}
 }
