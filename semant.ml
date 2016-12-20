@@ -66,12 +66,13 @@ let convertToSast classes =
 			"placeholder"
 		in
 		let checkAssign e1 e2 env =
-			let typ1  = (getType e1 env)
+			"placeholder"
+(*			let typ1  = (getType e1 env)
 			and typ2  = (getType e2 env)
 			in
 			if typ1 <> typ2
 				then raise(Failure("Expected " ^ (str_of_type typ1) ^ " expression in " ^ (str_of_expr e1)))
-		in
+*)		in
 		let rec convertExprToSast expr env = match expr with
 			  Int_Lit(i)	-> SInt_Lit(i)
 			| Bool_Lit(b)	-> SBoolean_Lit(b)
@@ -80,14 +81,14 @@ let convertToSast classes =
 			| Char_Lit(c)	-> SChar_Lit(c)
 			| Null		-> SNull
 			| Noexpr	-> SNoexpr
-			| Id(id)	-> SId(id, getIdType id env) (** @TODO Sast has SId(string, datatype) **)
-			| Binop(expr1, op, expr2)	-> (checkBinop expr1 op expr2;SBinop(convertExprToSast expr1 env, op, convertExprToSast expr2 env, getType expr1 env))
-			| ArrayCreate(d, el)  -> SArrayCreate(d, (List.map (fun e -> convertExprToSast e env) el), Arraytype(d, List.length el))
+			| Id(id)	-> SId(id, JInt (*getIdType id env*)) (** @TODO Sast has SId(string, datatype) **)
+			| Binop(expr1, op, expr2)	-> (checkBinop expr1 op expr2;SBinop(convertExprToSast expr1 env, op, convertExprToSast expr2 env, JInt (*getType expr1 env)*)))
+			| ArrayCreate(d, el)  -> SArrayCreate(d, (List.map (fun e -> convertExprToSast e env) el),JInt (*Arraytype(d, List.length el)*))
 			| ArrayAccess(e, el)  -> SArrayAccess(convertExprToSast e env, (List.map (fun e -> convertExprToSast e env) el), JInt) (* @TODO *)
-			| Assign(e1, e2)		-> (checkAssign e1 e2 env; SAssign(convertExprToSast e1 env, convertExprToSast e2 env, getType e1 env))
-			| FuncCall(s, el)		-> (checkFuncCall s el env; SFuncCall(s, (List.map (fun e -> convertExprToSast e env) el), getType (FuncCall(s, el)) env, 0))
-			| Unop(op, expr)		-> (checkUnop op expr env; SUnop(op, convertExprToSast expr env, getType expr env))
-			| CreateObject(s,el)	-> SCreateObject(s, (List.map (fun e -> convertExprToSast e env) el), Object(s))
+			| Assign(e1, e2)		-> (checkAssign e1 e2 env; SAssign(convertExprToSast e1 env, convertExprToSast e2 env,JInt(* getType e1 env*)))
+			| FuncCall(s, el)		-> (checkFuncCall s el env; SFuncCall(s, (List.map (fun e -> convertExprToSast e env) el), JInt(*getType (FuncCall(s, el)) env*), 0))
+			| Unop(op, expr)		-> (checkUnop op expr env; SUnop(op, convertExprToSast expr env, JInt (*getType expr env*)))
+			| CreateObject(s,el)	-> SCreateObject(s, (List.map (fun e -> convertExprToSast e env) el), JInt (*Object(s)*))
 			| ObjAccess(e1,e2) -> SObjAccess(convertExprToSast e1 env, convertExprToSast e2 env, JInt (*getType e1 env*)) (* @TODO Double check type *)
 			| TupleCreate(dl, el)	-> STupleCreate(dl, (List.map (fun e -> convertExprToSast e env) el), Tuple(dl))
 			| TupleAccess(e1, e2)	-> STupleAccess(convertExprToSast e1 env, convertExprToSast e2 env, JInt (*getType e1 env*)) (* @TODO Double Check type*)		
@@ -99,28 +100,33 @@ let convertToSast classes =
 			svexpr = convertExprToSast vdecl.vexpr env;
 		} in
 		let checkLocalVarDecl dt id e env =
+(*			"placeholder"
 			if StringMap.mem id env.envParams || StringMap.mem id env.envLocals || StringMap.mem id env.envClassMap.variableMap
 				then raise(Failure("Variable name already used"))
 			else if ((e <> Ast.Noexpr) && ((getType e env) <> dt))
 				then raise(Failure(str_of_expr e ^ " is of type " ^ str_of_type (getType e env) ^ " but expression of type " ^ str_of_type dt ^ " was expected"));
-			env.envLocals <- StringMap.add id dt env.envLocals 
+*)			env.envLocals <- StringMap.add id dt env.envLocals 
 		in
 		let checkReturn e env =
-			if getType e env <> env.envReturnType
+			"placeholder"
+(*			if getType e env <> env.envReturnType
 				then raise(Failure("Return type doesn't match expected return type"))
-		in
+*)		in
 		let checkIf e s1 s2 env =
-			if (getType e env) <> JBoolean
+			"placeholder"
+(*			if (getType e env) <> JBoolean
 				then raise(Failure("Expected boolean expression in " ^ (str_of_expr e)))	
-		in
+*)		in
 		let checkFor e1 e2 e3 s env = 
-			if (getType e2 env) <> JBoolean
+			"placeholder"
+(*			if (getType e2 env) <> JBoolean
 				then raise(Failure("Expected boolean expression in " ^ (str_of_expr e2)))
-		in
-		let checkWhile e s env = 
-			if (getType e env) <> JBoolean
+*)		in
+		let checkWhile e s env =
+			"placeholder" 
+(*			if (getType e env) <> JBoolean
                                 then raise(Failure("Expected boolean expression in " ^ (str_of_expr e)))
-		in	
+*)		in	
 		let rec convertStmtToSast stmt env = match stmt with
 			  Block(sl)			-> SBlock(List.map (fun s -> convertStmtToSast s env) sl)
 			| Expr(expr)			-> SExpr(convertExprToSast expr env, getType expr env)
@@ -133,7 +139,11 @@ let convertToSast classes =
 	in
 	
 	(* Semantic Checking for class methods *)
-	let getListOfFormalTypes c = List.map (fun f -> f.fvtype) c.fformals 
+	let rec strOfFormals fl = match fl with
+		|  [] -> ""
+		| h::t -> str_of_type h ^ (strOfFormals t)
+	in
+let getListOfFormalTypes c = List.map (fun f -> f.fvtype) c.fformals 
 	in
 	let hasDuplicateFormalNames l = 
 		let result = ref false
@@ -141,7 +151,7 @@ let convertToSast classes =
 		in List.iter (fun e -> result := !result || e) (List.map (fun n -> List.length (List.filter (fun s -> s = n) names) > 1) names);!result
 	in
 	let checkMethod func_decl classEnv =
-		let formalTypes = getListOfFormalTypes func_decl
+(*		let formalTypes = getListOfFormalTypes func_decl
 		in
 		let checkSignature _ v =
 			v.mformalTypes=formalTypes
@@ -151,7 +161,10 @@ let convertToSast classes =
 		in
 		let mp = StringMap.filter compareName classEnv.classMap.methodMap
 		in
-		StringMap.iter (fun k v -> if checkSignature k v then raise(Failure("Duplicate Method Declaration"))) mp;	
+		
+		let _ = StringMap.iter (fun k v -> if checkSignature k v then raise(Failure("Duplicate Method Declaration"))) mp 
+		in StringMap.iter (fun kc c -> ((StringMap.iter ((fun k v -> if k=func_decl.fname && checkSignature k v then raise(Failure("Duplicate Method Declaration"))) c.methodMap));
+			if StringMap.mem (strOfFormals formalTypes) c.constructorMap then raise(Failure("Duplicate Method Declaration")))) classEnv.classMaps;
 		if hasDuplicateFormalNames func_decl.fformals
 			then raise(Failure("Formal names must be unique"));
 		let signature = {
@@ -161,9 +174,17 @@ let convertToSast classes =
 			mReturn = func_decl.freturn;
 		} in signature
 	in
+*)	{
+		mscope = Public;
+		mname = "";
+		mformalTypes = [];
+		mReturn = JInt
+	}
+
+	in
 	let setEnvParams formals env =
 			List.map (fun f -> env.envParams <- StringMap.add f.fvname f.fvtype env.envParams) formals
-		
+
 	in
 	let convertMethodToSast func_decl classEnv =
 	
@@ -181,7 +202,8 @@ let convertToSast classes =
 			envBuiltinMethods = classEnv.builtinMethods;
 		} in 
 		let _ = setEnvParams func_decl.fformals env
-		in {
+		in 
+		{
 			sfscope = func_decl.fscope;
 			sfname = func_decl.fname;
 			sfformals = List.map (fun f -> convertFormalToSast f env) func_decl.fformals; 
@@ -191,12 +213,8 @@ let convertToSast classes =
 
 	in
 	(* Semantic checking for class constructor *)
-	let rec strOfFormals fl = match fl with
-		|  [] -> ""
-		| h::t -> str_of_type h ^ (strOfFormals t)
-	in
 	let checkConstructor constructor classEnv = 
-		let formalTypes = getListOfFormalTypes constructor
+(*		let formalTypes = getListOfFormalTypes constructor
 		in
 		let checking =
 			
@@ -211,7 +229,13 @@ let convertToSast classes =
                         mformalTypes = formalTypes;
 			mReturn = JVoid;
                 }
-
+*)
+		{
+                mscope = Public;
+                mname = "";
+                mformalTypes = [];
+                mReturn = JInt
+        	}
 	in
 	let convertConstructorToSast constructor classEnv =
 		let constructorSignature = checkConstructor constructor classEnv
@@ -228,7 +252,8 @@ let convertToSast classes =
 			envBuiltinMethods = classEnv.builtinMethods;
 		} in
 		let _ = setEnvParams constructor.fformals env
-		in {
+		in 
+		{
 			sfscope = constructor.fscope;
 			sfname = constructor.fname;
 			sfformals = List.map (fun f -> convertFormalToSast f env) constructor.fformals; 
@@ -239,13 +264,14 @@ let convertToSast classes =
 	in
 	(* Sematic checking for class variable *)
 	let checkVdecl vdecl env = 
-		let check = 
+		"placeholder"
+(*		let check = 
 			if StringMap.mem vdecl.vname env.envClassMap.variableMap
 				then raise (Failure("Variable name already used"))
 			else if vdecl.vexpr <> Ast.Noexpr && getType vdecl.vexpr env <> vdecl.vtype
 				then raise (Failure(str_of_expr vdecl.vexpr ^ " is of type " ^ str_of_type (getType vdecl.vexpr env) ^ " but type " ^ str_of_type vdecl.vtype ^ " is expected"))
 		in check
-	in
+*)	in
 
 	let convertVariableToSast vdecl classEnv =
 		let env = {

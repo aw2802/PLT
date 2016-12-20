@@ -80,7 +80,7 @@ let getFuncType s fl env =
 	end
 
 let rec getType expr env = match expr with
-	  Id(s) 		-> getIdType s env
+	  Id(s) 		-> JInt(*getIdType s env*)
 	| Int_Lit(s) 		-> JInt
 	| Float_Lit(f)		-> JFloat
 	| Char_Lit(c)		-> JChar
@@ -102,8 +102,8 @@ let rec getType expr env = match expr with
 	| CreateObject(s, el) 	-> Object(s)
 	| ArrayCreate(d, el)	-> Arraytype(d, List.length el)
 	| ArrayAccess(e, el)	-> JInt(*(match e with Id(s) -> getType Id(s))*)
-	| FuncCall(s, el)	-> getFuncType s (List.map (fun e -> getType e env) el) env
-
+	| FuncCall(s, el)	-> JInt(*getFuncType s (List.map (fun e -> getType e env) el) env
+*)
 
 let addComma l =
 	if l = [] then ""
