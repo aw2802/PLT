@@ -93,6 +93,13 @@ Fatal error: exception Failure("Undeclared identifier name")
 Fatal error: exception Parsing.Parse_error
 ###### FAILED
 
+###### Testing test-demo1
+./javapm tests/test-demo1.javapm > test-demo1.ll
+lli test-demo1.ll > test-demo1.out
+diff -b test-demo1.out tests/test-demo1.out > test-demo1.diff
+FAILED test-demo1.out differs from tests/test-demo1.out
+###### FAILED
+
 ###### Testing test-div
 ./javapm tests/test-div.javapm > test-div.ll
 lli test-div.ll > test-div.out
@@ -418,26 +425,22 @@ FAILED fail-for1.err differs from tests/fail-for1.err
 ###### Testing fail-for2
 ./javapm tests/fail-for2.javapm 2> fail-for2.err >> testall.log
 diff -b fail-for2.err tests/fail-for2.err > fail-for2.diff
-FAILED fail-for2.err differs from tests/fail-for2.err
-###### FAILED
+###### SUCCESS
 
 ###### Testing fail-for3
 ./javapm tests/fail-for3.javapm 2> fail-for3.err >> testall.log
 diff -b fail-for3.err tests/fail-for3.err > fail-for3.diff
-FAILED fail-for3.err differs from tests/fail-for3.err
-###### FAILED
+###### SUCCESS
 
 ###### Testing fail-for4
 ./javapm tests/fail-for4.javapm 2> fail-for4.err >> testall.log
 diff -b fail-for4.err tests/fail-for4.err > fail-for4.diff
-FAILED fail-for4.err differs from tests/fail-for4.err
-###### FAILED
+###### SUCCESS
 
 ###### Testing fail-for5
 ./javapm tests/fail-for5.javapm 2> fail-for5.err >> testall.log
 diff -b fail-for5.err tests/fail-for5.err > fail-for5.diff
-FAILED fail-for5.err differs from tests/fail-for5.err
-###### FAILED
+###### SUCCESS
 
 ###### Testing fail-func1
 ./javapm tests/fail-func1.javapm 2> fail-func1.err >> testall.log
