@@ -209,7 +209,11 @@ let translate sast =
 		generate_while e2 whileBody llbuilder
 
 	and generate_if e s1 s2 llbuilder =
-		let boolean_condition = expr_gen llbuilder e in
+		let boolean_condition = 
+		match e with
+			| SId (n, dt)	-> get_value true n llbuilder 
+			| _ -> expr_gen llbuilder e 
+		in
 
 		let start_block = L.insertion_block llbuilder in
 		let parent_function = L.block_parent start_block in
