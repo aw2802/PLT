@@ -80,7 +80,7 @@ let convertToSast classes =
 			| Char_Lit(c)	-> SChar_Lit(c)
 			| Null		-> SNull
 			| Noexpr	-> SNoexpr
-			| Id(id)	-> SId(id, JInt(*getIdType id env*)) (** @TODO Sast has SId(string, datatype) **)
+			| Id(id)	-> SId(id, JInt (*getIdType id env)*) (** @TODO Sast has SId(string, datatype) **)
 			| Binop(expr1, op, expr2)	-> (checkBinop expr1 op expr2;SBinop(convertExprToSast expr1 env, op, convertExprToSast expr2 env, getType expr1 env))
 			| ArrayCreate(d, el)  -> SArrayCreate(d, (List.map (fun e -> convertExprToSast e env) el), Arraytype(d, List.length el))
 			| ArrayAccess(e, el)  -> SArrayAccess(convertExprToSast e env, (List.map (fun e -> convertExprToSast e env) el), JInt) (* @TODO *)

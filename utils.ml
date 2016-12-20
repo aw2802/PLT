@@ -80,7 +80,7 @@ let getFuncType s fl env =
 	end
 
 let rec getType expr env = match expr with
-	  Id(s) 		-> getIdType s env
+	  Id(s) 		-> (*getIdType s env*) JInt
 	| Int_Lit(s) 		-> JInt
 	| Float_Lit(f)		-> JFloat
 	| Char_Lit(c)		-> JChar
