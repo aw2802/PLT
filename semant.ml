@@ -15,7 +15,7 @@ let builtinMethods = ["print"; "println"]
 	
 let isMain f = f.sfname = "main"
 
-let get_methods l classy = List.concat [(List.concat [classy.scbody.smethods;l])]
+let get_methods l classy =  List.concat [classy.scbody.smethods;l]
 
 let get_main m = try (List.hd (List.filter isMain (List.fold_left get_methods [] m))) with Failure("hd") -> raise(Failure("No main method was defined"))
 
