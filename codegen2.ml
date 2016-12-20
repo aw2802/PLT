@@ -527,7 +527,7 @@ let translate sast =
 	        		| SId(id, d) -> get_value true id llbuilder
 					| SArrayAccess(e, el, d) -> generate_array_access true e el llbuilder
 					| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
-					| _ -> expr_gen llbuilder f) tuple_value llbuilder);
+					| _ -> expr_gen llbuilder expr) tuple_value llbuilder);
 	        	
 	        	let scope = f.scope in
 	        	Hashtbl.add (match scope with
