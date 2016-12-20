@@ -20,7 +20,7 @@ public class TestFibonacci{
     y = 6;
     z = fib(x); //this. needed?
 
-    print(z);
+    println(z);
   }
 
 

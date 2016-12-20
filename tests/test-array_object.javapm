@@ -1,7 +1,11 @@
 public class Car{
-  public string color;
-  getColor(){
+  public String color;
+
+  Car(){
     color = "green";
+  }
+
+  public String getColor(){
     return color;
   }
 }
