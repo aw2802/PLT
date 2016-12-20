@@ -1,7 +1,7 @@
 public class String{
 	private char[] string;
 
-	puclic String(char[] s){
+	String(char[] s){
 		string = s;
 	}
 
