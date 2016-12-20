@@ -138,7 +138,7 @@ let translate sast =
 	(*Stmt and expr handling*)
 
 	let rec stmt_gen llbuilder = function 
-		  SBlock sl        ->	try (List.hd (List.map (stmt_gen llbuilder) sl)) with | Failure("hd") -> raise(Failure("No body"));
+		  SBlock sl        ->	generate_block sl llbuilder
  		| SExpr (se, _)    ->   expr_gen llbuilder se
 		| SVarDecl sv           ->  generate_vardecl sv.svscope sv.svtype sv.svname sv.svexpr llbuilder
 		| SLocalVarDecl (dt, vname, vexpr)		-> generate_local_vardecl dt vname vexpr llbuilder
@@ -146,6 +146,11 @@ let translate sast =
 		| SWhile(e, s) -> generate_while e s llbuilder
 		| SFor(e1, e2, e3, s) -> generate_for e1 e2 e3 s llbuilder
 		| SReturn(e, d)		-> generate_return e d llbuilder
+
+	
+	and generate_block sl llbuilder = 
+		try List.hd (List.map (stmt_gen llbuilder) sl) with 
+		| Failure("hd") -> raise(Failure("No body"));
 
 	and generate_return e d llbuilder =
 		match e with
