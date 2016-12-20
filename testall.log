@@ -56,17 +56,17 @@ diff -b test-assign.out tests/test-assign.out > test-assign.diff
 ###### Testing test-bool
 ./javapm tests/test-bool.javapm > test-bool.ll
 lli test-bool.ll > test-bool.out
-0  libLLVM-3.8.so.1 0x00007fed12de8d38 llvm::sys::PrintStackTrace(llvm::raw_ostream&) + 56
-1  libLLVM-3.8.so.1 0x00007fed12de6fc6 llvm::sys::RunSignalHandlers() + 54
-2  libLLVM-3.8.so.1 0x00007fed12de7129
-3  libc.so.6        0x00007fed1213a4b0
-4  libc.so.6        0x00007fed12153cc0 _IO_vfprintf + 6992
-5  libc.so.6        0x00007fed1215a899 _IO_printf + 153
-6  libc.so.6        0x00007fed15445093 _IO_printf + 53389459
-7  libLLVM-3.8.so.1 0x00007fed139ec391 llvm::MCJIT::runFunction(llvm::Function*, llvm::ArrayRef<llvm::GenericValue>) + 465
-8  libLLVM-3.8.so.1 0x00007fed139c740c llvm::ExecutionEngine::runFunctionAsMain(llvm::Function*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, char const* const*) + 556
+0  libLLVM-3.8.so.1 0x00007f5c3a4b9d38 llvm::sys::PrintStackTrace(llvm::raw_ostream&) + 56
+1  libLLVM-3.8.so.1 0x00007f5c3a4b7fc6 llvm::sys::RunSignalHandlers() + 54
+2  libLLVM-3.8.so.1 0x00007f5c3a4b8129
+3  libc.so.6        0x00007f5c3980b4b0
+4  libc.so.6        0x00007f5c39824cc0 _IO_vfprintf + 6992
+5  libc.so.6        0x00007f5c3982b899 _IO_printf + 153
+6  libc.so.6        0x00007f5c3cb16093 _IO_printf + 53389459
+7  libLLVM-3.8.so.1 0x00007f5c3b0bd391 llvm::MCJIT::runFunction(llvm::Function*, llvm::ArrayRef<llvm::GenericValue>) + 465
+8  libLLVM-3.8.so.1 0x00007f5c3b09840c llvm::ExecutionEngine::runFunctionAsMain(llvm::Function*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, char const* const*) + 556
 9  lli              0x0000000000418382 main + 6290
-10 libc.so.6        0x00007fed12125830 __libc_start_main + 240
+10 libc.so.6        0x00007f5c397f6830 __libc_start_main + 240
 11 lli              0x00000000004191f9 _start + 41
 Stack dump:
 0.	Program arguments: lli test-bool.ll 
