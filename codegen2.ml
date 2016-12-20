@@ -42,6 +42,7 @@ and get_llvm_type datatype = match datatype with (* LLVM type for AST type *)
 	| A.JBoolean -> i1_t
 	| A.JFloat -> f_t
 	| A.JInt -> i32_t
+	| A.JString -> i8_t
 	| A.Object(s) -> L.pointer_type(find_llvm_struct_type s)
 	| A.Arraytype(data_type, i) ->  get_ptr_type (A.Arraytype(data_type, (i)))
 	| A.Tuple(dt_list) -> L.pointer_type(find_llvm_tuple_type dt_list)
