@@ -438,9 +438,11 @@ let translate sast =
 
 	and print_func_gen newLine expr_list llbuilder =
 		let printf = find_func_in_module "printf" in
+		let tmp_count = ref 0 in
+		let incr_tmp = fun x -> incr tmp_count in
 		let map_expr_to_printfexpr expr = match expr with
 			| SId(id, d) -> (match d with
-							| A.JBoolean -> let tmp_var = "print_bool" in
+							| A.JBoolean -> incr_tmp (); let tmp_var = "tmp" ^ (string_of_int !tmp_count) in
 											let trueStr = SString_Lit("true") in
 											let falseStr = SString_Lit("false") in
 											let id = SId(tmp_var, Arraytype(JChar, 1)) in 
