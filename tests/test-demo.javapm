@@ -9,7 +9,7 @@ public class Demo {
 	}
 
 	public Tuple<char[], int> testTuple(int t){
-		Tuple<char[], int> myTuple = new Tuple<char[a], int>("Zeynep", t);
+		Tuple<char[], int> myTuple = new Tuple<char[], int>("Zeynep", t);
 		return myTuple;
 	}
 
