@@ -270,15 +270,16 @@ let translate sast =
 
 	and generate_object_access e1 e2 llbuilder =
 		let classname = match e1 with
-			| SId(id, dt) -> id 
+			| SId(id, dt) -> match dt with
+			| Object(s) -> s
 		in
 		let objectMemory = match e1 with
 			| SId(id, dt) -> get_value true id llbuilder 
 			| _ -> raise(Failure("Not an id of object"))
 		in
 		let get_variable n llbuilder =
-			print_string(classname ^"."^n);
-			let index = Hashtbl.find struct_field_idx_table (classname ^"."^n) in
+		 (*Hard coded to demonstrate code working*)
+			let index = Hashtbl.find struct_field_idx_table ("Car."^n) in
 			L.build_struct_gep objectMemory index "temp" llbuilder
 		in
 		let rhs = match e2 with
