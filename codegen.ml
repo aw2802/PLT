@@ -269,8 +269,8 @@ let translate sast =
 
 	and generate_object_access e1 e2 llbuilder =
 		let classname = match e1 with
-			| SId(id, dt) -> match dt with
-			| Object(s) -> s
+			| SId(id, dt) -> (match dt with
+							| Object(s) -> s)
 		in
 		let objectMemory = match e1 with
 			| SId(id, dt) -> get_value true id llbuilder 
