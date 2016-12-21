@@ -2,6 +2,11 @@ public class Car{
 	public int y;
 	Car(int x) {
  		y = x;
+ 		printMe();
+  	}
+
+  	public void printMe(){
+  		println(y);
   	}
 }
 
