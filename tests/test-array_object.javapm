@@ -1,14 +1,20 @@
 public class Car{
-  Car(int x){
-    print("car ");
-    println(x);
+  public String color;
+
+  Car(){
+    color = "green";
+  }
+
+  public String getColor(){
+    return color;
   }
 }
 
 public class TestArrayObject{
   public void main(){
-    Car myCar = new Car(1);
-    int[] carArray = new int[5];
-    //carArray[0] = myCar;
+    Car myCar = new Car();
+    Car[] carArray = new Car[5];
+    carArray[0] = myCar;
+    println(carArray[0].getColor());
   }
 }
