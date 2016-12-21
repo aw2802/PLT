@@ -1,0 +1,33 @@
+public class Tuples{
+	public void main(){
+		Tuple<int,int,int> tup = new Tuple<int, int, int>(2,2,2);
+		tup<<2>> = 1;
+		boolean test = true;
+		while(test == true){
+			println("Is it winter break yet?");	
+			if( tup<<0>> == 1 ){
+				test=false;
+				println("Finally, it's break!");
+			}
+			else{
+				println("No.");
+			}
+			println("Is it winter break yet?");
+			if(tup<<1>> == 1){
+				test=false;
+				println("Finally, it's break!");
+			}
+			else{
+				println("No.");
+			}
+			println("Ist it winter break yet?");
+			if(tup<<2>> == 1){
+				test=false;
+				println("Yes, it's finally break!");
+			}
+			else{
+				println("No.");
+			}
+		}		
+	}
+}
