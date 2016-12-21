@@ -16,7 +16,7 @@ public class TestObject{
   public void main(){
    	Car myCar = new Car(5);
     	println("Created!");
-    	//int z = myCar.y;
-    	//println(z);
+    	int z = myCar.y;
+    	println(z);
   }
 }
