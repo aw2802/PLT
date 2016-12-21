@@ -4,6 +4,7 @@ public class TestString {
 
 		char[] str = "Hello World";
 		print(str);
+		println("hello");
 	}
 
 }
