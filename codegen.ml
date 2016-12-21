@@ -258,6 +258,7 @@ let translate sast =
 		| SUnop(op, e, dt)      -> unop_gen op e llbuilder
 		| SAssign (e1, e2, dt)	-> assign_to_variable e1 e2 llbuilder
 		| SCreateObject(id, el, d) -> generate_object_create id el llbuilder
+		| SObjAccess(e1, e2, dt) -> generate_object_access e1 e2 llbuilder
 		| SFuncCall (fname, expr_list, d, _) -> generate_function_call fname expr_list d llbuilder
 		| SNoexpr -> L.build_add (L.const_int i32_t 0) (L.const_int i32_t 0) "nop" llbuilder
 		| SArrayCreate (datatype, el, d)	-> generate_array datatype el llbuilder
@@ -265,6 +266,24 @@ let translate sast =
 		| STupleCreate(dt_list, el, d) -> generate_create_tuples dt_list el llbuilder
 		| STupleAccess(e1, e2, d) -> generate_tuple_access false e1 e2 llbuilder 
 		| _ -> raise(Failure("No match for expression"))
+
+	and generate_object_access e1 e2 llbuilder =
+		let classname = match e1 with
+			| SId(id, dt) -> id 
+		in
+		let objectMemory = match e1 with
+			| SId(id, dt) -> get_value true id llbuilder 
+			| _ -> raise(Failure("Not an id of object"))
+		in
+		let get_variable n llbuilder =
+			let index = Hashtbl.find struct_field_idx_table (classname ^"."^n) in
+			L.build_struct_gep objectMemory index "temp" llbuilder
+		in
+		let rhs = match e2 with
+			| SId(id, dt) -> get_variable id llbuilder
+			| _ -> raise(Failure("Function acces not yet supported"))
+		in
+		rhs
 
 	and generate_create_tuples dt_list expr_list llbuilder =
 		let type_list = List.map (function dt -> get_llvm_type dt) dt_list in
