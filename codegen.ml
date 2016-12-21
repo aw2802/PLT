@@ -605,11 +605,13 @@ let translate sast =
 					| STupleAccess(e1, e2, d) -> generate_tuple_access true e1 e2 llbuilder 
 					| _ -> expr_gen llbuilder expr) tuple_value llbuilder);
 	        	
+	        	set_value_name f.svname tuple_value;
+
 	        	let scope = f.svscope in
 	        	Hashtbl.add (match scope with
 						| A.Public -> global_var_table 
 						| A.Private -> class_private_vars) f.svname tuple_value;
-	    	) class_name.scbody.svariables; print_string("test");
+	    	) class_name.scbody.svariables;
 
 			let pointer_to_class = L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder in
 
