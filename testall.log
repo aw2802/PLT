@@ -14,8 +14,9 @@ diff -b test-addAssign.out tests/test-addAssign.out > test-addAssign.diff
 
 ###### Testing test-and
 ./javapm tests/test-and.javapm > test-and.ll
-Fatal error: exception Failure("Invalid datatype for binop")
-###### FAILED
+lli test-and.ll > test-and.out
+diff -b test-and.out tests/test-and.out > test-and.diff
+###### SUCCESS
 
 ###### Testing test-andOp
 ./javapm tests/test-andOp.javapm > test-andOp.ll
@@ -62,8 +63,7 @@ diff -b test-assign.out tests/test-assign.out > test-assign.diff
 ./javapm tests/test-bool.javapm > test-bool.ll
 lli test-bool.ll > test-bool.out
 diff -b test-bool.out tests/test-bool.out > test-bool.diff
-FAILED test-bool.out differs from tests/test-bool.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-char_array
 ./javapm tests/test-char_array.javapm > test-char_array.ll
@@ -76,8 +76,7 @@ FAILED test-char_array.out differs from tests/test-char_array.out
 ./javapm tests/test-char_decl.javapm > test-char_decl.ll
 lli test-char_decl.ll > test-char_decl.out
 diff -b test-char_decl.out tests/test-char_decl.out > test-char_decl.diff
-FAILED test-char_decl.out differs from tests/test-char_decl.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-comments
 ./javapm tests/test-comments.javapm > test-comments.ll

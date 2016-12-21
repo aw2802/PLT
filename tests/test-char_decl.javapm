@@ -1,7 +1,7 @@
 public class TestCharDecl {
 	public void main() {
 		char c = 'c';
-		println(c);
+		println(c); // should print 'c' but because of stubbed semant datatypes will print ascii code 99
 
 	}
 
