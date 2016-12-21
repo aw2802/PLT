@@ -1,0 +1,13 @@
+public class Animal{
+	Animal(int x){
+		println(x);
+	}
+}
+
+public class HowManyAnimals{
+	public void main(){
+		println("How many cats do you have?");
+		Animal cat = new Animal(6);
+		println("You're a cat lady.");
+	}
+}
