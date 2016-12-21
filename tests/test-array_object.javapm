@@ -15,6 +15,5 @@ public class TestArrayObject{
     Car myCar = new Car();
     Car[] carArray = new Car[5];
     carArray[0] = myCar;
-    println(carArray[0].getColor());
   }
 }
