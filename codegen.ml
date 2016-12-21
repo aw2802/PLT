@@ -109,6 +109,7 @@ let translate sast =
 		List.iteri (
 			fun i f ->
 	        let n = c.scname ^ "." ^ f in
+	        print_string(n);
 	        Hashtbl.add struct_field_idx_table n i;
 	    	) 
 	    name_list; 
@@ -276,6 +277,7 @@ let translate sast =
 			| _ -> raise(Failure("Not an id of object"))
 		in
 		let get_variable n llbuilder =
+			print_string(classname ^"."^n);
 			let index = Hashtbl.find struct_field_idx_table (classname ^"."^n) in
 			L.build_struct_gep objectMemory index "temp" llbuilder
 		in
