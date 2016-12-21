@@ -8,7 +8,7 @@ public class Car{
 public class TestArrayObject{
   public void main(){
     Car myCar = new Car(1);
-    Car[] carArray = new Car[5];
-    carArray[0] = myCar;
+    int[] carArray = new int[5];
+    //carArray[0] = myCar;
   }
 }
