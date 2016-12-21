@@ -3,7 +3,7 @@ public class Car{
 	Car(int x) {
  		y = x;
  		println(y);
- 		printMe();
+ 		//printMe();
   	}
 
   	public void printMe(){
