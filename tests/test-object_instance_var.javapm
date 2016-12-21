@@ -2,7 +2,7 @@ public class Car{
 	public int y;
 	Car(int x) {
  		y = x;
- 		println(y);
+ 		println("in constructor");
  		//printMe();
   	}
 
