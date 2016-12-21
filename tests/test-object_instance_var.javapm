@@ -2,13 +2,14 @@ public class Car{
 	public int y;
 	Car(int x) {
  		y = x;
- 		println("in constructor");
+ 		//println("in constructor");
  		//printMe();
   	}
-
+/*
   	public void printMe(){
   		println(y);
   	}
+  	*/
 }
 
 public class TestObject{
