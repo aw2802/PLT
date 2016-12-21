@@ -1,0 +1,18 @@
+public class PrintList{
+ public void main(){
+  int [] list = new int[3];
+  list[0] = 9;
+  list[1] = 5;
+  list[2] = 8;
+  	
+  boolean print = true;
+  while (print == true){
+   int i;
+   for (i = 0; i < 3; i = i + 1){
+    println(list[i]);
+   }
+   print = false;
+   }  
+  } 
+} 
+ 
