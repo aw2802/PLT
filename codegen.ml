@@ -609,7 +609,7 @@ let translate sast =
 	        	Hashtbl.add (match scope with
 						| A.Public -> global_var_table 
 						| A.Private -> class_private_vars) f.svname tuple_value;
-	    	) class_name.scbody.svariables; 
+	    	) class_name.scbody.svariables; print_string("test");
 
 			let pointer_to_class = L.build_pointercast allocatedMemory (L.pointer_type struct_type) "tupleMemAlloc" llbuilder in
 

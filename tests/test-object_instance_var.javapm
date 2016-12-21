@@ -1,10 +1,7 @@
 public class Car{
 	public int y;
 	Car(int x) {
-		int f;
  		y = x;
- 		println("in constructor");
- 		//printMe();
   	}
 /*
   	public void printMe(){
