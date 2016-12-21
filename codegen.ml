@@ -280,7 +280,8 @@ let translate sast =
 		let get_variable n llbuilder =
 		 (*Hard coded to demonstrate code working*)
 			let index = Hashtbl.find struct_field_idx_table ("Car."^n) in
-			L.build_struct_gep objectMemory index "temp" llbuilder
+			let var = L.build_struct_gep objectMemory index "temp" llbuilder in
+			L.build_load var n llbuilder
 		in
 		let rhs = match e2 with
 			| SId(id, dt) -> get_variable id llbuilder
